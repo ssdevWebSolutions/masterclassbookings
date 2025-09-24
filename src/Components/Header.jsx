@@ -22,54 +22,65 @@ export default function Header() {
   return (
     <header className="sticky-top bg-dark text-white shadow-sm">
       <div className="container d-flex justify-content-between align-items-center py-3">
-        <h1 className="h5 fw-bold text-warning mb-0">MasterClass Cricket</h1>
+  {/* Logo + Title */}
+  <div className="d-flex align-items-center">
+    <img 
+      src="logo_.png" 
+      alt="MasterClass Cricket Logo" 
+      className="me-2 img-fluid" 
+      style={{ maxHeight: "50px", width: "auto" }} 
+    />
+    <h1 className="h5 fw-bold text-warning mb-0">MasterClass Cricket</h1>
+  </div>
 
-        {/* Desktop Nav */}
-        <nav className="d-none d-md-flex align-items-center gap-3">
-          <a href="#camps" className="text-white text-decoration-none"
-             onMouseEnter={e => e.target.style.color = "#FFD700"}
-             onMouseLeave={e => e.target.style.color = "white"}>
-            Camps
-          </a>
-          <a href="#about" className="text-white text-decoration-none"
-             onMouseEnter={e => e.target.style.color = "#FFD700"}
-             onMouseLeave={e => e.target.style.color = "white"}>
-            About
-          </a>
-          <a href="#contact" className="text-white text-decoration-none"
-             onMouseEnter={e => e.target.style.color = "#FFD700"}
-             onMouseLeave={e => e.target.style.color = "white"}>
-            Contact
-          </a>
+  {/* Desktop Nav */}
+  <nav className="d-none d-md-flex align-items-center gap-3">
+    <a href="#camps" className="text-white text-decoration-none"
+       onMouseEnter={e => e.target.style.color = "#FFD700"}
+       onMouseLeave={e => e.target.style.color = "white"}>
+      Camps
+    </a>
+    <a href="#about" className="text-white text-decoration-none"
+       onMouseEnter={e => e.target.style.color = "#FFD700"}
+       onMouseLeave={e => e.target.style.color = "white"}>
+      About
+    </a>
+    <a href="#contact" className="text-white text-decoration-none"
+       onMouseEnter={e => e.target.style.color = "#FFD700"}
+       onMouseLeave={e => e.target.style.color = "white"}>
+      Contact
+    </a>
 
-          {!loggedIn ? (
-            <Button className="btn-warning text-dark fw-semibold" onClick={() => setShowLogin(true)}>
-              Login
-            </Button>
-          ) : (
-            <Dropdown>
-              <Dropdown.Toggle variant="warning" className="text-dark fw-semibold">
-                <i className="bi bi-person-circle"></i>
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item href="#profile">Profile</Dropdown.Item>
-                <Dropdown.Item href="#bookings">Bookings</Dropdown.Item>
-                <Dropdown.Item href="#settings">Settings</Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item onClick={() => setLoggedIn(false)}>Logout</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          )}
-        </nav>
+    {!loggedIn ? (
+      <Button className="btn-warning text-dark fw-semibold" onClick={() => setShowLogin(true)}>
+        Login
+      </Button>
+    ) : (
+      <Dropdown>
+        <Dropdown.Toggle variant="warning" className="text-dark fw-semibold">
+          <i className="bi bi-person-circle"></i>
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+          <Dropdown.Item href="#profile">Profile</Dropdown.Item>
+          <Dropdown.Item href="#bookings">Bookings</Dropdown.Item>
+          <Dropdown.Item href="#settings">Settings</Dropdown.Item>
+          <Dropdown.Divider />
+          <Dropdown.Item onClick={() => setLoggedIn(false)}>Logout</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    )}
+  </nav>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="btn btn-outline-light d-md-none"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          ☰
-        </button>
-      </div>
+  {/* Mobile Menu Button */}
+  <button
+    className="btn btn-outline-light d-md-none"
+    onClick={() => setMenuOpen(!menuOpen)}
+  >
+    ☰
+  </button>
+</div>
+
+
 
       {/* Mobile Menu */}
       {menuOpen && (
