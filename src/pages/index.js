@@ -1,12 +1,12 @@
 import Head from "next/head";
 import Image from "next/image";
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import CampGrid from "@/components/CampGrid";
-import WhyJoinUs from "@/components/WhyJoinUs";
-import About from "@/components/About";
-import Footer from "@/components/Footer";
+import Header from '../Components/Header';
+import Hero from "../Components/Hero";
+import CampGrid from "../Components/CampGrid";
+import WhyJoinUs from "../Components/WhyJoinUs";
+import About from "../Components/About";
+import Footer from "../Components/Footer";
 
 export default function Home() {
   return (
