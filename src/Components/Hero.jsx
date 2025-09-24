@@ -7,7 +7,7 @@ export default function Hero() {
         Join Our Cricket Camps
       </h2>
       <p className="lead mb-4 text-secondary">
-        Learn, Play & Excel at Our Premium Training Camps
+      where we run masasterclass sessions and cricket camps
       </p>
       <button className="btn btn-warning text-dark fw-semibold">
         Explore Camps

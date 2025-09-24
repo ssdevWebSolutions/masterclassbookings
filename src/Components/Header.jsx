@@ -22,7 +22,7 @@ export default function Header() {
   return (
     <header className="sticky-top bg-dark text-white shadow-sm">
       <div className="container d-flex justify-content-between align-items-center py-3">
-        <h1 className="h5 fw-bold text-warning mb-0">Cricket Camps</h1>
+        <h1 className="h5 fw-bold text-warning mb-0">MasterClass Cricket</h1>
 
         {/* Desktop Nav */}
         <nav className="d-none d-md-flex align-items-center gap-3">
@@ -116,7 +116,7 @@ export default function Header() {
         <Modal.Header className="border-0 text-center pb-0">
           <div className="w-100">
             <div className="mb-3">
-              <img src="/path-to-your-cricket-logo.png" alt="Cricket App" className="login-logo" />
+              <img src="logo_.png" alt="Cricket App" className="login-logo"  width="15%" height="15%"/>
             </div>
             <Modal.Title className="fw-bold text-dark fs-3 mb-2">Login Now</Modal.Title>
             <p className="text-muted small mb-0">Introduce your information to sign in.</p>
