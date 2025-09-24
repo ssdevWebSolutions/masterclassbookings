@@ -10,9 +10,9 @@ import Footer from "../Components/Footer";
 import RegistrationProfile from "../Components/RegistrationProfile";
 import { useState } from "react";
 
-export default function Home() {
+export default function Register() {
 
-  const [registration, setRegistration] = useState(false);
+  
   return (
     <>
       <Head>
@@ -26,11 +26,8 @@ export default function Home() {
 
       <main className="font-sans">
         <Header />
-        <Hero />
-        <CampGrid />
-        <About />
+        <RegistrationProfile />
         <Footer />
-
       </main>
     </>
   );

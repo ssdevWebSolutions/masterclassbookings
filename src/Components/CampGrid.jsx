@@ -4,12 +4,12 @@ const camps = [
   {
     title: "Winter coaching Clinics - Class 1",
     desc: "Venue: Tiffin Girls School KT2 5PL ",
-    img: "/camp1.jpg",
+    img: "Black White and Orange Photocentric Sports Cricket Flyer.png",
   },
   {
     title: "Winter coaching Clinics - Class 2",
     desc: "Venue: Tiffin Girls School KT2 5PL",
-    img: "/camp2.jpg",
+    img: "Black White and Orange Photocentric Sports Cricket Flyer (1).png",
   },
 ];
 
@@ -25,7 +25,7 @@ export default function CampGrid() {
                 src={camp.img}
                 className="card-img-top"
                 alt={camp.title}
-                style={{ height: "12rem", objectFit: "cover" }}
+                style={{ height: "20rem", objectFit: "fit" }}
               />
               <div className="card-body">
                 <h5 className="card-title text-dark">{camp.title}</h5>
