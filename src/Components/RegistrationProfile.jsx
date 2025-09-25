@@ -1,253 +1,217 @@
-"use client";
+'use client'
+
 import { useState } from "react";
-import { Form, Button, Card, Container, Row, Col, Accordion } from "react-bootstrap";
+import { Form, Button, Card, Container, Row, Col, InputGroup } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Eye, EyeSlash } from 'react-bootstrap-icons';
+import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { registerUserWithType } from "@/Redux/Authentication/AuthenticationAction";
 
 export default function RegistrationProfile() {
   const [parentData, setParentData] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    phone: ""
+    phone: "",
+    password: "",
+    confirmPassword: ""
   });
 
-  const [kids, setKids] = useState([]);
+  const router = useRouter();
+  const dispatch = useDispatch();
 
-  const [newKid, setNewKid] = useState({
-    firstName: "",
-    lastName: "",
-    age: "",
-    club: "",
-    medicalInfo: "",
-    level: ""
-  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+
+  const handleRoute = () => {
+    router.push("/");
+  };
 
   const handleParentChange = (e) => {
     const { name, value } = e.target;
     setParentData({ ...parentData, [name]: value });
   };
 
-  const handleKidChange = (e) => {
-    const { name, value } = e.target;
-    setNewKid({ ...newKid, [name]: value });
-  };
-
-  const addKid = () => {
-    setKids([...kids, newKid]);
-    setNewKid({
-      firstName: "",
-      lastName: "",
-      age: "",
-      club: "",
-      medicalInfo: "",
-      level: ""
-    });
-  };
-
   const handleParentSubmit = (e) => {
     e.preventDefault();
-    console.log("Parent Data:", parentData);
+
+    if (parentData.password !== parentData.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    // Show OTP form after initial validation
+    setOtpSent(true);
   };
 
-  const handleKidsSubmit = (e) => {
+  const handleOtpSubmit = (e) => {
     e.preventDefault();
-    console.log("Kids Data:", kids);
+
+    // Prepare payload for backend
+    const payload = {
+      firstName: parentData.firstName,
+      lastName: parentData.lastName,
+      email: parentData.email,
+      phoneNumber: parentData.phone,
+      password: parentData.password,
+      role: "ADMIN", // hardcoded for now
+    };
+
+    console.log("Payload to send:", payload);
+
+    dispatch(registerUserWithType(payload));
+    handleRoute(); // redirect after dispatch
   };
 
   return (
-    <Container className="my-5">
-      {/* Parent Registration */}
-      <Card className="mb-4 shadow" style={{ borderRadius: '1rem', border: '2px solid #FFD700' }}>
-        <Card.Header className="bg-dark text-warning fw-bold fs-5 text-center">
-          Parent / Guardian Registration
-        </Card.Header>
-        <Card.Body>
-          <Form onSubmit={handleParentSubmit}>
-            <Row className="mb-3">
-              <Col md={6}>
-                <Form.Group controlId="parentFirstName">
-                  <Form.Label className="text-dark">Parent/Guardian First Name*</Form.Label>
+    <Container className="my-5 d-flex justify-content-center">
+      <div style={{ maxWidth: "500px", width: "100%" }}>
+        {!otpSent ? (
+          // Parent Registration Form
+          <Card className="mb-4 shadow" style={{ borderRadius: '1rem', border: '2px solid #FFD700' }}>
+            <Card.Header className="bg-dark text-warning fw-bold fs-5 text-center">
+              Parent / Guardian Registration
+            </Card.Header>
+            <Card.Body>
+              <Form onSubmit={handleParentSubmit}>
+                <Row className="mb-3">
+                  <Col md={6}>
+                    <Form.Group controlId="parentFirstName">
+                      <Form.Label className="text-dark">First Name*</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="First Name"
+                        name="firstName"
+                        value={parentData.firstName}
+                        onChange={handleParentChange}
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group controlId="parentLastName">
+                      <Form.Label className="text-dark">Last Name*</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Last Name"
+                        name="lastName"
+                        value={parentData.lastName}
+                        onChange={handleParentChange}
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+
+                <Row className="mb-3">
+                  <Col md={6}>
+                    <Form.Group controlId="parentEmail">
+                      <Form.Label className="text-dark">Email*</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Email"
+                        name="email"
+                        value={parentData.email}
+                        onChange={handleParentChange}
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group controlId="parentPhone">
+                      <Form.Label className="text-dark">Phone Number*</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Phone Number"
+                        name="phone"
+                        value={parentData.phone}
+                        onChange={handleParentChange}
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+
+                <Row className="mb-3">
+                  <Col md={6}>
+                    <Form.Group controlId="parentPassword">
+                      <Form.Label className="text-dark">Password*</Form.Label>
+                      <InputGroup>
+                        <Form.Control
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Password"
+                          name="password"
+                          value={parentData.password}
+                          onChange={handleParentChange}
+                          required
+                        />
+                        <Button
+                          variant="outline-secondary"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? <EyeSlash /> : <Eye />}
+                        </Button>
+                      </InputGroup>
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group controlId="parentConfirmPassword">
+                      <Form.Label className="text-dark">Confirm Password*</Form.Label>
+                      <InputGroup>
+                        <Form.Control
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="Confirm Password"
+                          name="confirmPassword"
+                          value={parentData.confirmPassword}
+                          onChange={handleParentChange}
+                          required
+                        />
+                        <Button
+                          variant="outline-secondary"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        >
+                          {showConfirmPassword ? <EyeSlash /> : <Eye />}
+                        </Button>
+                      </InputGroup>
+                    </Form.Group>
+                  </Col>
+                </Row>
+
+                <Button type="submit" className="w-100 btn-warning text-dark fw-bold">
+                  Send OTP
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
+        ) : (
+          // OTP Verification Form
+          <Card className="mb-4 shadow" style={{ borderRadius: '1rem', border: '2px solid #FFD700' }}>
+            <Card.Header className="bg-dark text-warning fw-bold fs-5 text-center">
+              Enter OTP
+            </Card.Header>
+            <Card.Body>
+              <Form onSubmit={handleOtpSubmit}>
+                <Form.Group controlId="otp">
+                  <Form.Label className="text-dark">Enter the OTP sent to your email</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="First Name"
-                    name="firstName"
-                    value={parentData.firstName}
-                    onChange={handleParentChange}
+                    placeholder="Enter OTP"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
                     required
                   />
                 </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group controlId="parentLastName">
-                  <Form.Label className="text-dark">Parent/Guardian Last Name*</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Last Name"
-                    name="lastName"
-                    value={parentData.lastName}
-                    onChange={handleParentChange}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-
-            <Row className="mb-3">
-              <Col md={6}>
-                <Form.Group controlId="parentEmail">
-                  <Form.Label className="text-dark">Email*</Form.Label>
-                  <Form.Control
-                    type="email"
-                    placeholder="Email"
-                    name="email"
-                    value={parentData.email}
-                    onChange={handleParentChange}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group controlId="parentPhone">
-                  <Form.Label className="text-dark">Phone Number*</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Phone Number"
-                    name="phone"
-                    value={parentData.phone}
-                    onChange={handleParentChange}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-
-            <Button type="submit" className="w-100 btn-warning text-dark fw-bold">
-              Register Parent
-            </Button>
-          </Form>
-        </Card.Body>
-      </Card>
-
-      {/* Kids Profile Section */}
-      <Card className="shadow" style={{ borderRadius: '1rem', border: '2px solid #FFD700' }}>
-        <Card.Header className="bg-dark text-warning fw-bold fs-5 text-center">
-          Kids Profile
-        </Card.Header>
-        <Card.Body>
-          <Form onSubmit={handleKidsSubmit}>
-            <Row className="mb-3">
-              <Col md={6}>
-                <Form.Group controlId="kidFirstName">
-                  <Form.Label className="text-dark">Player's First Name*</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="First Name"
-                    name="firstName"
-                    value={newKid.firstName}
-                    onChange={handleKidChange}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group controlId="kidLastName">
-                  <Form.Label className="text-dark">Player's Last Name*</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Last Name"
-                    name="lastName"
-                    value={newKid.lastName}
-                    onChange={handleKidChange}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-
-            <Row className="mb-3">
-              <Col md={4}>
-                <Form.Group controlId="kidAge">
-                  <Form.Label className="text-dark">Player's Age*</Form.Label>
-                  <Form.Control
-                    type="number"
-                    placeholder="Age"
-                    name="age"
-                    value={newKid.age}
-                    onChange={handleKidChange}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group controlId="kidClub">
-                  <Form.Label className="text-dark">Player's Club*</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Club"
-                    name="club"
-                    value={newKid.club}
-                    onChange={handleKidChange}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group controlId="kidLevel">
-                  <Form.Label className="text-dark">Highest Level*</Form.Label>
-                  <Form.Select
-                    name="level"
-                    value={newKid.level}
-                    onChange={handleKidChange}
-                    required
-                  >
-                    <option value="">Select Level</option>
-                    <option value="School">School</option>
-                    <option value="Club">Club</option>
-                    <option value="Borough/District">Borough/District</option>
-                    <option value="Regional">Regional</option>
-                    <option value="County">County</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-            </Row>
-
-            <Form.Group className="mb-3" controlId="kidMedicalInfo">
-              <Form.Label className="text-dark">Medical Info</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={2}
-                placeholder="Medical Info"
-                name="medicalInfo"
-                value={newKid.medicalInfo}
-                onChange={handleKidChange}
-              />
-            </Form.Group>
-
-            <Button type="button" className="btn-warning text-dark fw-bold me-2" onClick={addKid}>
-              Add Kid
-            </Button>
-            <Button type="submit" className="btn-dark text-warning fw-bold">
-              Save Kids
-            </Button>
-          </Form>
-
-          {/* Display added kids */}
-          {kids.length > 0 && (
-            <Accordion defaultActiveKey="0" className="mt-4">
-              {kids.map((kid, idx) => (
-                <Accordion.Item eventKey={idx.toString()} key={idx}>
-                  <Accordion.Header>{kid.firstName} {kid.lastName}</Accordion.Header>
-                  <Accordion.Body>
-                    <p><strong>Age:</strong> {kid.age}</p>
-                    <p><strong>Club:</strong> {kid.club}</p>
-                    <p><strong>Highest Level:</strong> {kid.level}</p>
-                    <p><strong>Medical Info:</strong> {kid.medicalInfo}</p>
-                  </Accordion.Body>
-                </Accordion.Item>
-              ))}
-            </Accordion>
-          )}
-        </Card.Body>
-      </Card>
+                <Button type="submit" className="w-100 btn-warning text-dark fw-bold mt-3">
+                  Verify OTP
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
+        )}
+      </div>
     </Container>
   );
 }

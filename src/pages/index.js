@@ -1,6 +1,5 @@
 import Head from "next/head";
-import Image from "next/image";
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from '../Components/Header';
 import Hero from "../Components/Hero";
 import CampGrid from "../Components/CampGrid";
@@ -8,11 +7,25 @@ import WhyJoinUs from "../Components/WhyJoinUs";
 import About from "../Components/About";
 import Footer from "../Components/Footer";
 import RegistrationProfile from "../Components/RegistrationProfile";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchBookings } from "../Redux/bookingSlice/bookingSlice"; // redux slice we created
+import AdminDashboard from "../pages/AdminDashboard"; // create this component for admin view
 
 export default function Home() {
-
   const [registration, setRegistration] = useState(false);
+  const dispatch = useDispatch();
+  
+  const token = useSelector((state) => state.auth.loginData?.token);
+  const role = useSelector((state) => state.auth.loginData?.role);
+  const parentId = useSelector((state) => state.auth.loginData?.id);
+
+  useEffect(() => {
+    if (token && role) {
+      dispatch(fetchBookings({ token, role, parentId }));
+    }
+  }, [token, role, parentId, dispatch]);
+
   return (
     <>
       <Head>
@@ -29,8 +42,11 @@ export default function Home() {
         <Hero />
         <CampGrid />
         <About />
-        <Footer />
 
+        {/* Admin-specific section */}
+        {role === 'ADMIN' && <AdminDashboard />}
+
+        <Footer />
       </main>
     </>
   );

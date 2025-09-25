@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSessionsByYear } from "@/Redux/Sessions/sessionsSlice";
 
 const CricketAcademyBooking = () => {
   const [selectedChild, setSelectedChild] = useState("");
@@ -18,66 +20,38 @@ const CricketAcademyBooking = () => {
   const [termsScrolledToEnd, setTermsScrolledToEnd] = useState(false);
   const [isPlatinumSelected, setIsPlatinumSelected] = useState(false);
   const [showFridayDiscount, setShowFridayDiscount] = useState(false);
-
-  // Sample booking data with actual booking counts
- // Block 2 (16th January – 27th March 2026)
-
-// Friday Sessions
-const fridayDates = [
-    { date: "2026-01-16", day: "Friday", time: "5:45pm-7:15pm", type: "friday", bookedCount: 0 },
-    { date: "2026-01-23", day: "Friday", time: "5:45pm-7:15pm", type: "friday", bookedCount: 0 },
-    { date: "2026-01-30", day: "Friday", time: "5:45pm-7:15pm", type: "friday", bookedCount: 0 },
-    { date: "2026-02-06", day: "Friday", time: "5:45pm-7:15pm", type: "friday", bookedCount: 0 },
-    { date: "2026-02-13", day: "Friday", time: "5:45pm-7:15pm", type: "friday", bookedCount: 0 },
-    { date: "2026-02-20", day: "Friday", time: "5:45pm-7:15pm", type: "friday", bookedCount: 0 },
-    { date: "2026-02-27", day: "Friday", time: "5:45pm-7:15pm", type: "friday", bookedCount: 0 },
-    { date: "2026-03-06", day: "Friday", time: "5:45pm-7:15pm", type: "friday", bookedCount: 0 },
-    { date: "2026-03-13", day: "Friday", time: "5:45pm-7:15pm", type: "friday", bookedCount: 0 },
-    { date: "2026-03-20", day: "Friday", time: "5:45pm-7:15pm", type: "friday", bookedCount: 0 }
-  ];
+  const [showSundayClass1Discount, setShowSundayClass1Discount] = useState(false);
+  const [showSundayClass2Discount, setShowSundayClass2Discount] = useState(false);
+  const [showPlatinumInfo, setShowPlatinumInfo] = useState(false);
+  const [showBookingProcessModal, setShowBookingProcessModal] = useState(false);
+  const loginData = useSelector(state => state.auth.loginData);
   
-  // Sunday Sessions - Class 1
-  const sundayClass1Dates = [
-    { date: "2026-01-18", day: "Sunday", time: "4:30pm-6:00pm", type: "sunday-class1", class: "Class 1", bookedCount: 0 },
-    { date: "2026-01-25", day: "Sunday", time: "4:30pm-6:00pm", type: "sunday-class1", class: "Class 1", bookedCount: 0 },
-    { date: "2026-02-01", day: "Sunday", time: "4:30pm-6:00pm", type: "sunday-class1", class: "Class 1", bookedCount: 0 },
-    { date: "2026-02-08", day: "Sunday", time: "4:30pm-6:00pm", type: "sunday-class1", class: "Class 1", bookedCount: 0 },
-    { date: "2026-02-15", day: "Sunday", time: "4:30pm-6:00pm", type: "sunday-class1", class: "Class 1", bookedCount: 0 },
-    { date: "2026-02-22", day: "Sunday", time: "4:30pm-6:00pm", type: "sunday-class1", class: "Class 1", bookedCount: 0 },
-    { date: "2026-03-01", day: "Sunday", time: "4:30pm-6:00pm", type: "sunday-class1", class: "Class 1", bookedCount: 0 },
-    { date: "2026-03-08", day: "Sunday", time: "4:30pm-6:00pm", type: "sunday-class1", class: "Class 1", bookedCount: 0 },
-    { date: "2026-03-15", day: "Sunday", time: "4:30pm-6:00pm", type: "sunday-class1", class: "Class 1", bookedCount: 0 },
-    { date: "2026-03-22", day: "Sunday", time: "4:30pm-6:00pm", type: "sunday-class1", class: "Class 1", bookedCount: 0 }
-  ];
-  
-  // Sunday Sessions - Class 2
-  const sundayClass2Dates = [
-    { date: "2026-01-18", day: "Sunday", time: "6:00pm-7:30pm", type: "sunday-class2", class: "Class 2", bookedCount: 0 },
-    { date: "2026-01-25", day: "Sunday", time: "6:00pm-7:30pm", type: "sunday-class2", class: "Class 2", bookedCount: 0 },
-    { date: "2026-02-01", day: "Sunday", time: "6:00pm-7:30pm", type: "sunday-class2", class: "Class 2", bookedCount: 0 },
-    { date: "2026-02-08", day: "Sunday", time: "6:00pm-7:30pm", type: "sunday-class2", class: "Class 2", bookedCount: 0 },
-    { date: "2026-02-15", day: "Sunday", time: "6:00pm-7:30pm", type: "sunday-class2", class: "Class 2", bookedCount: 0 },
-    { date: "2026-02-22", day: "Sunday", time: "6:00pm-7:30pm", type: "sunday-class2", class: "Class 2", bookedCount: 0 },
-    { date: "2026-03-01", day: "Sunday", time: "6:00pm-7:30pm", type: "sunday-class2", class: "Class 2", bookedCount: 0 },
-    { date: "2026-03-08", day: "Sunday", time: "6:00pm-7:30pm", type: "sunday-class2", class: "Class 2", bookedCount: 0 },
-    { date: "2026-03-15", day: "Sunday", time: "6:00pm-7:30pm", type: "sunday-class2", class: "Class 2", bookedCount: 0 },
-    { date: "2026-03-22", day: "Sunday", time: "6:00pm-7:30pm", type: "sunday-class2", class: "Class 2", bookedCount: 0 }
-  ];
-  
+  const kidstate = useSelector(state => state.kids.list);
+  const { data: sessions, loading } = useSelector((state) => state.sessions);
 
-  // Dummy child data (will come from backend)
-  const childDetails = {
-    name: "Alex Johnson",
-    age: 11,
-    email: "parent@email.com",
-    phone: "+44 7123 456789",
-    emergencyContact: "Sarah Johnson (+44 7987 654321)",
-    medicalNotes: "No known allergies"
-  };
+  // Dynamic data filtering from API
+  const fridayDates = sessions ? sessions.filter(session => session.type === 'friday') : [];
+  const sundayClass1Dates = sessions ? sessions.filter(session => session.type === 'sunday-class1') : [];
+  const sundayClass2Dates = sessions ? sessions.filter(session => session.type === 'sunday-class2') : [];
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchSessionsByYear(2026));
+   console.log("Kids:", kidstate, "Sessions:", sessions);
+ }, [ ]);
+
+  useEffect(() => {
+    //  dispatch(fetchSessionsByYear(year));
+    console.log("Kids:", kidstate, "Sessions:", sessions);
+  }, [kidstate, sessions]);
 
   const getAvailabilityStatus = (bookedCount) => {
-    if (bookedCount >= 36) return "not-available";
-    if (bookedCount >= 30) return "filling-fast";
+    // Convert to number and handle undefined/null cases
+    const count = Number(bookedCount) || 0;
+    
+    if (count >= 36) return "not-available";
+    if (count >= 30) return "filling-fast";
     return "available";
   };
 
@@ -95,17 +69,16 @@ const fridayDates = [
     }
   };
 
-  const toggleFridaySelection = (dateKey, bookedCount) => {
+  const toggleFridaySelection = (sessionId, bookedCount) => {
     const status = getAvailabilityStatus(bookedCount);
     if (status === "not-available") return;
     
-    const newSelection = selectedFridayDates.includes(dateKey) 
-      ? selectedFridayDates.filter(d => d !== dateKey) 
-      : [...selectedFridayDates, dateKey];
+    const newSelection = selectedFridayDates.includes(sessionId) 
+      ? selectedFridayDates.filter(d => d !== sessionId) 
+      : [...selectedFridayDates, sessionId];
     
     setSelectedFridayDates(newSelection);
     
-    // Check if all available Fridays are now selected
     const availableFridaysCount = fridayDates.filter(session => 
       getAvailabilityStatus(session.bookedCount) !== "not-available"
     ).length;
@@ -115,32 +88,51 @@ const fridayDates = [
     }
   };
 
-  const toggleSundayClass1Selection = (dateKey, bookedCount) => {
+  const toggleSundayClass1Selection = (sessionId, bookedCount) => {
     const status = getAvailabilityStatus(bookedCount);
     if (status === "not-available") return;
     
-    setSelectedSundayClass1Dates(prev =>
-      prev.includes(dateKey) ? prev.filter(d => d !== dateKey) : [...prev, dateKey]
-    );
+    const newSelection = selectedSundayClass1Dates.includes(sessionId)
+      ? selectedSundayClass1Dates.filter(d => d !== sessionId)
+      : [...selectedSundayClass1Dates, sessionId];
+    
+    setSelectedSundayClass1Dates(newSelection);
+
+    const availableClass1Count = sundayClass1Dates.filter(session => 
+      getAvailabilityStatus(session.bookedCount) !== "not-available"
+    ).length;
+    
+    if (newSelection.length === availableClass1Count && availableClass1Count === 10) {
+      setShowSundayClass1Discount(true);
+    }
   };
 
-  const toggleSundayClass2Selection = (dateKey, bookedCount) => {
+  const toggleSundayClass2Selection = (sessionId, bookedCount) => {
     const status = getAvailabilityStatus(bookedCount);
     if (status === "not-available") return;
     
-    setSelectedSundayClass2Dates(prev =>
-      prev.includes(dateKey) ? prev.filter(d => d !== dateKey) : [...prev, dateKey]
-    );
+    const newSelection = selectedSundayClass2Dates.includes(sessionId)
+      ? selectedSundayClass2Dates.filter(d => d !== sessionId)
+      : [...selectedSundayClass2Dates, sessionId];
+    
+    setSelectedSundayClass2Dates(newSelection);
+
+    const availableClass2Count = sundayClass2Dates.filter(session => 
+      getAvailabilityStatus(session.bookedCount) !== "not-available"
+    ).length;
+    
+    if (newSelection.length === availableClass2Count && availableClass2Count === 10) {
+      setShowSundayClass2Discount(true);
+    }
   };
 
   const handleSelectAllFridays = (e) => {
     if (e.target.checked) {
       const availableFridays = fridayDates
         .filter(session => getAvailabilityStatus(session.bookedCount) !== "not-available")
-        .map(session => session.date);
+        .map(session => session.id);
       setSelectedFridayDates(availableFridays);
       
-      // Show discount popup if all 10 sessions are available and selected
       if (availableFridays.length === 10) {
         setShowFridayDiscount(true);
       }
@@ -153,8 +145,12 @@ const fridayDates = [
     if (e.target.checked) {
       const availableSundays = sundayClass1Dates
         .filter(session => getAvailabilityStatus(session.bookedCount) !== "not-available")
-        .map(session => session.date);
+        .map(session => session.id);
       setSelectedSundayClass1Dates(availableSundays);
+      
+      if (availableSundays.length === 10) {
+        setShowSundayClass1Discount(true);
+      }
     } else {
       setSelectedSundayClass1Dates([]);
     }
@@ -164,8 +160,12 @@ const fridayDates = [
     if (e.target.checked) {
       const availableSundays = sundayClass2Dates
         .filter(session => getAvailabilityStatus(session.bookedCount) !== "not-available")
-        .map(session => session.date);
+        .map(session => session.id);
       setSelectedSundayClass2Dates(availableSundays);
+      
+      if (availableSundays.length === 10) {
+        setShowSundayClass2Discount(true);
+      }
     } else {
       setSelectedSundayClass2Dates([]);
     }
@@ -178,9 +178,50 @@ const fridayDates = [
 
   const totalSelectedSessions = isPlatinumSelected ? 0 : selectedFridayDates.length + selectedSundayClass1Dates.length + selectedSundayClass2Dates.length;
   const isFullFridayBlock = selectedFridayDates.length === 10;
+  const isFullSundayClass1Block = selectedSundayClass1Dates.length === 10;
+  const isFullSundayClass2Block = selectedSundayClass2Dates.length === 10;
+  
   const regularPrice = isPlatinumSelected ? 900 : totalSelectedSessions * 40;
-  const discountAmount = isPlatinumSelected ? 0 : (isFullFridayBlock ? 50 : 0);
+  let discountAmount = 0;
+  
+  if (!isPlatinumSelected) {
+    if (isFullFridayBlock) discountAmount += 50;
+    if (isFullSundayClass1Block) discountAmount += 50;
+    if (isFullSundayClass2Block) discountAmount += 50;
+  }
+  
   const finalPrice = regularPrice - discountAmount;
+
+  const getSelectedChildDetails = () => {
+    return kidstate?.find(child => child.id.toString() === selectedChild);
+  };
+
+  const generateBookingJSON = () => {
+    const selectedChildDetails = getSelectedChildDetails();
+    
+    return {
+      childId: selectedChild,
+      parentId : loginData.id,
+      childDetails: selectedChildDetails || null,
+      bookingType: isPlatinumSelected ? "platinum_pass" : "individual_sessions",
+      sessionIds: isPlatinumSelected ? [] : [
+        ...selectedFridayDates,
+        ...selectedSundayClass1Dates,
+        ...selectedSundayClass2Dates
+      ],
+      totalAmount: finalPrice,
+      discountApplied: discountAmount,
+      acceptTerms: acceptTerms,
+      acceptDataPolicy: acceptDataPolicy,
+      fullBlockSelections: {
+        fridayBlock: isFullFridayBlock,
+        sundayClass1Block: isFullSundayClass1Block,
+        sundayClass2Block: isFullSundayClass2Block
+      },
+      paymentStatus:false,
+      timestamp: new Date().toISOString()
+    };
+  };
 
   const handleConfirmBooking = () => {
     if (!isPlatinumSelected && totalSelectedSessions === 1) {
@@ -191,9 +232,24 @@ const fridayDates = [
   };
 
   const processBooking = () => {
-    alert(`Booking processed successfully for ${childDetails.name}!\nTotal: £${finalPrice}`);
+    const bookingData = generateBookingJSON();
+    console.log("Booking Data:", bookingData);
+    
+    // Option 1: Using React Router - pass data via state
+    // navigate('/payment', { state: { bookingData } });
+    
+    // Option 2: Store in sessionStorage and navigate
+    sessionStorage.setItem('cricketBookingData', JSON.stringify(bookingData));
+    
+    // Show professional modal instead of alert
+    setShowBookingProcessModal(true);
     setShowConfirmDialog(false);
     setShowBookingConfirmation(false);
+  };
+
+  const handleProceedToPayment = () => {
+    setShowBookingProcessModal(false);
+    window.location.href = '/payment';
   };
 
   const handleTermsScroll = (e) => {
@@ -202,28 +258,63 @@ const fridayDates = [
     setTermsScrolledToEnd(scrolledToBottom);
   };
 
-  // Check if all Fridays are selected
+  const handlePlatinumClick = () => {
+    if (!isPlatinumSelected) {
+      setShowPlatinumInfo(true);
+    }
+    setIsPlatinumSelected(!isPlatinumSelected);
+  };
+
+  // Check if all sessions are selected for each category
   const availableFridaysCount = fridayDates.filter(session => getAvailabilityStatus(session.bookedCount) !== "not-available").length;
   const allFridaysSelected = selectedFridayDates.length === availableFridaysCount && availableFridaysCount > 0;
 
-  // Check if all Sunday Class 1 are selected
   const availableSundayClass1Count = sundayClass1Dates.filter(session => getAvailabilityStatus(session.bookedCount) !== "not-available").length;
   const allSundayClass1Selected = selectedSundayClass1Dates.length === availableSundayClass1Count && availableSundayClass1Count > 0;
 
-  // Check if all Sunday Class 2 are selected
   const availableSundayClass2Count = sundayClass2Dates.filter(session => getAvailabilityStatus(session.bookedCount) !== "not-available").length;
   const allSundayClass2Selected = selectedSundayClass2Dates.length === availableSundayClass2Count && availableSundayClass2Count > 0;
 
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center min-vh-100">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-vh-100" style={{ backgroundColor: "#f8f9fa" }}>
-      {/* Hero Section */}
-      <header className="py-5" style={{ backgroundColor: "#000" }}>
-        <div className="container text-white text-center">
-          <div className="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning mb-3" style={{ width: 72, height: 72 }}>
-            <i className="bi bi-trophy fs-2 text-dark"></i>
+  <div className="min-vh-100" style={{ backgroundColor: "#f8f9fa" }}>
+          {/* Hero Section */}
+          <header className="py-5" style={{ backgroundColor: "#000" }}>
+            <div className="container text-white text-center">
+                  <div
+            className="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning mb-3"
+            style={{
+              width: "18vw", // Responsive width (adjust as needed)
+              height: "18vw", // Keep it square for perfect circle
+              maxWidth: "52px", // Limit max size
+              maxHeight: "52px",
+              minWidth: "48px", // Optional: don't get too small
+              minHeight: "48px",
+            }}
+          >
+            <img
+              src="logo_.png" // ✅ Replace with your logo path
+              alt="Logo"
+              className="img-fluid"
+              style={{
+                width: "100%", // Relative to container
+                height: "100%",
+                objectFit: "contain",
+              }}
+            />
           </div>
+
           <h1 className="display-5 fw-bold">Masterclass Cricket Academy</h1>
-          <p className="lead text-white-50 mb-3">Block 2: Game based scenarios game plan, target practice learning to bat in different scenarios  field settings repeated for the games</p>
+          <p className="lead text-white-50 mb-3">Block 1: Technical Development Programme</p>
 
           <div className="alert alert-warning d-inline-flex align-items-center py-2 px-3 mb-3">
             <i className="bi bi-exclamation-triangle-fill me-2"></i>
@@ -235,15 +326,14 @@ const fridayDates = [
 
           <div>
             <small className="text-white-50">
-              Fridays: 5:45pm - 7:15pm (10 Oct - 12 Dec 2025) • Sundays: Class1 4:30pm-6pm & Class2 6pm-7:30pm (16th January – 27th March 2026)
+              Fridays: 5:45pm - 7:15pm (10 Oct - 12 Dec 2025) • Sundays: Class1 4:30pm-6pm & Class2 6pm-7:30pm (12 Oct - 14 Dec 2025)
             </small>
           </div>
         </div>
       </header>
 
       <main className="container py-5">
-
-      {!showBookingConfirmation ? (
+        {!showBookingConfirmation ? (
           <>
             {/* Venue */}
             <div className="card mb-4">
@@ -273,8 +363,11 @@ const fridayDates = [
                 <div className="d-flex gap-2 flex-wrap">
                   <select className="form-select" value={selectedChild} onChange={(e) => setSelectedChild(e.target.value)}>
                     <option value="">Choose child</option>
-                    <option value="alex-johnson">Alex Johnson (Age 11)</option>
-                    <option value="child2">Child 2</option>
+                    {kidstate?.map(child => (
+                      <option key={child.id} value={child.id}>
+                        {child.firstName} {child.lastName} (Age {child.age})
+                      </option>
+                    ))}
                   </select>
                   <button className="btn btn-outline-secondary">Add New Child</button>
                 </div>
@@ -304,7 +397,7 @@ const fridayDates = [
               </div>
 
               <div className="col-md-4">
-                <div className={`card position-relative border-primary text-center ${isPlatinumSelected ? 'border-3' : ''}`}>
+                <div className={`card position-relative border-primary text-center ${isPlatinumSelected ? 'border-3 bg-light' : ''}`}>
                   <span className="badge bg-primary position-absolute top-0 start-50 translate-middle">Platinum Pass</span>
                   <div className="card-body mt-3">
                     <div className="d-flex justify-content-between align-items-start mb-2">
@@ -312,12 +405,12 @@ const fridayDates = [
                         <p className="text-muted mb-1">Premium Access</p>
                         <div className="text-decoration-line-through text-muted">£1210</div>
                         <h2 className="mb-0 text-primary">£900</h2>
-                        <p className="text-success mb-0 fw-bold">Access to full classes</p>
+                        <p className="text-success mb-0 fw-bold">Full Access</p>
                       </div>
                       <div 
                         className={`rounded-circle border d-flex align-items-center justify-content-center ${isPlatinumSelected ? "bg-primary border-primary" : "border-secondary"}`} 
                         style={{ width: 24, height: 24, cursor: 'pointer' }}
-                        onClick={() => setIsPlatinumSelected(!isPlatinumSelected)}
+                        onClick={handlePlatinumClick}
                       >
                         {isPlatinumSelected && <i className="bi bi-check-lg text-white" />}
                       </div>
@@ -341,7 +434,7 @@ const fridayDates = [
                         onClick={() => setShowFridays(!showFridays)}
                       >
                         <i className="bi bi-calendar me-2"></i>
-                        Fridays (10 sessions available)
+                        Fridays ({fridayDates.length} sessions available)
                         <i className={`bi bi-chevron-${showFridays ? 'up' : 'down'} ms-auto`}></i>
                       </button>
                       <div 
@@ -353,166 +446,153 @@ const fridayDates = [
                       </div>
                     </div>
                   
-                  {showFridays && (
-                    <div className="mt-2">
-                      <div className="list-group">
-                        {fridayDates.map((session, index) => {
-                          const dateKey = session.date;
-                          const isSelected = selectedFridayDates.includes(dateKey);
-                          const status = getAvailabilityStatus(session.bookedCount);
-                          const isDisabled = status === "not-available";
+                    {showFridays && (
+                      <div className="mt-2">
+                        <div className="list-group">
+                          {fridayDates.map((session, index) => {
+                            const isSelected = selectedFridayDates.includes(session.id);
+                            const status = getAvailabilityStatus(session.bookedCount);
+                            const isDisabled = status === "not-available";
 
-                          return (
-                            <button
-                              key={index}
-                              type="button"
-                              onClick={() => toggleFridaySelection(dateKey, session.bookedCount)}
-                              className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${isDisabled ? "disabled" : ""}`}
-                              aria-disabled={isDisabled}
-                              style={{ cursor: isDisabled ? "not-allowed" : "pointer" }}
-                            >
-                              <div>
-                                <div className="fw-semibold">{formatDate(session.date)}</div>
-                                <div className="text-muted small">{session.time}</div>
-                              </div>
-                              <div className="d-flex align-items-center gap-3">
-                                {getAvailabilityBadge(session.bookedCount)}
-                                <div className={`rounded-circle border d-flex align-items-center justify-content-center ${isSelected ? "bg-warning" : ""}`} style={{ width: 22, height: 22 }}>
-                                  {isSelected && <i className="bi bi-check-lg text-dark" />}
+                            return (
+                              <button
+                                key={session.id}
+                                type="button"
+                                onClick={() => toggleFridaySelection(session.id, session.bookedCount)}
+                                className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${isDisabled ? "disabled" : ""}`}
+                                aria-disabled={isDisabled}
+                                style={{ cursor: isDisabled ? "not-allowed" : "pointer" }}
+                              >
+                                <div>
+                                  <div className="fw-semibold">{formatDate(session.date)}</div>
+                                  <div className="text-muted small">{session.time}</div>
                                 </div>
-                              </div>
-                            </button>
-                          );
-                        }                        )}
+                                <div className="d-flex align-items-center gap-3">
+                                  {getAvailabilityBadge(session.bookedCount)}
+                                  <div className={`rounded-circle border d-flex align-items-center justify-content-center ${isSelected ? "bg-warning" : ""}`} style={{ width: 22, height: 22 }}>
+                                    {isSelected && <i className="bi bi-check-lg text-dark" />}
+                                  </div>
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Sunday Class 1 Section */}
-                <div className="mb-3">
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <button
-                      className="btn btn-outline-secondary d-flex align-items-center"
-                      onClick={() => setShowSundayClass1(!showSundayClass1)}
-                    >
-                      <i className="bi bi-calendar me-2"></i>
-                      Sunday Class 1 (4:30pm-6:00pm)
-                      <i className={`bi bi-chevron-${showSundayClass1 ? 'up' : 'down'} ms-2`}></i>
-                    </button>
-                    <div className="form-check">
-                      <input 
-                        className="form-check-input" 
-                        type="checkbox" 
-                        id="selectAllSundayClass1"
-                        checked={allSundayClass1Selected}
-                        onChange={handleSelectAllSundayClass1}
-                      />
-                      <label className="form-check-label" htmlFor="selectAllSundayClass1">
-                        Select All
-                      </label>
-                    </div>
+                    )}
                   </div>
-                  
-                  {showSundayClass1 && (
-                    <div className="mt-2">
-                      <div className="list-group">
-                        {sundayClass1Dates.map((session, index) => {
-                          const dateKey = session.date;
-                          const isSelected = selectedSundayClass1Dates.includes(dateKey);
-                          const status = getAvailabilityStatus(session.bookedCount);
-                          const isDisabled = status === "not-available";
 
-                          return (
-                            <button
-                              key={index}
-                              type="button"
-                              onClick={() => toggleSundayClass1Selection(dateKey, session.bookedCount)}
-                              className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${isDisabled ? "disabled" : ""}`}
-                              aria-disabled={isDisabled}
-                              style={{ cursor: isDisabled ? "not-allowed" : "pointer" }}
-                            >
-                              <div>
-                                <div className="fw-semibold">{formatDate(session.date)}</div>
-                                <div className="text-muted small">{session.time}</div>
-                              </div>
-                              <div className="d-flex align-items-center gap-3">
-                                {getAvailabilityBadge(session.bookedCount)}
-                                <div className={`rounded-circle border d-flex align-items-center justify-content-center ${isSelected ? "bg-warning" : ""}`} style={{ width: 22, height: 22 }}>
-                                  {isSelected && <i className="bi bi-check-lg text-dark" />}
-                                </div>
-                              </div>
-                            </button>
-                          );
-                        }                        )}
+                  {/* Sunday Class 1 Section */}
+                  <div className="mb-3">
+                    <div className="d-flex justify-content-between align-items-center mb-2">
+                      <button
+                        className="btn btn-outline-secondary d-flex align-items-center flex-grow-1 me-3"
+                        onClick={() => setShowSundayClass1(!showSundayClass1)}
+                      >
+                        <i className="bi bi-calendar me-2"></i>
+                        Sunday Class 1 (4:30pm-6:00pm) - {sundayClass1Dates.length} sessions
+                        <i className={`bi bi-chevron-${showSundayClass1 ? 'up' : 'down'} ms-auto`}></i>
+                      </button>
+                      <div 
+                        className={`rounded-circle border d-flex align-items-center justify-content-center ${allSundayClass1Selected ? "bg-warning border-warning" : "border-secondary"}`} 
+                        style={{ width: 28, height: 28, cursor: 'pointer' }}
+                        onClick={(e) => handleSelectAllSundayClass1({ target: { checked: !allSundayClass1Selected } })}
+                      >
+                        {allSundayClass1Selected && <i className="bi bi-check-lg text-dark" />}
                       </div>
                     </div>
-                  )}
-                </div>
+                    
+                    {showSundayClass1 && (
+                      <div className="mt-2">
+                        <div className="list-group">
+                          {sundayClass1Dates.map((session) => {
+                            const isSelected = selectedSundayClass1Dates.includes(session.id);
+                            const status = getAvailabilityStatus(session.bookedCount);
+                            const isDisabled = status === "not-available";
 
-                {/* Sunday Class 2 Section */}
-                <div className="mb-3">
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <button
-                      className="btn btn-outline-secondary d-flex align-items-center"
-                      onClick={() => setShowSundayClass2(!showSundayClass2)}
-                    >
-                      <i className="bi bi-calendar me-2"></i>
-                      Sunday Class 2 (6:00pm-7:30pm)
-                      <i className={`bi bi-chevron-${showSundayClass2 ? 'up' : 'down'} ms-2`}></i>
-                    </button>
-                    <div className="form-check">
-                      <input 
-                        className="form-check-input" 
-                        type="checkbox" 
-                        id="selectAllSundayClass2"
-                        checked={allSundayClass2Selected}
-                        onChange={handleSelectAllSundayClass2}
-                      />
-                      <label className="form-check-label" htmlFor="selectAllSundayClass2">
-                        Select All
-                      </label>
-                    </div>
+                            return (
+                              <button
+                                key={session.id}
+                                type="button"
+                                onClick={() => toggleSundayClass1Selection(session.id, session.bookedCount)}
+                                className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${isDisabled ? "disabled" : ""}`}
+                                aria-disabled={isDisabled}
+                                style={{ cursor: isDisabled ? "not-allowed" : "pointer" }}
+                              >
+                                <div>
+                                  <div className="fw-semibold">{formatDate(session.date)}</div>
+                                  <div className="text-muted small">{session.time}</div>
+                                </div>
+                                <div className="d-flex align-items-center gap-3">
+                                  {getAvailabilityBadge(session.bookedCount)}
+                                  <div className={`rounded-circle border d-flex align-items-center justify-content-center ${isSelected ? "bg-warning" : ""}`} style={{ width: 22, height: 22 }}>
+                                    {isSelected && <i className="bi bi-check-lg text-dark" />}
+                                  </div>
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  
-                  {showSundayClass2 && (
-                    <div className="mt-2">
-                      <div className="list-group">
-                        {sundayClass2Dates.map((session, index) => {
-                          const dateKey = session.date;
-                          const isSelected = selectedSundayClass2Dates.includes(dateKey);
-                          const status = getAvailabilityStatus(session.bookedCount);
-                          const isDisabled = status === "not-available";
 
-                          return (
-                            <button
-                              key={index}
-                              type="button"
-                              onClick={() => toggleSundayClass2Selection(dateKey, session.bookedCount)}
-                              className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${isDisabled ? "disabled" : ""}`}
-                              aria-disabled={isDisabled}
-                              style={{ cursor: isDisabled ? "not-allowed" : "pointer" }}
-                            >
-                              <div>
-                                <div className="fw-semibold">{formatDate(session.date)}</div>
-                                <div className="text-muted small">{session.time}</div>
-                              </div>
-                              <div className="d-flex align-items-center gap-3">
-                                {getAvailabilityBadge(session.bookedCount)}
-                                <div className={`rounded-circle border d-flex align-items-center justify-content-center ${isSelected ? "bg-warning" : ""}`} style={{ width: 22, height: 22 }}>
-                                  {isSelected && <i className="bi bi-check-lg text-dark" />}
-                                </div>
-                              </div>
-                            </button>
-                          );
-                        })}
+                  {/* Sunday Class 2 Section */}
+                  <div className="mb-3">
+                    <div className="d-flex justify-content-between align-items-center mb-2">
+                      <button
+                        className="btn btn-outline-secondary d-flex align-items-center flex-grow-1 me-3"
+                        onClick={() => setShowSundayClass2(!showSundayClass2)}
+                      >
+                        <i className="bi bi-calendar me-2"></i>
+                        Sunday Class 2 (6:00pm-7:30pm) - {sundayClass2Dates.length} sessions
+                        <i className={`bi bi-chevron-${showSundayClass2 ? 'up' : 'down'} ms-auto`}></i>
+                      </button>
+                      <div 
+                        className={`rounded-circle border d-flex align-items-center justify-content-center ${allSundayClass2Selected ? "bg-warning border-warning" : "border-secondary"}`} 
+                        style={{ width: 28, height: 28, cursor: 'pointer' }}
+                        onClick={(e) => handleSelectAllSundayClass2({ target: { checked: !allSundayClass2Selected } })}
+                      >
+                        {allSundayClass2Selected && <i className="bi bi-check-lg text-dark" />}
                       </div>
                     </div>
-                  )}
-                </div>
+                    
+                    {showSundayClass2 && (
+                      <div className="mt-2">
+                        <div className="list-group">
+                          {sundayClass2Dates.map((session) => {
+                            const isSelected = selectedSundayClass2Dates.includes(session.id);
+                            const status = getAvailabilityStatus(session.bookedCount);
+                            const isDisabled = status === "not-available";
 
+                            return (
+                              <button
+                                key={session.id}
+                                type="button"
+                                onClick={() => toggleSundayClass2Selection(session.id, session.bookedCount)}
+                                className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${isDisabled ? "disabled" : ""}`}
+                                aria-disabled={isDisabled}
+                                style={{ cursor: isDisabled ? "not-allowed" : "pointer" }}
+                              >
+                                <div>
+                                  <div className="fw-semibold">{formatDate(session.date)}</div>
+                                  <div className="text-muted small">{session.time}</div>
+                                </div>
+                                <div className="d-flex align-items-center gap-3">
+                                  {getAvailabilityBadge(session.bookedCount)}
+                                  <div className={`rounded-circle border d-flex align-items-center justify-content-center ${isSelected ? "bg-warning" : ""}`} style={{ width: 22, height: 22 }}>
+                                    {isSelected && <i className="bi bi-check-lg text-dark" />}
+                                  </div>
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>)}
+            )}
 
             {/* Data Permission */}
             <div className="card mb-4">
@@ -558,7 +638,9 @@ const fridayDates = [
                   <div className="text-muted small">
                     {isPlatinumSelected ? "Platinum Pass Selected" : `${totalSelectedSessions} session${totalSelectedSessions !== 1 ? "s" : ""} selected`}
                   </div>
-                  {isFullFridayBlock && !isPlatinumSelected && <div className="text-success small">Friday Block Discount Applied!</div>}
+                  {(isFullFridayBlock || isFullSundayClass1Block || isFullSundayClass2Block) && !isPlatinumSelected && (
+                    <div className="text-success small">Block Discount Applied!</div>
+                  )}
                 </div>
                 <div className="text-end">
                   {!isPlatinumSelected && discountAmount > 0 && <div className="text-muted text-decoration-line-through">£{regularPrice}</div>}
@@ -577,7 +659,6 @@ const fridayDates = [
                   {isPlatinumSelected ? `Confirm Platinum Pass - £${finalPrice}` : `Continue to Booking Confirmation - £${finalPrice}`}
                 </button>
               </div>
-
             </div>
           </>
         ) : (
@@ -592,18 +673,19 @@ const fridayDates = [
                   {/* Child Details */}
                   <div className="mb-4">
                     <h6 className="border-bottom pb-2 mb-3">Child Details</h6>
-                    <div className="row">
-                      <div className="col-md-6">
-                        <p><strong>Name:</strong> {childDetails.name}</p>
-                        <p><strong>Age:</strong> {childDetails.age}</p>
-                        <p><strong>Email:</strong> {childDetails.email}</p>
+                    {getSelectedChildDetails() && (
+                      <div className="row">
+                        <div className="col-md-6">
+                          <p><strong>Name:</strong> {getSelectedChildDetails().firstName} {getSelectedChildDetails().lastName}</p>
+                          <p><strong>Age:</strong> {getSelectedChildDetails().age}</p>
+                          <p><strong>Level:</strong> {getSelectedChildDetails().level}</p>
+                        </div>
+                        <div className="col-md-6">
+                          <p><strong>Club:</strong> {getSelectedChildDetails().club}</p>
+                          <p><strong>Medical Info:</strong> {getSelectedChildDetails().medicalInfo}</p>
+                        </div>
                       </div>
-                      <div className="col-md-6">
-                        <p><strong>Phone:</strong> {childDetails.phone}</p>
-                        <p><strong>Emergency Contact:</strong> {childDetails.emergencyContact}</p>
-                        <p><strong>Medical Notes:</strong> {childDetails.medicalNotes}</p>
-                      </div>
-                    </div>
+                    )}
                   </div>
 
                   {/* Venue & Programme */}
@@ -639,10 +721,10 @@ const fridayDates = [
                           <div className="mb-3">
                             <strong>Friday Sessions:</strong>
                             <ul className="list-unstyled mt-2">
-                              {selectedFridayDates.map(dateKey => {
-                                const session = fridayDates.find(s => s.date === dateKey);
+                              {selectedFridayDates.map(sessionId => {
+                                const session = fridayDates.find(s => s.id === sessionId);
                                 return (
-                                  <li key={dateKey} className="mb-1">
+                                  <li key={sessionId} className="mb-1">
                                     <i className="bi bi-calendar-event me-2"></i>
                                     {formatDate(session.date)} - {session.time}
                                   </li>
@@ -656,10 +738,10 @@ const fridayDates = [
                           <div className="mb-3">
                             <strong>Sunday Class 1 Sessions:</strong>
                             <ul className="list-unstyled mt-2">
-                              {selectedSundayClass1Dates.map(dateKey => {
-                                const session = sundayClass1Dates.find(s => s.date === dateKey);
+                              {selectedSundayClass1Dates.map(sessionId => {
+                                const session = sundayClass1Dates.find(s => s.id === sessionId);
                                 return (
-                                  <li key={dateKey} className="mb-1">
+                                  <li key={sessionId} className="mb-1">
                                     <i className="bi bi-calendar-event me-2"></i>
                                     {formatDate(session.date)} - {session.time}
                                   </li>
@@ -673,10 +755,10 @@ const fridayDates = [
                           <div className="mb-3">
                             <strong>Sunday Class 2 Sessions:</strong>
                             <ul className="list-unstyled mt-2">
-                              {selectedSundayClass2Dates.map(dateKey => {
-                                const session = sundayClass2Dates.find(s => s.date === dateKey);
+                              {selectedSundayClass2Dates.map(sessionId => {
+                                const session = sundayClass2Dates.find(s => s.id === sessionId);
                                 return (
-                                  <li key={dateKey} className="mb-1">
+                                  <li key={sessionId} className="mb-1">
                                     <i className="bi bi-calendar-event me-2"></i>
                                     {formatDate(session.date)} - {session.time}
                                   </li>
@@ -714,7 +796,7 @@ const fridayDates = [
                             </div>
                             {discountAmount > 0 && (
                               <div className="d-flex justify-content-between mb-2 text-success">
-                                <span>Friday Block Discount</span>
+                                <span>Block Discount{discountAmount > 50 ? "s" : ""}</span>
                                 <span>-£{discountAmount}</span>
                               </div>
                             )}
@@ -725,8 +807,6 @@ const fridayDates = [
                             </div>
                           </>
                         )}
-                      </div>
-                    </div>
                       </div>
                     </div>
                   </div>
@@ -762,15 +842,108 @@ const fridayDates = [
                     </button>
                   </div>
                 </div>
+              </div>
+            </div>
           </div>
-
-            
-          
         )}
-
       </main>
 
-      {/* Friday Discount Celebration Popup */}
+      {/* Booking Process Success Modal - Replaces the alert */}
+      {showBookingProcessModal && (
+        <>
+          <div className="modal-backdrop fade show"></div>
+          <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{ zIndex: 1050 }}>
+            <div className="modal-dialog modal-dialog-centered" role="document">
+              <div className="modal-content border-success">
+                <div className="modal-header bg-success text-white">
+                  <h5 className="modal-title">
+                    <i className="bi bi-check-circle-fill me-2"></i>
+                    Booking Prepared Successfully!
+                  </h5>
+                </div>
+                <div className="modal-body text-center">
+                  <div className="mb-4">
+                    <i className="bi bi-check-circle text-success" style={{ fontSize: '4rem' }}></i>
+                  </div>
+                  <h4 className="text-success mb-3">Ready for Payment!</h4>
+                  <div className="alert alert-info">
+                    <div className="row text-start">
+                      <div className="col-6"><strong>Total Amount:</strong></div>
+                      <div className="col-6">£{finalPrice}</div>
+                      <div className="col-6"><strong>Booking Type:</strong></div>
+                      <div className="col-6">{isPlatinumSelected ? "Platinum Pass" : "Individual Sessions"}</div>
+                      <div className="col-6"><strong>Child:</strong></div>
+                      <div className="col-6">{getSelectedChildDetails()?.firstName} {getSelectedChildDetails()?.lastName}</div>
+                    </div>
+                  </div>
+                  <p className="mb-3">Your booking data has been prepared and saved. Click below to proceed to the secure payment page.</p>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-outline-secondary" onClick={() => setShowBookingProcessModal(false)}>
+                    Go Back
+                  </button>
+                  <button type="button" className="btn btn-success" onClick={handleProceedToPayment}>
+                    <i className="bi bi-credit-card me-2"></i>
+                    Continue to Payment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Platinum Info Popup */}
+      {showPlatinumInfo && (
+        <>
+          <div className="modal-backdrop fade show"></div>
+          <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{ zIndex: 1050 }}>
+            <div className="modal-dialog modal-dialog-centered" role="document">
+              <div className="modal-content border-primary">
+                <div className="modal-header bg-primary text-white">
+                  <h5 className="modal-title">
+                    <i className="bi bi-star-fill me-2"></i>
+                    Platinum Pass Benefits
+                  </h5>
+                </div>
+                <div className="modal-body">
+                  <div className="mb-3">
+                    <i className="bi bi-trophy-fill text-primary" style={{ fontSize: '4rem' }}></i>
+                  </div>
+                  <h4 className="text-primary mb-3">Ultimate Cricket Experience!</h4>
+                  <div className="alert alert-primary">
+                    <h6 className="mb-2">What You Get:</h6>
+                    <ul className="mb-0">
+                      <li>Access to ALL Friday sessions (10 weeks)</li>
+                      <li>Access to ALL Sunday Class 1 sessions (10 weeks)</li>
+                      <li>Access to ALL Sunday Class 2 sessions (10 weeks)</li>
+                      <li>Flexible attendance - join any available class</li>
+                      <li>Priority booking for future programs</li>
+                      <li>Exclusive coaching tips and feedback</li>
+                    </ul>
+                  </div>
+                  <div className="text-center">
+                    <h5 className="text-success">Total Value: £1,200</h5>
+                    <h3 className="text-primary">Your Price: £900</h3>
+                    <p className="text-success fw-bold">Save £300 + Maximum Flexibility!</p>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-outline-secondary" onClick={() => setShowPlatinumInfo(false)}>
+                    Maybe Later
+                  </button>
+                  <button type="button" className="btn btn-primary" onClick={() => setShowPlatinumInfo(false)}>
+                    <i className="bi bi-star-fill me-2"></i>
+                    Continue with Platinum
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Friday Block Discount Popup */}
       {showFridayDiscount && (
         <>
           <div className="modal-backdrop fade show"></div>
@@ -780,7 +953,7 @@ const fridayDates = [
                 <div className="modal-header bg-warning text-dark">
                   <h5 className="modal-title">
                     <i className="bi bi-trophy-fill me-2"></i>
-                    Hurray! Coupon Availed!
+                    Friday Block Discount Unlocked!
                   </h5>
                 </div>
                 <div className="modal-body text-center">
@@ -798,6 +971,78 @@ const fridayDates = [
                   <button type="button" className="btn btn-warning" onClick={() => setShowFridayDiscount(false)}>
                     <i className="bi bi-hand-thumbs-up me-2"></i>
                     Awesome! Continue
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Sunday Class 1 Block Discount Popup */}
+      {showSundayClass1Discount && (
+        <>
+          <div className="modal-backdrop fade show"></div>
+          <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{ zIndex: 1050 }}>
+            <div className="modal-dialog modal-dialog-centered" role="document">
+              <div className="modal-content border-warning">
+                <div className="modal-header bg-warning text-dark">
+                  <h5 className="modal-title">
+                    <i className="bi bi-trophy-fill me-2"></i>
+                    Sunday Class 1 Block Discount Unlocked!
+                  </h5>
+                </div>
+                <div className="modal-body text-center">
+                  <div className="mb-3">
+                    <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '4rem' }}></i>
+                  </div>
+                  <h4 className="text-success mb-3">Fantastic!</h4>
+                  <p className="mb-3">You've selected all Sunday Class 1 sessions and earned our block discount!</p>
+                  <div className="alert alert-success">
+                    <h5 className="mb-1">Sunday Class 1 Block: £350</h5>
+                    <p className="mb-0">You save £50 compared to individual sessions!</p>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-warning" onClick={() => setShowSundayClass1Discount(false)}>
+                    <i className="bi bi-hand-thumbs-up me-2"></i>
+                    Excellent! Continue
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Sunday Class 2 Block Discount Popup */}
+      {showSundayClass2Discount && (
+        <>
+          <div className="modal-backdrop fade show"></div>
+          <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{ zIndex: 1050 }}>
+            <div className="modal-dialog modal-dialog-centered" role="document">
+              <div className="modal-content border-warning">
+                <div className="modal-header bg-warning text-dark">
+                  <h5 className="modal-title">
+                    <i className="bi bi-trophy-fill me-2"></i>
+                    Sunday Class 2 Block Discount Unlocked!
+                  </h5>
+                </div>
+                <div className="modal-body text-center">
+                  <div className="mb-3">
+                    <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '4rem' }}></i>
+                  </div>
+                  <h4 className="text-success mb-3">Outstanding!</h4>
+                  <p className="mb-3">You've selected all Sunday Class 2 sessions and earned our block discount!</p>
+                  <div className="alert alert-success">
+                    <h5 className="mb-1">Sunday Class 2 Block: £350</h5>
+                    <p className="mb-0">You save £50 compared to individual sessions!</p>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-warning" onClick={() => setShowSundayClass2Discount(false)}>
+                    <i className="bi bi-hand-thumbs-up me-2"></i>
+                    Perfect! Continue
                   </button>
                 </div>
               </div>
@@ -955,7 +1200,7 @@ const fridayDates = [
         </>
       )}
 
-      {/* Confirmation Dialog */}
+      {/* Single Session Confirmation Dialog */}
       {showConfirmDialog && (
         <>
           <div className="modal-backdrop fade show"></div>
@@ -971,14 +1216,14 @@ const fridayDates = [
                     <i className="bi bi-exclamation-circle display-1 text-warning"></i>
                   </div>
                   <p>You've selected only 1 session. Would you like to check other available slots before proceeding?</p>
-                  <p className="text-muted small">You can always add more sessions or continue with your current selection.</p>
+                  <p className="text-muted small">Consider our block discounts - save £50 when booking 10 sessions from any category!</p>
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-outline-secondary" onClick={() => setShowConfirmDialog(false)}>
                     Check Other Slots
                   </button>
                   <button type="button" className="btn btn-primary" onClick={() => { setShowConfirmDialog(false); setShowBookingConfirmation(true); }}>
-                    Continue to Confirmation
+                    Continue with Single Session
                   </button>
                 </div>
               </div>

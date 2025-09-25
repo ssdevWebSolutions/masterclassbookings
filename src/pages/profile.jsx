@@ -2,6 +2,7 @@ import RegistrationProfile from "../Components/RegistrationProfile";
 import Header from "../Components/Header";
 import Head from "next/head";
 import Footer from "../Components/Footer";
+import RegistrationProfileKids from "../Components/RegistrationProfileKids";
 
 export default function Register() {
   return (
@@ -18,7 +19,7 @@ export default function Register() {
       <div className="d-flex flex-column min-vh-100">
         <main className="flex-grow-1 font-sans">
           <Header />
-          <RegistrationProfile />
+          <RegistrationProfileKids />
         </main>
         <Footer />
       </div>

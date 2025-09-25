@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
+// Camp data
 const camps = [
   {
     title: "Winter coaching Clinics - Class 1",
@@ -16,15 +18,45 @@ const camps = [
   },
 ];
 
+// ✅ Centered Toast Component
+function CenterToast({ message, onClose }) {
+  return (
+    <div
+      className="position-fixed top-50 start-50 translate-middle"
+      style={{
+        zIndex: 1050,
+        minWidth: "300px",
+        padding: "1rem 1.5rem",
+        backgroundColor: "#212529",
+        color: "#fff",
+        borderRadius: "0.5rem",
+        boxShadow: "0 0.5rem 1rem rgba(0,0,0,0.3)",
+        textAlign: "center",
+      }}
+    >
+      <div>{message}</div>
+      <button className="btn btn-sm btn-light mt-3" onClick={onClose}>
+        Close
+      </button>
+    </div>
+  );
+}
+
 export default function CampGrid() {
   const router = useRouter();
+  const loginData = useSelector((state) => state.auth.loginData);
+  const [toastVisible, setToastVisible] = useState(false);
 
   const handleRoute = (path) => {
-    router.push(path);
+    if (loginData.token) {
+      router.push(path);
+    } else {
+      setToastVisible(true);
+    }
   };
 
   return (
-    <section id="camps" className="container py-5">
+    <section id="camps" className="container py-5 position-relative">
       <h2 className="text-center mb-4 fw-bold text-dark">Our Camps</h2>
       <div className="row g-4">
         {camps.map((camp, idx) => (
@@ -53,6 +85,14 @@ export default function CampGrid() {
           </div>
         ))}
       </div>
+
+      {/* ✅ Render the centered toast only if user not logged in */}
+      {toastVisible && (
+        <CenterToast
+          message="Please login before booking a slot."
+          onClose={() => setToastVisible(false)}
+        />
+      )}
     </section>
   );
 }
