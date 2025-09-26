@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchBookings } from "../Redux/bookingSlice/bookingSlice";
 import AdminDashboard from "../pages/AdminDashboard";
 import Header from "@/Components/Header";
+import { useRouter } from "next/router";
 
 export default function Home() {
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -53,6 +54,12 @@ export default function Home() {
     );
   }
 
+  const route = useRouter();
+  
+  const handleLogin=()=>{
+    route.push("/");
+  }
+
   // Not logged in
   if (!token) {
     return (
@@ -64,9 +71,9 @@ export default function Home() {
              style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" }}>
           <div className="text-center text-white">
             <i className="fas fa-baseball-ball fa-4x mb-4 text-warning"></i>
-            <h1 className="display-5 mb-3">Cricket Camps</h1>
+            {/* <h1 className="display-5 mb-3">Cricket Camps</h1> */}
             <p className="lead mb-4">Please log in to access your dashboard</p>
-            <button className="btn btn-warning btn-lg px-5">Login</button>
+            <button className="btn btn-warning btn-lg px-5" onClick={handleLogin} >Login</button>
           </div>
         </div>
       </>
