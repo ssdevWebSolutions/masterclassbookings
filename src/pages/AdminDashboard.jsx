@@ -61,7 +61,7 @@ export default function AdminDashboard() {
 
   const handleSlotUpdate = async (id, newCount) => {
     try {
-      const res = await fetch(`http://localhost:8080/api/auth/sessions/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sessions/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +82,7 @@ export default function AdminDashboard() {
 
   const initSessions = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/auth/sessions/init", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sessions/init`, {
         method: "POST",
         headers: { Authorization: `Bearer ${loginData.token}` },
       });

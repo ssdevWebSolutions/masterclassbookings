@@ -9,7 +9,7 @@ const PaymentSuccess = () => {
     const sessionId = params.get("session_id");
 
     if (sessionId) {
-      fetch(`http://localhost:8080/api/auth/payments/checkout-session/${sessionId}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/payments/checkout-session/${sessionId}`)
         .then(res => res.json())
         .then(data => setSessionData(data))
         .catch(err => console.error(err));

@@ -20,7 +20,7 @@ const PaymentSuccess = () => {
 
           const parsedBooking = JSON.parse(bookingData);
 
-          const res = await fetch("http://localhost:8080/api/auth/payments/bookings", {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/payments/bookings`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

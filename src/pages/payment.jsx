@@ -20,7 +20,7 @@ const PaymentPage = () => {
 
     try {
       const response = await fetch(
-        'http://localhost:8080/api/auth/payments/create-checkout-session',
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/payments/create-checkout-session`,
         {
           method: 'POST',
           headers: {

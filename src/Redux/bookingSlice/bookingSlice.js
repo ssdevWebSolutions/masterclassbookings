@@ -6,8 +6,8 @@ export const fetchBookings = createAsyncThunk(
   'booking/fetchBookings',
   async ({ token, role, parentId }) => {
     let url = role === 'ADMIN'
-      ? 'http://localhost:8080/api/auth/payments/bookings/all'
-      : `http://localhost:8080/api/auth/payments/bookings/parent/${parentId}`;
+      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/payments/bookings/all`
+      : `${process.env.NEXT_PUBLIC_API_BASE_URL}/payments/bookings/parent/${parentId}`;
 
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${token}` },
