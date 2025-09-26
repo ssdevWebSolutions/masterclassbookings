@@ -4,6 +4,7 @@ import { fetchSessionsByYear, updateBookedCount } from "../Redux/Sessions/sessio
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaBars, FaUser, FaSignOutAlt, FaChevronDown } from "react-icons/fa";
 import { logOutUserWithType } from "@/Redux/Authentication/AuthenticationAction";
+import { useRouter } from "next/router";
 
 export default function AdminDashboard() {
   const dispatch = useDispatch();
@@ -12,6 +13,11 @@ export default function AdminDashboard() {
   const bookings = useSelector(state => state.bookings.bookings);
 
   useState(()=>{},[loginData]);
+  const router= useRouter();
+
+  const handleLoginRoute= ()=>{
+    router.push("/");
+  }
 
   // Authentication check - early return if not authenticated or not admin
   if (!loginData?.token) {
@@ -23,7 +29,7 @@ export default function AdminDashboard() {
               <FaUser className="text-muted mb-3" style={{ fontSize: "3rem" }} />
               <h4 className="text-dark mb-3">Authentication Required</h4>
               <p className="text-muted mb-4">Please login again to access the admin dashboard.</p>
-              <button className="btn btn-primary">
+              <button className="btn btn-primary" onClick={handleLoginRoute}>
                 Go to Login
               </button>
             </div>
