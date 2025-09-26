@@ -55,7 +55,7 @@ const PaymentSuccess = () => {
         className="btn btn-primary mt-3"
         onClick={() => router.push('/bookings')}
       >
-        Go to Dashboard
+        Go to Bookings
       </button>
     </div>
   );
