@@ -44,7 +44,7 @@ export default function Home() {
         <About />
 
         {/* Admin-specific section */}
-        {role === 'ADMIN' && <AdminDashboard />}
+        {/* {role === 'ADMIN' && <AdminDashboard />} */}
 
         <Footer />
       </main>
