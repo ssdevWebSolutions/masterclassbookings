@@ -53,7 +53,7 @@ const PaymentSuccess = () => {
       <p>Your booking has been confirmed. Thank you for your payment.</p>
       <button
         className="btn btn-primary mt-3"
-        onClick={() => router.push('/class1')}
+        onClick={() => router.push('/bookings')}
       >
         Go to Dashboard
       </button>
