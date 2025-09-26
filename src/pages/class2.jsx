@@ -290,6 +290,16 @@ const CricketAcademyBooking = () => {
           {/* Hero Section */}
           <header className="py-5" style={{ backgroundColor: "#000" }}>
             <div className="container text-white text-center">
+
+            <button
+          onClick={() => window.history.back()}
+          className="btn btn-outline-light position-absolute top-0 start-0 m-3"
+        >
+          <i className="bi bi-arrow-left me-1"></i> Back
+        </button>
+
+
+
                   <div
             className="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning mb-3"
             style={{

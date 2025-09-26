@@ -292,49 +292,61 @@ const CricketAcademyBooking = () => {
   return (
   <div className="min-vh-100" style={{ backgroundColor: "#f8f9fa" }}>
           {/* Hero Section */}
-          <header className="py-5" style={{ backgroundColor: "#000" }}>
-            <div className="container text-white text-center">
-                  <div
-            className="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning mb-3"
+              <header className="py-5" style={{ backgroundColor: "#000" }}>
+      <div className="container text-white text-center">
+
+        {/* 🔙 Back Button */}
+        <button
+          onClick={() => window.history.back()}
+          className="btn btn-outline-light position-absolute top-0 start-0 m-3"
+        >
+          <i className="bi bi-arrow-left me-1"></i> Back
+        </button>
+
+        <div
+          className="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning mb-3"
+          style={{
+            width: "18vw",
+            height: "18vw",
+            maxWidth: "52px",
+            maxHeight: "52px",
+            minWidth: "48px",
+            minHeight: "48px",
+          }}
+        >
+          <img
+            src="logo_.png"
+            alt="Logo"
+            className="img-fluid"
             style={{
-              width: "18vw", // Responsive width (adjust as needed)
-              height: "18vw", // Keep it square for perfect circle
-              maxWidth: "52px", // Limit max size
-              maxHeight: "52px",
-              minWidth: "48px", // Optional: don't get too small
-              minHeight: "48px",
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
             }}
-          >
-            <img
-              src="logo_.png" // ✅ Replace with your logo path
-              alt="Logo"
-              className="img-fluid"
-              style={{
-                width: "100%", // Relative to container
-                height: "100%",
-                objectFit: "contain",
-              }}
-            />
-          </div>
+          />
+        </div>
 
-          <h1 className="display-5 fw-bold">Masterclass Cricket Academy</h1>
-          <p className="lead text-white-50 mb-3">Block 1: Technical Development Programme</p>
+        <h1 className="display-5 fw-bold">Masterclass Cricket Academy</h1>
+        <p className="lead text-white-50 mb-3">
+          Block 1: Technical Development Programme
+        </p>
 
-          <div className="alert alert-warning d-inline-flex align-items-center py-2 px-3 mb-3">
-            <i className="bi bi-exclamation-triangle-fill me-2"></i>
-            <div>
-              <strong>Sessions filling up quickly</strong>
-              <div className="small">Select your sessions below</div>
-            </div>
-          </div>
-
+        <div className="alert alert-warning d-inline-flex align-items-center py-2 px-3 mb-3">
+          <i className="bi bi-exclamation-triangle-fill me-2"></i>
           <div>
-            <small className="text-white-50">
-              Fridays: 5:45pm - 7:15pm (10 Oct - 12 Dec 2025) • Sundays: Class1 4:30pm-6pm & Class2 6pm-7:30pm (12 Oct - 14 Dec 2025)
-            </small>
+            <strong>Sessions filling up quickly</strong>
+            <div className="small">Select your sessions below</div>
           </div>
         </div>
-      </header>
+
+        <div>
+          <small className="text-white-50">
+            Fridays: 5:45pm - 7:15pm (10 Oct - 12 Dec 2025) • Sundays: Class1 4:30pm-6pm & Class2 6pm-7:30pm (12 Oct - 14 Dec 2025)
+          </small>
+        </div>
+      </div>
+    </header>
+
 
       <main className="container py-5">
         {!showBookingConfirmation ? (
