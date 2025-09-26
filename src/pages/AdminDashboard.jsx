@@ -8,17 +8,51 @@ import { useRouter } from "next/router";
 
 export default function AdminDashboard() {
   const dispatch = useDispatch();
+  const router = useRouter();
+  
+  // ✅ ALL HOOKS MUST BE AT THE TOP - BEFORE ANY CONDITIONAL LOGIC
   const { data: sessions, loading } = useSelector((state) => state.sessions);
   const loginData = useSelector((state) => state.auth.loginData);
   const bookings = useSelector(state => state.bookings.bookings);
 
-  useState(()=>{},[loginData]);
-  const router= useRouter();
+  const [year, setYear] = useState("2025");
+  const [dayFilter, setDayFilter] = useState("All");
+  const [classFilter, setClassFilter] = useState("All");
+  const [activeNav, setActiveNav] = useState("Sessions");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  
+  // Pagination states for Sessions
+  const [sessionsCurrentPage, setSessionsCurrentPage] = useState(1);
+  const [sessionsPerPage, setSessionsPerPage] = useState(10);
+  const [updatedSessions, setUpdatedSessions] = useState(new Set());
+  
+  // Pagination states for Bookings
+  const [bookingsCurrentPage, setBookingsCurrentPage] = useState(1);
+  const [bookingsPerPage, setBookingsPerPage] = useState(10);
 
-  const handleLoginRoute= ()=>{
+  // ✅ ALL useEffect HOOKS AT THE TOP TOO
+  useEffect(() => {
+    import('bootstrap/dist/js/bootstrap.bundle.min.js');
+  }, []);
+
+  useEffect(() => {
+    if (loginData?.token) {
+      dispatch(fetchSessionsByYear(year));
+    }
+  }, [year, loginData, dispatch]);
+
+  // ✅ HELPER FUNCTIONS
+  const handleLoginRoute = () => {
     router.push("/");
   }
 
+  const handleLogout = () => {
+    console.log("Logout clicked");
+    dispatch(logOutUserWithType());
+  };
+
+  // ✅ NOW CHECK CONDITIONS AFTER ALL HOOKS ARE CALLED
   // Authentication check - early return if not authenticated or not admin
   if (!loginData?.token) {
     return (
@@ -58,32 +92,7 @@ export default function AdminDashboard() {
     );
   }
 
-  const [year, setYear] = useState("2025");
-  const [dayFilter, setDayFilter] = useState("All");
-  const [classFilter, setClassFilter] = useState("All");
-  const [activeNav, setActiveNav] = useState("Sessions");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  
-  // Pagination states for Sessions
-  const [sessionsCurrentPage, setSessionsCurrentPage] = useState(1);
-  const [sessionsPerPage, setSessionsPerPage] = useState(10);
-  const [updatedSessions, setUpdatedSessions] = useState(new Set());
-  
-  // Pagination states for Bookings
-  const [bookingsCurrentPage, setBookingsCurrentPage] = useState(1);
-  const [bookingsPerPage, setBookingsPerPage] = useState(10);
-
-  useEffect(() => {
-    import('bootstrap/dist/js/bootstrap.bundle.min.js');
-  }, []);
-
-  useEffect(() => {
-    if (loginData?.token) {
-      dispatch(fetchSessionsByYear(year));
-    }
-  }, [year, loginData]);
-
+  // ✅ COMPONENT LOGIC AFTER AUTHENTICATION CHECKS
   const filteredSessions = sessions.filter((s) => {
     if (dayFilter !== "All" && s.day !== dayFilter) return false;
     if (dayFilter === "Sunday" && classFilter !== "All" && s.sessionClass !== classFilter) return false;
@@ -115,14 +124,6 @@ export default function AdminDashboard() {
       console.error(err);
       alert("Error initializing sessions");
     }
-  };
- 
-
-  const handleLogout = () => {
-    // Add your logout logic here
-    console.log("Logout clicked");
-    dispatch(logOutUserWithType());
-    // dispatch(logout()); // Uncomment when you have logout action
   };
 
   const Pagination = ({ currentPage, totalPages, onPageChange, pageType, itemsPerPage, setItemsPerPage }) => {
