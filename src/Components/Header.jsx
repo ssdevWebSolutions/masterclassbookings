@@ -138,7 +138,7 @@ export default function Header() {
                   <i className="bi bi-person me-2"></i>
                   Profile
                 </Dropdown.Item>
-                <Dropdown.Item href="#bookings">
+                <Dropdown.Item href="bookings">
                   <i className="bi bi-calendar-check me-2"></i>
                   Bookings
                 </Dropdown.Item>
@@ -207,7 +207,7 @@ export default function Header() {
                   <i className="bi bi-person me-2"></i>
                   Profile
                 </Dropdown.Item>
-                <Dropdown.Item href="#bookings">
+                <Dropdown.Item href="bookings">
                   <i className="bi bi-calendar-check me-2"></i>
                   Bookings
                 </Dropdown.Item>
