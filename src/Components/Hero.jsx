@@ -9,9 +9,9 @@ export default function Hero() {
       <p className="lead mb-4 text-secondary">
       where we run masasterclass sessions and cricket camps
       </p>
-      <button className="btn btn-warning text-dark fw-semibold">
+      {/* <button className="btn btn-warning text-dark fw-semibold">
         Explore Clinics
-      </button>
+      </button> */}
     </section>
   );
 }

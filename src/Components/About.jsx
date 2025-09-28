@@ -15,21 +15,21 @@ export default function About() {
             <div className="carousel-inner">
               <div className="carousel-item active">
                 <img
-                  src="Black White and Orange Photocentric Sports Cricket Flyer (1).png"
+                  src="Block2.png"
                   className="d-block w-100 img-fluid"
                   alt="Cricket Training 1"
                 />
               </div>
               <div className="carousel-item">
                 <img
-                  src="Black White and Orange Photocentric Sports Cricket Flyer.png"
+                  src="Block1.png"
                   className="d-block w-100 img-fluid"
                   alt="Cricket Training 2"
                 />
               </div>
               <div className="carousel-item">
                 <img
-                  src="Black White and Orange Photocentric Sports Cricket Flyer.png"
+                  src="Block2.png"
                   className="d-block w-100 img-fluid"
                   alt="Cricket Training 3"
                 />

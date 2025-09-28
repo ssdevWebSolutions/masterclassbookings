@@ -7,13 +7,13 @@ const camps = [
   {
     title: "Winter coaching Clinics - Class 1",
     desc: "Block 1: Technical Development Programme ",
-    img: "Black White and Orange Photocentric Sports Cricket Flyer.png",
+    img: "Block1.png",
     path: "/class1",
   },
   {
     title: "Winter coaching Clinics - Class 2",
     desc: "Block 2: Game based scenarios game plan, target practice learning to bat in different scenarios field settings repeated for the games",
-    img: "Black White and Orange Photocentric Sports Cricket Flyer (1).png",
+    img: "Block2.png",
     path: "/class2",
   },
 ];

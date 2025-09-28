@@ -142,10 +142,10 @@ export default function Header() {
                   <i className="bi bi-calendar-check me-2"></i>
                   Bookings
                 </Dropdown.Item>
-                <Dropdown.Item href="#settings">
+                {/* <Dropdown.Item href="#settings">
                   <i className="bi bi-gear me-2"></i>
                   Settings
-                </Dropdown.Item>
+                </Dropdown.Item> */}
                 <Dropdown.Divider />
                 <Dropdown.Item onClick={handleLogOut}>
                   <i className="bi bi-box-arrow-right me-2"></i>
@@ -211,10 +211,10 @@ export default function Header() {
                   <i className="bi bi-calendar-check me-2"></i>
                   Bookings
                 </Dropdown.Item>
-                <Dropdown.Item href="#settings">
+                {/* <Dropdown.Item href="#settings">
                   <i className="bi bi-gear me-2"></i>
                   Settings
-                </Dropdown.Item>
+                </Dropdown.Item> */}
                 <Dropdown.Divider />
                 <Dropdown.Item onClick={handleLogOut}>
                   <i className="bi bi-box-arrow-right me-2"></i>

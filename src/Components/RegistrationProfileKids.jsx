@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Form, Button, Card, Container, Row, Col, Table } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { fetchKids, addKid, updateKid, deleteKid } from "../Redux/Kids/KidActions";
+import { useRouter } from "next/router";
 
 export default function RegistrationProfileKids() {
   const dispatch = useDispatch();
@@ -14,10 +15,18 @@ export default function RegistrationProfileKids() {
   const [newKid, setNewKid] = useState({ firstName: "", lastName: "", age: "", club: "", medicalInfo: "", level: "" });
   const [editKidId, setEditKidId] = useState(null);
   const kidstate = useSelector(state => state.kids.list);
+  const router = useRouter();
 
   useEffect(()=>{
     console.log(kidstate,"pp");
   },[kidstate]);
+
+  useEffect(()=>{
+    if(!loginData.token)
+    {
+      router.push("/");
+    }
+  },[loginData])
 
   useEffect(() => {
     if (loginData && loginData.token) {
