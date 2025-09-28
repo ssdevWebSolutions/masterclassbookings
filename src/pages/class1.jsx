@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSessionsByYear } from "@/Redux/Sessions/sessionsSlice";
+import { useRouter } from "next/navigation";
 
 const CricketAcademyBooking = () => {
   const [selectedChild, setSelectedChild] = useState("");
@@ -43,6 +44,7 @@ const CricketAcademyBooking = () => {
    console.log("Kids:", kidstate, "Sessions:", sessions);
  }, [ ]);
 
+
  
 
   useEffect(() => {
@@ -67,7 +69,7 @@ const CricketAcademyBooking = () => {
       case "filling-fast":
         return <span className="badge bg-warning text-dark">Filling Fast</span>;
       case "not-available":
-        return <span className="badge bg-danger">Sold Out</span>;
+        return <span className="badge bg-danger">Fully Booked</span>;
       default:
         return null;
     }
@@ -175,6 +177,26 @@ const CricketAcademyBooking = () => {
     }
   };
 
+  // Clear all functions
+  const clearAllFridays = () => {
+    setSelectedFridayDates([]);
+  };
+
+  const clearAllSundayClass1 = () => {
+    setSelectedSundayClass1Dates([]);
+  };
+
+  const clearAllSundayClass2 = () => {
+    setSelectedSundayClass2Dates([]);
+  };
+
+  const clearAllSelections = () => {
+    setSelectedFridayDates([]);
+    setSelectedSundayClass1Dates([]);
+    setSelectedSundayClass2Dates([]);
+    setIsPlatinumSelected(false);
+  };
+
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" });
@@ -269,6 +291,16 @@ const CricketAcademyBooking = () => {
     setIsPlatinumSelected(!isPlatinumSelected);
   };
 
+  const handlePlatinumMaybeLater = () => {
+    setIsPlatinumSelected(false);
+    setShowPlatinumInfo(false);
+  };
+
+ const router= useRouter();
+  const handleAddChild=()=>{
+    router.push("/profile");
+  }
+
   // Check if all sessions are selected for each category
   const availableFridaysCount = fridayDates.filter(session => getAvailabilityStatus(session.bookedCount) !== "not-available").length;
   const allFridaysSelected = selectedFridayDates.length === availableFridaysCount && availableFridaysCount > 0;
@@ -292,13 +324,13 @@ const CricketAcademyBooking = () => {
   return (
   <div className="min-vh-100" style={{ backgroundColor: "#f8f9fa" }}>
           {/* Hero Section */}
-              <header className="py-5" style={{ backgroundColor: "#000" }}>
+              <header className="py-4" style={{ backgroundColor: "#000" }}>
       <div className="container text-white text-center">
 
-        {/* 🔙 Back Button */}
+        {/* Back Button */}
         <button
           onClick={() => window.history.back()}
-          className="btn btn-outline-light position-absolute top-0 start-0 m-3"
+          className="btn btn-outline-light position-absolute top-0 start-0 m-3 btn-sm"
         >
           <i className="bi bi-arrow-left me-1"></i> Back
         </button>
@@ -306,12 +338,8 @@ const CricketAcademyBooking = () => {
         <div
           className="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning mb-3"
           style={{
-            width: "18vw",
-            height: "18vw",
-            maxWidth: "52px",
-            maxHeight: "52px",
-            minWidth: "48px",
-            minHeight: "48px",
+            width: "48px",
+            height: "48px",
           }}
         >
           <img
@@ -326,8 +354,8 @@ const CricketAcademyBooking = () => {
           />
         </div>
 
-        <h1 className="display-5 fw-bold">Masterclass Cricket Academy</h1>
-        <p className="lead text-white-50 mb-3">
+        <h1 className="h3 fw-bold mb-2">Masterclass Cricket Academy</h1>
+        <p className="text-white-50 mb-3">
           Block 1: Technical Development Programme
         </p>
 
@@ -348,34 +376,34 @@ const CricketAcademyBooking = () => {
     </header>
 
 
-      <main className="container py-5">
+      <main className="container py-4">
         {!showBookingConfirmation ? (
           <>
             {/* Venue */}
-            <div className="card mb-4">
-              <div className="card-body">
-                <h5 className="card-title mb-1"><i className="bi bi-geo-alt me-2"></i>Venue</h5>
-                <p className="text-muted mb-0">Tiffin Girls School, KT2 5PL</p>
+            <div className="card mb-3 border-0 shadow-sm">
+              <div className="card-body py-3">
+                <h6 className="card-title mb-1 text-muted"><i className="bi bi-geo-alt me-2"></i>Venue</h6>
+                <p className="mb-0">Tiffin Girls School, KT2 5PL</p>
               </div>
             </div>
 
             {/* Programme Details */}
-            <div className="card mb-4">
-              <div className="card-body d-flex justify-content-between align-items-center">
+            <div className="card mb-3 border-0 shadow-sm">
+              <div className="card-body d-flex justify-content-between align-items-center py-3">
                 <div>
-                  <h5 className="card-title mb-1">Programme Details</h5>
-                  <p className="text-muted mb-0">10-Week Technical Masterclass Clinic (Ages 8–13)</p>
+                  <h6 className="card-title mb-1">Programme Details</h6>
+                  <p className="text-muted mb-0 small">10-Week Technical Masterclass Clinic (Ages 8–13)</p>
                 </div>
-                <button className="btn btn-light" onClick={() => setShowDescription(true)}>
-                  <i className="bi bi-info-circle me-2"></i> Read More
+                <button className="btn btn-outline-secondary btn-sm" onClick={() => setShowDescription(true)}>
+                  <i className="bi bi-info-circle me-1"></i> Read More
                 </button>
               </div>
             </div>
 
             {/* Child Selection */}
-            <div className="card mb-4">
-              <div className="card-body">
-                <h5 className="card-title">Select Child</h5>
+            <div className="card mb-3 border-0 shadow-sm">
+              <div className="card-body py-3">
+                <h6 className="card-title mb-2">Select Child</h6>
                 <div className="d-flex gap-2 flex-wrap">
                   <select className="form-select" value={selectedChild} onChange={(e) => setSelectedChild(e.target.value)}>
                     <option value="">Choose child</option>
@@ -385,50 +413,50 @@ const CricketAcademyBooking = () => {
                       </option>
                     ))}
                   </select>
-                  <button className="btn btn-outline-secondary">Add New Child</button>
+                  <button className="btn btn-outline-secondary" onClick={handleAddChild}>Add New Child</button>
                 </div>
               </div>
             </div>
 
-            {/* Pricing */}
+            {/* Pricing - Equal Width Cards */}
             <div className="row g-3 mb-4">
               <div className="col-md-4">
-                <div className="card text-center">
-                  <div className="card-body">
-                    <p className="text-muted mb-1">Per Session</p>
-                    <h2 className="mb-0">£40</h2>
+                <div className="card text-center h-100 border-0 shadow-sm">
+                  <div className="card-body d-flex flex-column justify-content-center">
+                    <p className="text-muted mb-1 small">Per Session</p>
+                    <h3 className="mb-0">£40</h3>
                   </div>
                 </div>
               </div>
 
               <div className="col-md-4">
-                <div className="card position-relative border-warning text-center">
+                <div className="card position-relative border-warning text-center h-100 shadow-sm">
                   <span className="badge bg-warning text-dark position-absolute top-0 start-50 translate-middle">Best Value</span>
-                  <div className="card-body mt-3">
-                    <p className="text-muted mb-1">Full Block (10 sessions)</p>
-                    <h2 className="mb-0">£350</h2>
-                    <p className="text-success mb-0 fw-bold">Save £50</p>
+                  <div className="card-body d-flex flex-column justify-content-center mt-2">
+                    <p className="text-muted mb-1 small">Full Block (10 sessions)</p>
+                    <h3 className="mb-0">£350</h3>
+                    <p className="text-success mb-0 fw-bold small">Save £50</p>
                   </div>
                 </div>
               </div>
 
               <div className="col-md-4">
-                <div className={`card position-relative border-primary text-center ${isPlatinumSelected ? 'border-3 bg-light' : ''}`}>
+                <div className={`card position-relative border-primary text-center h-100 shadow-sm ${isPlatinumSelected ? 'border-3 bg-light' : ''}`}>
                   <span className="badge bg-primary position-absolute top-0 start-50 translate-middle">Platinum Pass</span>
-                  <div className="card-body mt-3">
-                    <div className="d-flex justify-content-between align-items-start mb-2">
+                  <div className="card-body d-flex flex-column justify-content-center mt-2">
+                    <div className="d-flex justify-content-between align-items-center">
                       <div className="flex-grow-1">
-                        <p className="text-muted mb-1">Premium Access</p>
-                        <div className="text-decoration-line-through text-muted">£1210</div>
-                        <h2 className="mb-0 text-primary">£900</h2>
-                        <p className="text-success mb-0 fw-bold">Full Access</p>
+                        <p className="text-muted mb-1 small">Premium Access</p>
+                        <div className="text-decoration-line-through text-muted small">£1210</div>
+                        <h3 className="mb-0 text-primary">£900</h3>
+                        <p className="text-success mb-0 fw-bold small">Full Access</p>
                       </div>
                       <div 
                         className={`rounded-circle border d-flex align-items-center justify-content-center ${isPlatinumSelected ? "bg-primary border-primary" : "border-secondary"}`} 
                         style={{ width: 24, height: 24, cursor: 'pointer' }}
                         onClick={handlePlatinumClick}
                       >
-                        {isPlatinumSelected && <i className="bi bi-check-lg text-white" />}
+                        {isPlatinumSelected && <i className="bi bi-check-lg text-white" style={{ fontSize: '0.75rem' }} />}
                       </div>
                     </div>
                   </div>
@@ -438,9 +466,16 @@ const CricketAcademyBooking = () => {
 
             {/* Session Selection */}
             {!isPlatinumSelected && (
-              <div className="card mb-4">
+              <div className="card mb-4 border-0 shadow-sm">
                 <div className="card-body">
-                  <h5 className="mb-3"><i className="bi bi-calendar-check me-2"></i>Select Sessions</h5>
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h6 className="mb-0"><i className="bi bi-calendar-check me-2"></i>Select Sessions</h6>
+                    {(selectedFridayDates.length > 0 || selectedSundayClass1Dates.length > 0 || selectedSundayClass2Dates.length > 0) && (
+                      <button className="btn btn-outline-danger btn-sm" onClick={clearAllSelections}>
+                        <i className="bi bi-x-circle me-1"></i> Clear All
+                      </button>
+                    )}
+                  </div>
 
                   {/* Fridays Section */}
                   <div className="mb-3">
@@ -453,12 +488,19 @@ const CricketAcademyBooking = () => {
                         Fridays ({fridayDates.length} sessions available)
                         <i className={`bi bi-chevron-${showFridays ? 'up' : 'down'} ms-auto`}></i>
                       </button>
-                      <div 
-                        className={`rounded-circle border d-flex align-items-center justify-content-center ${allFridaysSelected ? "bg-warning border-warning" : "border-secondary"}`} 
-                        style={{ width: 28, height: 28, cursor: 'pointer' }}
-                        onClick={(e) => handleSelectAllFridays({ target: { checked: !allFridaysSelected } })}
-                      >
-                        {allFridaysSelected && <i className="bi bi-check-lg text-dark" />}
+                      <div className="d-flex gap-2">
+                        {selectedFridayDates.length > 0 && (
+                          <button className="btn btn-outline-danger btn-sm" onClick={clearAllFridays}>
+                            <i className="bi bi-x"></i>
+                          </button>
+                        )}
+                        <div 
+                          className={`rounded-circle border d-flex align-items-center justify-content-center ${allFridaysSelected ? "bg-warning border-warning" : "border-secondary"}`} 
+                          style={{ width: 28, height: 28, cursor: 'pointer' }}
+                          onClick={(e) => handleSelectAllFridays({ target: { checked: !allFridaysSelected } })}
+                        >
+                          {allFridaysSelected && <i className="bi bi-check-lg text-dark" />}
+                        </div>
                       </div>
                     </div>
                   
@@ -508,12 +550,19 @@ const CricketAcademyBooking = () => {
                         Sunday Class 1 (4:30pm-6:00pm) - {sundayClass1Dates.length} sessions
                         <i className={`bi bi-chevron-${showSundayClass1 ? 'up' : 'down'} ms-auto`}></i>
                       </button>
-                      <div 
-                        className={`rounded-circle border d-flex align-items-center justify-content-center ${allSundayClass1Selected ? "bg-warning border-warning" : "border-secondary"}`} 
-                        style={{ width: 28, height: 28, cursor: 'pointer' }}
-                        onClick={(e) => handleSelectAllSundayClass1({ target: { checked: !allSundayClass1Selected } })}
-                      >
-                        {allSundayClass1Selected && <i className="bi bi-check-lg text-dark" />}
+                      <div className="d-flex gap-2">
+                        {selectedSundayClass1Dates.length > 0 && (
+                          <button className="btn btn-outline-danger btn-sm" onClick={clearAllSundayClass1}>
+                            <i className="bi bi-x"></i>
+                          </button>
+                        )}
+                        <div 
+                          className={`rounded-circle border d-flex align-items-center justify-content-center ${allSundayClass1Selected ? "bg-warning border-warning" : "border-secondary"}`} 
+                          style={{ width: 28, height: 28, cursor: 'pointer' }}
+                          onClick={(e) => handleSelectAllSundayClass1({ target: { checked: !allSundayClass1Selected } })}
+                        >
+                          {allSundayClass1Selected && <i className="bi bi-check-lg text-dark" />}
+                        </div>
                       </div>
                     </div>
                     
@@ -563,12 +612,19 @@ const CricketAcademyBooking = () => {
                         Sunday Class 2 (6:00pm-7:30pm) - {sundayClass2Dates.length} sessions
                         <i className={`bi bi-chevron-${showSundayClass2 ? 'up' : 'down'} ms-auto`}></i>
                       </button>
-                      <div 
-                        className={`rounded-circle border d-flex align-items-center justify-content-center ${allSundayClass2Selected ? "bg-warning border-warning" : "border-secondary"}`} 
-                        style={{ width: 28, height: 28, cursor: 'pointer' }}
-                        onClick={(e) => handleSelectAllSundayClass2({ target: { checked: !allSundayClass2Selected } })}
-                      >
-                        {allSundayClass2Selected && <i className="bi bi-check-lg text-dark" />}
+                      <div className="d-flex gap-2">
+                        {selectedSundayClass2Dates.length > 0 && (
+                          <button className="btn btn-outline-danger btn-sm" onClick={clearAllSundayClass2}>
+                            <i className="bi bi-x"></i>
+                          </button>
+                        )}
+                        <div 
+                          className={`rounded-circle border d-flex align-items-center justify-content-center ${allSundayClass2Selected ? "bg-warning border-warning" : "border-secondary"}`} 
+                          style={{ width: 28, height: 28, cursor: 'pointer' }}
+                          onClick={(e) => handleSelectAllSundayClass2({ target: { checked: !allSundayClass2Selected } })}
+                        >
+                          {allSundayClass2Selected && <i className="bi bi-check-lg text-dark" />}
+                        </div>
                       </div>
                     </div>
                     
@@ -611,20 +667,20 @@ const CricketAcademyBooking = () => {
             )}
 
             {/* Data Permission */}
-            <div className="card mb-4">
-              <div className="card-body">
+            <div className="card mb-3 border-0 shadow-sm">
+              <div className="card-body py-3">
                 <div className="d-flex gap-2 align-items-start">
                   <input type="checkbox" checked={acceptDataPolicy} onChange={(e) => setAcceptDataPolicy(e.target.checked)} />
                   <div className="small">
-                    I give permission to analyze my data and post on social media for promotional purposes.
+                    I give permission to analyse my data and post on social media for promotional purposes.
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Terms */}
-            <div className="card mb-4">
-              <div className="card-body">
+            <div className="card mb-3 border-0 shadow-sm">
+              <div className="card-body py-3">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <h6 className="mb-0">Terms and Conditions</h6>
                   <button className="btn btn-outline-secondary btn-sm" onClick={() => setShowTerms(true)}>
@@ -647,10 +703,10 @@ const CricketAcademyBooking = () => {
             </div>
 
             {/* Total & Confirm */}
-            <div className="card">
+            <div className="card border-0 shadow">
               <div className="card-body d-flex justify-content-between align-items-center mb-3">
                 <div>
-                  <h5 className="mb-0">Total</h5>
+                  <h6 className="mb-0">Total</h6>
                   <div className="text-muted small">
                     {isPlatinumSelected ? "Platinum Pass Selected" : `${totalSelectedSessions} session${totalSelectedSessions !== 1 ? "s" : ""} selected`}
                   </div>
@@ -665,7 +721,7 @@ const CricketAcademyBooking = () => {
                 </div>
               </div>
 
-              <div className="card-footer bg-white">
+              <div className="card-footer bg-white border-0">
                 <button
                   type="button"
                   className="btn btn-dark w-100"
@@ -681,9 +737,9 @@ const CricketAcademyBooking = () => {
           /* Booking Confirmation Page */
           <div className="row justify-content-center">
             <div className="col-lg-8">
-              <div className="card">
+              <div className="card border-0 shadow">
                 <div className="card-header bg-primary text-white">
-                  <h4 className="mb-0"><i className="bi bi-check-circle me-2"></i>Confirm Your Booking</h4>
+                  <h5 className="mb-0"><i className="bi bi-check-circle me-2"></i>Confirm Your Booking</h5>
                 </div>
                 <div className="card-body">
                   {/* Child Details */}
@@ -799,7 +855,7 @@ const CricketAcademyBooking = () => {
                               <span>£900</span>
                             </div>
                             <hr />
-                            <div className="d-flex justify-content-between h5">
+                            <div className="d-flex justify-content-between h6">
                               <strong>Total Amount</strong>
                               <strong>£900</strong>
                             </div>
@@ -817,7 +873,7 @@ const CricketAcademyBooking = () => {
                               </div>
                             )}
                             <hr />
-                            <div className="d-flex justify-content-between h5">
+                            <div className="d-flex justify-content-between h6">
                               <strong>Total Amount</strong>
                               <strong>£{finalPrice}</strong>
                             </div>
@@ -840,7 +896,7 @@ const CricketAcademyBooking = () => {
                   </div>
                 </div>
 
-                <div className="card-footer bg-light">
+                <div className="card-footer bg-light border-0">
                   <div className="d-flex gap-2">
                     <button 
                       type="button" 
@@ -864,7 +920,7 @@ const CricketAcademyBooking = () => {
         )}
       </main>
 
-      {/* Booking Process Success Modal - Replaces the alert */}
+      {/* Booking Process Success Modal */}
       {showBookingProcessModal && (
         <>
           <div className="modal-backdrop fade show"></div>
@@ -879,11 +935,11 @@ const CricketAcademyBooking = () => {
                 </div>
                 <div className="modal-body text-center">
                   <div className="mb-4">
-                    <i className="bi bi-check-circle text-success" style={{ fontSize: '4rem' }}></i>
+                    <i className="bi bi-check-circle text-success" style={{ fontSize: '3rem' }}></i>
                   </div>
-                  <h4 className="text-success mb-3">Ready for Payment!</h4>
+                  <h5 className="text-success mb-3">Ready for Payment!</h5>
                   <div className="alert alert-info">
-                    <div className="row text-start">
+                    <div className="row text-start small">
                       <div className="col-6"><strong>Total Amount:</strong></div>
                       <div className="col-6">£{finalPrice}</div>
                       <div className="col-6"><strong>Booking Type:</strong></div>
@@ -922,30 +978,30 @@ const CricketAcademyBooking = () => {
                     Platinum Pass Benefits
                   </h5>
                 </div>
-                <div className="modal-body">
+                <div className="modal-body text-center">
                   <div className="mb-3">
-                    <i className="bi bi-trophy-fill text-primary" style={{ fontSize: '4rem' }}></i>
+                    <i className="bi bi-trophy-fill text-primary" style={{ fontSize: '3rem' }}></i>
                   </div>
-                  <h4 className="text-primary mb-3">Ultimate Cricket Experience!</h4>
-                  <div className="alert alert-primary">
+                  <h5 className="text-primary mb-3">Ultimate Cricket Experience!</h5>
+                  <div className="alert alert-primary text-start">
                     <h6 className="mb-2">What You Get:</h6>
-                    <ul className="mb-0">
+                    <ul className="mb-0 small">
                       <li>Access to ALL Friday sessions (10 weeks)</li>
                       <li>Access to ALL Sunday Class 1 sessions (10 weeks)</li>
                       <li>Access to ALL Sunday Class 2 sessions (10 weeks)</li>
                       <li>Flexible attendance - join any available class</li>
-                      <li>Priority booking for future programs</li>
+                      <li>Priority booking for future programmes</li>
                       <li>Exclusive coaching tips and feedback</li>
                     </ul>
                   </div>
                   <div className="text-center">
-                    <h5 className="text-success">Total Value: £1,200</h5>
-                    <h3 className="text-primary">Your Price: £900</h3>
+                    <h6 className="text-success">Total Value: £1,200</h6>
+                    <h4 className="text-primary">Your Price: £900</h4>
                     <p className="text-success fw-bold">Save £300 + Maximum Flexibility!</p>
                   </div>
                 </div>
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-outline-secondary" onClick={() => setShowPlatinumInfo(false)}>
+                  <button type="button" className="btn btn-outline-secondary" onClick={handlePlatinumMaybeLater}>
                     Maybe Later
                   </button>
                   <button type="button" className="btn btn-primary" onClick={() => setShowPlatinumInfo(false)}>
@@ -959,7 +1015,7 @@ const CricketAcademyBooking = () => {
         </>
       )}
 
-      {/* Friday Block Discount Popup */}
+      {/* Block Discount Popups */}
       {showFridayDiscount && (
         <>
           <div className="modal-backdrop fade show"></div>
@@ -974,19 +1030,19 @@ const CricketAcademyBooking = () => {
                 </div>
                 <div className="modal-body text-center">
                   <div className="mb-3">
-                    <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '4rem' }}></i>
+                    <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '3rem' }}></i>
                   </div>
-                  <h4 className="text-success mb-3">Congratulations!</h4>
+                  <h5 className="text-success mb-3">Congratulations!</h5>
                   <p className="mb-3">You've selected all Friday sessions and unlocked our special discount!</p>
                   <div className="alert alert-success">
-                    <h5 className="mb-1">Friday Block Price: £350</h5>
+                    <h6 className="mb-1">Friday Block Price: £350</h6>
                     <p className="mb-0">You save £50 compared to individual session pricing!</p>
                   </div>
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-warning" onClick={() => setShowFridayDiscount(false)}>
                     <i className="bi bi-hand-thumbs-up me-2"></i>
-                    Awesome! Continue
+                    Brilliant! Continue
                   </button>
                 </div>
               </div>
@@ -995,7 +1051,6 @@ const CricketAcademyBooking = () => {
         </>
       )}
 
-      {/* Sunday Class 1 Block Discount Popup */}
       {showSundayClass1Discount && (
         <>
           <div className="modal-backdrop fade show"></div>
@@ -1010,12 +1065,12 @@ const CricketAcademyBooking = () => {
                 </div>
                 <div className="modal-body text-center">
                   <div className="mb-3">
-                    <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '4rem' }}></i>
+                    <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '3rem' }}></i>
                   </div>
-                  <h4 className="text-success mb-3">Fantastic!</h4>
+                  <h5 className="text-success mb-3">Fantastic!</h5>
                   <p className="mb-3">You've selected all Sunday Class 1 sessions and earned our block discount!</p>
                   <div className="alert alert-success">
-                    <h5 className="mb-1">Sunday Class 1 Block: £350</h5>
+                    <h6 className="mb-1">Sunday Class 1 Block: £350</h6>
                     <p className="mb-0">You save £50 compared to individual sessions!</p>
                   </div>
                 </div>
@@ -1031,7 +1086,6 @@ const CricketAcademyBooking = () => {
         </>
       )}
 
-      {/* Sunday Class 2 Block Discount Popup */}
       {showSundayClass2Discount && (
         <>
           <div className="modal-backdrop fade show"></div>
@@ -1046,12 +1100,12 @@ const CricketAcademyBooking = () => {
                 </div>
                 <div className="modal-body text-center">
                   <div className="mb-3">
-                    <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '4rem' }}></i>
+                    <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '3rem' }}></i>
                   </div>
-                  <h4 className="text-success mb-3">Outstanding!</h4>
+                  <h5 className="text-success mb-3">Outstanding!</h5>
                   <p className="mb-3">You've selected all Sunday Class 2 sessions and earned our block discount!</p>
                   <div className="alert alert-success">
-                    <h5 className="mb-1">Sunday Class 2 Block: £350</h5>
+                    <h6 className="mb-1">Sunday Class 2 Block: £350</h6>
                     <p className="mb-0">You save £50 compared to individual sessions!</p>
                   </div>
                 </div>
@@ -1229,7 +1283,7 @@ const CricketAcademyBooking = () => {
                 </div>
                 <div className="modal-body text-center">
                   <div className="mb-3">
-                    <i className="bi bi-exclamation-circle display-1 text-warning"></i>
+                    <i className="bi bi-exclamation-circle text-warning" style={{ fontSize: '3rem' }}></i>
                   </div>
                   <p>You've selected only 1 session. Would you like to check other available slots before proceeding?</p>
                   <p className="text-muted small">Consider our block discounts - save £50 when booking 10 sessions from any category!</p>

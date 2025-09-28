@@ -60,6 +60,8 @@ export default function Home() {
     route.push("/");
   }
 
+  
+
   // Not logged in
   if (!token) {
     return (
@@ -94,19 +96,25 @@ export default function Home() {
           <div className="row align-items-center">
             <div className="col">
               <div className="d-flex align-items-center">
-                <div className="bg-warning rounded-circle p-3 me-3">
-                  <i className="fas fa-cricket-bat text-dark fa-lg"></i>
+                <div className=" p-3 me-3">
+                  {/* <i className="fas fa-cricket-bat text-dark fa-lg">
+                    Back
+                  </i> */}
+                  <button onClick={handleLogin} className="btn btn-warning rounded-pill px-4">
+               
+                Back
+              </button>
                 </div>
-                <div>
+                {/* <div>
                   <h4 className="mb-0 text-dark">Hey {userName?.split(' ')[0] || 'Champion'}! 👋</h4>
                   <small className="text-muted">Ready for some cricket?</small>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="col-auto">
-              <button className="btn btn-warning rounded-pill px-4">
-                <i className="fas fa-plus me-2"></i>Book Session
-              </button>
+              {/* <button className="btn btn-warning rounded-pill px-4">
+                <i className="fas fa-plus me-2"></i>Back
+              </button> */}
             </div>
           </div>
         </div>

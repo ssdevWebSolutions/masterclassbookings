@@ -60,24 +60,25 @@ export default function About() {
 
         {/* Text Section */}
         <div className="col-md-6">
-          <h2 className="mb-4 fw-bold text-dark">About Our Clinics</h2>
-          <p className="text-secondary mb-3">
-            At <strong>Masterclass Cricket Academy</strong>, our Autumn/Winter Clinic is all about
-            <strong> real player development</strong>. Designed for young cricketers aged 8–13, this
-            10-week programme focuses on the core technical skills – batting, bowling, and fielding –
-            taught through structured drills, video analysis, and proven biomechanics expertise.
-          </p>
-          <p className="text-secondary mb-3">
-            Led by <strong>Head Coach Uzi Arif</strong> and the Masterclass team, players don’t just
-            train – they learn to perform under pressure, grow in confidence, and build repeatable
-            skills that transfer directly into matches.
-          </p>
-          <p className="text-secondary">
-            What makes Masterclass different? We don’t run “feel-good” sessions. We deliver{" "}
-            <strong>measurable improvement</strong> in a fun, challenging environment where every
-            player is pushed to unlock their true potential.
-          </p>
-        </div>
+  <h2 className="mb-4 fw-bold text-dark">About Our Clinics</h2>
+  <p className="text-secondary mb-3">
+    At <strong>Masterclass Cricket Academy</strong>, our Autumn/Winter Clinic is all about
+    <strong> genuine player development</strong>. Designed for young cricketers aged 8–13, this
+    10-week programme focuses on core technical skills – batting, bowling, and fielding –
+    delivered through structured drills, video analysis, and proven biomechanics expertise.
+  </p>
+  <p className="text-secondary mb-3">
+    Led by <strong>Head Coach Uzi Arif</strong> and the Masterclass team, players don’t just
+    train – they learn to perform under pressure, build confidence, and develop repeatable
+    skills that transfer directly into matches.
+  </p>
+  <p className="text-secondary">
+    What makes Masterclass different? We don’t run “feel-good” sessions. We deliver{" "}
+    <strong>measurable improvement</strong> in a fun, challenging environment where every
+    player is pushed to unlock their true potential.
+  </p>
+</div>
+
       </div>
     </section>
   );

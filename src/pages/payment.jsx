@@ -7,15 +7,23 @@ const PaymentPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [reservationData, setReservationData] = useState(null);
   const [timeRemaining, setTimeRemaining] = useState(0);
+  const [initializing, setInitializing] = useState(true); // ADDED
   const valueToken = useSelector(state => state.auth.loginData.token);
+
+  
+
 
   useEffect(() => {
     const savedBookingData = sessionStorage.getItem('cricketBookingData');
     if (savedBookingData) {
       setBookingData(JSON.parse(savedBookingData));
     } else {
-      window.location.href = '/class1';
+      window.location.href = '/';
+      return; // stop further init if redirecting
     }
+
+   
+    
 
     const paymentInProgress = sessionStorage.getItem('paymentInProgress');
 
@@ -32,6 +40,8 @@ const PaymentPage = () => {
       // Only redirect if no reservation and not coming back from Stripe
       // window.location.href = '/class1';
     }
+
+    setInitializing(false); // ADDED
   }, []);
 
   useEffect(() => {
@@ -81,7 +91,7 @@ const PaymentPage = () => {
       } else {
         if (response.status === 409) {
           alert('Selected slots are no longer available. Please choose again.');
-          window.location.href = '/class1';
+          window.location.href = '/';
         } else alert(data.message || 'Failed to reserve slots.');
       }
     } catch (err) {
@@ -118,7 +128,7 @@ const PaymentPage = () => {
 
       const data = await response.json();
       if (data.url) {
-        sessionStorage.setItem('paymentInProgress', 'true'); // flag for returning from Stripe
+        sessionStorage.setItem('paymentInProgress', 'true');
         window.location.href = data.url;
       } else {
         console.error('Stripe response:', data);
@@ -135,7 +145,9 @@ const PaymentPage = () => {
   const releaseReservation = async () => {
     if (!reservationData) return;
 
+   
     try {
+      
       await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/payments/booking/release-reservation`, {
         method: 'DELETE',
         headers: {
@@ -144,6 +156,7 @@ const PaymentPage = () => {
         },
         body: JSON.stringify({ reservationId: reservationData.reservationId }),
       });
+      sessionStorage.clear();
     } catch (err) {
       console.error('Failed to release reservation:', err);
     } finally {
@@ -152,7 +165,7 @@ const PaymentPage = () => {
       sessionStorage.removeItem('reservationData');
       sessionStorage.removeItem('reservationId');
       sessionStorage.removeItem('paymentInProgress');
-      window.location.href = '/class1';
+      window.location.href = '/';
     }
   };
 
@@ -162,7 +175,16 @@ const PaymentPage = () => {
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
   };
 
-  if (!bookingData) return <div>Loading...</div>;
+  // Loader until initialized to prevent 00:00 flash
+  if (initializing || !bookingData) {
+    return (
+      <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
+        <div className="spinner-border" role="status" aria-live="polite" aria-label="Loading" />
+      </div>
+    );
+  }
+
+ 
 
   return (
     <div className="min-vh-100 bg-light d-flex align-items-center justify-content-center py-5">

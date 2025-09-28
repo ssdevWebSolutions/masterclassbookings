@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaBars, FaUser, FaSignOutAlt, FaChevronDown } from "react-icons/fa";
 import { logOutUserWithType } from "@/Redux/Authentication/AuthenticationAction";
 import { useRouter } from "next/router";
+import { fetchBookings } from "@/Redux/bookingSlice/bookingSlice";
 
 export default function AdminDashboard() {
   const dispatch = useDispatch();
@@ -201,6 +202,20 @@ export default function AdminDashboard() {
     );
   };
 
+  const handleNavSwitch=(item)=>{
+    setActiveNav(item);
+     if (loginData.token && loginData.role) {
+          console.log(loginData.token,loginData.token,"ro");
+          const token = loginData.token;
+          const role = loginData.role;
+          const parentId =0 ;
+          dispatch(fetchBookings({ token, role,  parentId}));
+        }
+
+  }
+
+  
+
   return (
     <div className="min-vh-100" style={{ backgroundColor: "#f8f9fa" }}>
       {/* Header */}
@@ -217,7 +232,7 @@ export default function AdminDashboard() {
                 {["Sessions", "Bookings", "Finance"].map((item) => (
                   <button
                     key={item}
-                    onClick={() => setActiveNav(item)}
+                    onClick={() => handleNavSwitch(item)}
                     className={`nav-link mx-1 ${activeNav === item ? 'active' : 'text-muted'}`}
                     style={{
                       backgroundColor: activeNav === item ? '#0d6efd' : 'transparent',
@@ -273,8 +288,9 @@ export default function AdminDashboard() {
                     <button
                       key={item}
                       onClick={() => {
-                        setActiveNav(item);
+                        handleNavSwitch(item);
                         setMobileMenuOpen(false);
+                        
                       }}
                       className={`nav-link mb-2 text-start ${activeNav === item ? 'active' : 'text-muted'}`}
                       style={{
