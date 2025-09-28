@@ -57,7 +57,7 @@ export default function CampGrid() {
 
   return (
     <section id="camps" className="container py-5 position-relative">
-      <h2 className="text-center mb-4 fw-bold text-dark">Our Camps</h2>
+      <h2 className="text-center mb-4 fw-bold text-dark">OUR MASTERCLASSES</h2>
       <div className="row g-4">
         {camps.map((camp, idx) => (
           <div key={idx} className="col-md-6">

@@ -69,8 +69,9 @@ export default function Home() {
       <main className="font-sans">
         <Header />
         <Hero />
-        <CampGrid />
         <About />
+        <CampGrid />
+        
         
         {/* Registration Modal or Profile - only for non-admin users */}
         {registration && (
