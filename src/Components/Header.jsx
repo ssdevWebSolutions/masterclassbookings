@@ -333,6 +333,8 @@ export default function Header() {
 
   const handleLogOut = () => {
     sessionStorage.clear();
+    // localStorage.clear();
+    localStorage.removeItem('persist:root');
     dispatch(logOutUserWithType());
     setEmail("");
     setPassword("");

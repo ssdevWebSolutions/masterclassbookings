@@ -63,7 +63,7 @@ export default function RegistrationProfileKids() {
   };
 
   const handleDeleteKid = (kidId) => {
-    dispatch(deleteKid(kidId));
+    dispatch(deleteKid(kidId,loginData.id,loginData.token));
   };
 
   return (
