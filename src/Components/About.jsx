@@ -2,83 +2,37 @@ import React from "react";
 
 export default function About() {
   return (
-    <section id="about" className="container py-5">
-      <div className="row align-items-center g-4">
-        {/* Image Carousel */}
-        <div className="col-md-6">
-          <div
-            id="aboutCarousel"
-            className="carousel slide carousel-fade rounded shadow"
-            data-bs-ride="carousel"
-            data-bs-interval="3000" // 3 seconds per slide
-          >
-            <div className="carousel-inner">
-              <div className="carousel-item active">
-                <img
-                  src="Block2.png"
-                  className="d-block w-100 img-fluid"
-                  alt="Cricket Training 1"
-                />
-              </div>
-              <div className="carousel-item">
-                <img
-                  src="Block1.png"
-                  className="d-block w-100 img-fluid"
-                  alt="Cricket Training 2"
-                />
-              </div>
-              <div className="carousel-item">
-                <img
-                  src="Block2.png"
-                  className="d-block w-100 img-fluid"
-                  alt="Cricket Training 3"
-                />
-              </div>
+    <section id="about" className="py-5 bg-light">
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-lg-8">
+            <div className="text-center mb-5">
+              <h2 className="display-5 fw-light text-dark mb-3">About Our Clinics</h2>
+              <div className="mx-auto bg-primary" style={{width: '60px', height: '3px'}}></div>
             </div>
-
-            {/* Controls */}
-            <button
-              className="carousel-control-prev"
-              type="button"
-              data-bs-target="#aboutCarousel"
-              data-bs-slide="prev"
-            >
-              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span className="visually-hidden">Previous</span>
-            </button>
-            <button
-              className="carousel-control-next"
-              type="button"
-              data-bs-target="#aboutCarousel"
-              data-bs-slide="next"
-            >
-              <span className="carousel-control-next-icon" aria-hidden="true"></span>
-              <span className="visually-hidden">Next</span>
-            </button>
+            
+            <div className="fs-6 lh-base">
+              <p className="text-muted mb-4">
+                At <strong className="text-dark">Masterclass Cricket Academy</strong>, our Autumn/Winter Clinic is all about 
+                <strong className="text-dark"> genuine player development</strong>. Designed for young cricketers aged 8–13, this 
+                10-week programme focuses on core technical skills – batting, bowling, and fielding – 
+                delivered through structured drills, video analysis, and proven biomechanics expertise.
+              </p>
+              
+              <p className="text-muted mb-4">
+                Led by <strong className="text-dark">Head Coach Uzi Arif</strong> and the Masterclass team, players don't just 
+                train – they learn to perform under pressure, build confidence, and develop repeatable 
+                skills that transfer directly into matches.
+              </p>
+              
+              <p className="text-muted mb-0">
+                What makes Masterclass different? We don't run "feel-good" sessions. We deliver{" "}
+                <strong className="text-dark">measurable improvement</strong> in a fun, challenging environment where every 
+                player is pushed to unlock their true potential.
+              </p>
+            </div>
           </div>
         </div>
-
-        {/* Text Section */}
-        <div className="col-md-6">
-  <h2 className="mb-4 fw-bold text-dark">About Our Clinics</h2>
-  <p className="text-secondary mb-3">
-    At <strong>Masterclass Cricket Academy</strong>, our Autumn/Winter Clinic is all about
-    <strong> genuine player development</strong>. Designed for young cricketers aged 8–13, this
-    10-week programme focuses on core technical skills – batting, bowling, and fielding –
-    delivered through structured drills, video analysis, and proven biomechanics expertise.
-  </p>
-  <p className="text-secondary mb-3">
-    Led by <strong>Head Coach Uzi Arif</strong> and the Masterclass team, players don’t just
-    train – they learn to perform under pressure, build confidence, and develop repeatable
-    skills that transfer directly into matches.
-  </p>
-  <p className="text-secondary">
-    What makes Masterclass different? We don’t run “feel-good” sessions. We deliver{" "}
-    <strong>measurable improvement</strong> in a fun, challenging environment where every
-    player is pushed to unlock their true potential.
-  </p>
-</div>
-
       </div>
     </section>
   );

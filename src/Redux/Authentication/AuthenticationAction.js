@@ -1,4 +1,6 @@
 
+import { clearBookings } from '../bookingSlice/bookingSlice';
+import { setKidsList } from '../Kids/KidsSlice';
 import {getLoginUserData} from  './AuthenticationSlice';
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -58,6 +60,8 @@ export const loginUserWithType = (loginData) => async (dispatch) => {
     try {
       // dispatch login success here if needed
       dispatch(getLoginUserData({}));
+      dispatch(clearBookings());
+      dispatch(setKidsList());
   
     } catch (error) {
       console.error("Error:", error);

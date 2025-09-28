@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch, useSelector } from "react-redux";
 import { loginUserWithType, logOutUserWithType } from "../Redux/Authentication/AuthenticationAction";
 import { fetchKids } from "@/Redux/Kids/KidActions";
+import { persistor } from "@/store";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -332,9 +333,7 @@ export default function Header() {
   };
 
   const handleLogOut = () => {
-    sessionStorage.clear();
-    // localStorage.clear();
-    localStorage.removeItem('persist:root');
+    
     dispatch(logOutUserWithType());
     setEmail("");
     setPassword("");
