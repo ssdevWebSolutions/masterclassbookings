@@ -58,6 +58,9 @@ export const loginUserWithType = (loginData) => async (dispatch) => {
 
   export const logOutUserWithType = () => async (dispatch) => {
     try {
+      sessionStorage.removeItem('reservationId');
+      sessionStorage.removeItem('reservationData');
+      sessionStorage.removeItem('paymentInProgress');
       // dispatch login success here if needed
       dispatch(getLoginUserData({}));
       dispatch(clearBookings());
