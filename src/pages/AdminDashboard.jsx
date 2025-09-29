@@ -32,8 +32,11 @@ export default function AdminDashboard() {
   const [bookingsCurrentPage, setBookingsCurrentPage] = useState(1);
   const [bookingsPerPage, setBookingsPerPage] = useState(10);
 
+  const [initiateButton,setIntiateButton] = useState(true);
   // ✅ ALL useEffect HOOKS AT THE TOP TOO
   useEffect(() => {
+    if(sessions.length === 0) setIntiateButton(false);
+    console.log(sessions);
     import('bootstrap/dist/js/bootstrap.bundle.min.js');
   }, []);
 
@@ -319,7 +322,8 @@ export default function AdminDashboard() {
               {activeNav === "Sessions" && (
                 <>
                   <div className="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center mb-4">
-                    <button className="btn btn-primary mb-3 mb-lg-0" onClick={initSessions}>
+                    
+                    <button className="btn btn-primary mb-3 mb-lg-0" disabled={initiateButton} onClick={initSessions}>
                       Initialize All Sessions
                     </button>
                   </div>
