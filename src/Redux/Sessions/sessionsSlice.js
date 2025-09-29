@@ -33,7 +33,7 @@ const sessionsSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchSessionsByYear.fulfilled, (state, action) => {
-        state.data = action.payload;
+        state.data = action.payload.sort((a, b) => new Date(a.date) - new Date(b.date));
         state.loading = false;
       })
       .addCase(fetchSessionsByYear.rejected, (state, action) => {
