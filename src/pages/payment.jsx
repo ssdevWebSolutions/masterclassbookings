@@ -13,9 +13,10 @@ const PaymentPage = () => {
   const [initializing, setInitializing] = useState(true);
   const valueToken = useSelector(state => state.auth.loginData.token);
   const router =useRouter();
+  const loginData = useSelector(state => state.auth.loginData);
 
   useEffect(()=>{
-      if(loginData.token === null) router.push("/");
+      if(!loginData.token) router.push("/");
     },[])
 
   useEffect(() => {
