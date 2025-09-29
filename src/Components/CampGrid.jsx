@@ -243,7 +243,7 @@ export default function CampGrid() {
     },
     imageContainer: {
       width: '100%',
-      height: '400px',
+      height: '320px',
       overflow: 'hidden',
       backgroundColor: '#000000',
       position: 'relative'
@@ -261,7 +261,7 @@ export default function CampGrid() {
     image: {
       width: '100%',
       height: '100%',
-      objectFit: 'cover',
+      objectFit: 'contain',
       transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
       filter: 'grayscale(0.3) contrast(1.1)'
     },

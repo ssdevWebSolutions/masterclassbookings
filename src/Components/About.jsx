@@ -179,7 +179,7 @@ export default function About() {
         <div style={styles.container}>
           {/* Header */}
           <div style={styles.header}>
-            <div style={styles.badge}>Who We Are</div>
+            {/* <div style={styles.badge}>Who We Are</div> */}
             <h2 style={styles.title} className="about-title-responsive">
               About Our <span style={styles.titleAccent}>Clinics</span>
             </h2>
