@@ -10,6 +10,10 @@ export default function RegistrationProfileKids() {
   const dispatch = useDispatch();
   const kidsList = useSelector(state => state.kids.list);
   const loginData = useSelector(state => state.auth.loginData);
+  const bookings = useSelector(state => state.bookings.bookings || []);
+  const token = loginData.token;
+  const role = loginData.role;
+  const parentId = loginData.id;
 
   const [parentData, setParentData] = useState({ firstName: "", lastName: "", email: "", phone: "" });
   const [newKid, setNewKid] = useState({ firstName: "", lastName: "", age: "", club: "", medicalInfo: "", level: "" });
@@ -18,6 +22,7 @@ export default function RegistrationProfileKids() {
   const router = useRouter();
 
   useEffect(()=>{
+    dispatch(fetchBookings({ token, role, parentId }));
     console.log(kidstate,"pp");
   },[kidstate]);
 
@@ -63,7 +68,8 @@ export default function RegistrationProfileKids() {
   };
 
   const handleDeleteKid = (kidId) => {
-    dispatch(deleteKid(kidId,loginData.id,loginData.token));
+    // dispatch(deleteKid(kidId,loginData.id,loginData.token));
+    
   };
 
   return (
@@ -161,7 +167,7 @@ export default function RegistrationProfileKids() {
                     <td>{kid.medicalInfo}</td>
                     <td>
                       <Button size="sm" variant="info" className="me-2" onClick={() => handleEditKid(kid)}>Edit</Button>
-                      <Button size="sm" variant="danger" onClick={() => handleDeleteKid(kid.id)}>Delete</Button>
+                      {/* <Button size="sm" variant="danger" onClick={() => handleDeleteKid(kid.id)}>Delete</Button> */}
                     </td>
                   </tr>
                 ))}
