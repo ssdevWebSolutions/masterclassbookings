@@ -61,6 +61,7 @@ export const loginUserWithType = (loginData) => async (dispatch) => {
       sessionStorage.removeItem('reservationId');
       sessionStorage.removeItem('reservationData');
       sessionStorage.removeItem('paymentInProgress');
+      sessionStorage.removeItem('cricketBookingData');
       // dispatch login success here if needed
       dispatch(getLoginUserData({}));
       dispatch(clearBookings());
