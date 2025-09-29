@@ -214,7 +214,7 @@ const CricketAcademyBooking = () => {
   const isFullSundayClass1Block = selectedSundayClass1Dates.length === 10;
   const isFullSundayClass2Block = selectedSundayClass2Dates.length === 10;
   
-  const regularPrice = isPlatinumSelected ? 900 : totalSelectedSessions * 40;
+  const regularPrice = isPlatinumSelected ? 899 : totalSelectedSessions * 40;
   let discountAmount = 0;
   
   if (!isPlatinumSelected) {
@@ -557,8 +557,8 @@ const CricketAcademyBooking = () => {
                     <div className="d-flex justify-content-between align-items-center">
                       <div className="flex-grow-1">
                         <p className="mb-1 small" style={{ color: "#999" }}>Premium Access</p>
-                        <div className="text-decoration-line-through small" style={{ color: "#666" }}>£1210</div>
-                        <h3 className="mb-0" style={{ color: "#FFD700" }}>£900</h3>
+                        <div className="text-decoration-line-through small" style={{ color: "#666" }}>£1380</div>
+                        <h3 className="mb-0" style={{ color: "#FFD700" }}>£899</h3>
                         <p className="mb-0 fw-bold small" style={{ color: "#4ade80" }}>Full Access</p>
                         <button 
                           className="btn btn-sm mt-2"
@@ -1403,7 +1403,7 @@ const CricketAcademyBooking = () => {
                           <>
                             <div className="d-flex justify-content-between mb-2" style={{ color: "#d4d4d4" }}>
                               <span>Platinum Pass (Full Access)</span>
-                              <span>£900</span>
+                              <span>£899</span>
                             </div>
                             <hr style={{ borderColor: "#FFD700" }} />
                             <div className="d-flex justify-content-between h6">
@@ -1958,10 +1958,10 @@ const CricketAcademyBooking = () => {
                     </ul>
                   </div>
                   <div className="platinum-price-section">
-                    <h6>Total Value: £1200</h6>
-                    <h4>£900</h4>
+                    <h6>Total Value: £1380</h6>
+                    <h4>£899</h4>
                     <div className="value-badge">
-                      Save £300 + Maximum Flexibility
+                      Save £481 + Maximum Flexibility
                     </div>
                   </div>
                 </div>
