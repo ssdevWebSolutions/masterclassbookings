@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
+import { useRouter } from 'next/router';
 
 const PaymentPage = () => {
   const [bookingData, setBookingData] = useState(null);
@@ -11,6 +12,11 @@ const PaymentPage = () => {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [initializing, setInitializing] = useState(true);
   const valueToken = useSelector(state => state.auth.loginData.token);
+  const router =useRouter();
+
+  useEffect(()=>{
+      if(loginData.token === null) router.push("/");
+    },[])
 
   useEffect(() => {
     const savedBookingData = sessionStorage.getItem('cricketBookingData');

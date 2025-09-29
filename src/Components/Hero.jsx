@@ -18,7 +18,8 @@ export default function Hero() {
 
   const styles = {
     section: {
-      backgroundColor: '#212529',
+      // backgroundColor: '#212529',
+      backgroundColor: '#111111',
       color: '#ffffff',
       padding: '80px 20px',
       position: 'relative',
@@ -69,7 +70,7 @@ export default function Hero() {
       transition: 'opacity 1.4s ease 0.4s, transform 1.4s ease 0.4s'
     },
     headingSpan: {
-      color: '#ffc107'
+      color: '#FFD700'
     },
     tagsContainer: {
       display: 'flex',
@@ -192,7 +193,7 @@ export default function Hero() {
         {/* Heading */}
         <h2 style={styles.heading}>
           Book Your Winter<br />
-          <span style={styles.headingSpan}>Masterclass Coaching</span>
+          <span style={{color:'#FFD700'}}>Masterclass Coaching</span>
         </h2>
         
         {/* Tags */}

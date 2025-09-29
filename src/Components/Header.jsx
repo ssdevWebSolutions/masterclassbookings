@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUserWithType, logOutUserWithType } from "../Redux/Authentication/AuthenticationAction";
 import { fetchKids } from "@/Redux/Kids/KidActions";
 import { persistor } from "@/store";
+import { useRouter } from "next/router";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -332,9 +333,11 @@ export default function Header() {
     setOtpCode(["", "", "", "", "", ""]);
   };
 
+  const router =useRouter();
   const handleLogOut = () => {
     
     dispatch(logOutUserWithType());
+    router.push("/");
     setEmail("");
     setPassword("");
     setLoginError("");
@@ -358,7 +361,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky-top bg-dark text-white shadow-sm">
+    <header className="sticky-top  text-white shadow-sm" style={{backgroundColor:'black'}}>
       <div className="container d-flex justify-content-between align-items-center py-3">
         {/* Logo + Title */}
         <div className="d-flex align-items-center">
@@ -368,7 +371,7 @@ export default function Header() {
             className="me-2 img-fluid" 
             style={{ maxHeight: "50px", width: "auto" }} 
           />
-          <h1 className="h5 fw-bold text-warning mb-0">MasterClass Cricket</h1>
+          <h1 className="h5 fw-bold text-warning mb-0" style={{color:'#FFD700'}}>MasterClass Cricket</h1>
         </div>
 
         {/* Desktop Nav */}

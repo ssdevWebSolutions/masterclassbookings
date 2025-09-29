@@ -39,7 +39,7 @@ function CenterToast({ message, onClose }) {
       minWidth: '380px',
       padding: '3rem 2.5rem',
       backgroundColor: '#000000',
-      border: '1px solid #D4AF37',
+      border: '1px solid #FFD700',
       borderRadius: '2px',
       boxShadow: '0 25px 80px rgba(212, 175, 55, 0.2)',
       textAlign: 'center',
@@ -53,7 +53,7 @@ function CenterToast({ message, onClose }) {
       transform: 'translateX(-50%)',
       width: '60px',
       height: '2px',
-      backgroundColor: '#D4AF37',
+      backgroundColor: '#FFD700',
       boxShadow: '0 0 20px rgba(212, 175, 55, 0.6)'
     },
     message: {
@@ -66,9 +66,9 @@ function CenterToast({ message, onClose }) {
     },
     button: {
       backgroundColor: 'transparent',
-      color: '#D4AF37',
+      color: '#FFD700',
       padding: '12px 32px',
-      border: '1px solid #D4AF37',
+      border: '1px solid #FFD700',
       borderRadius: '2px',
       fontSize: '13px',
       fontWeight: '500',
@@ -88,14 +88,14 @@ function CenterToast({ message, onClose }) {
           style={toastStyles.button}
           onClick={onClose}
           onMouseOver={(e) => {
-            e.target.style.backgroundColor = '#D4AF37';
+            e.target.style.backgroundColor = '#FFD700';
             e.target.style.color = '#000000';
             e.target.style.transform = 'translateY(-2px)';
             e.target.style.boxShadow = '0 8px 20px rgba(212, 175, 55, 0.3)';
           }}
           onMouseOut={(e) => {
             e.target.style.backgroundColor = 'transparent';
-            e.target.style.color = '#D4AF37';
+            e.target.style.color = '#FFD700';
             e.target.style.transform = 'translateY(0)';
             e.target.style.boxShadow = 'none';
           }}
@@ -184,7 +184,7 @@ export default function CampGrid() {
       display: 'inline-block',
       padding: '8px 24px',
       backgroundColor: 'transparent',
-      color: '#D4AF37',
+      color: '#FFD700',
       fontSize: '11px',
       fontWeight: '500',
       letterSpacing: '0.2em',
@@ -203,13 +203,13 @@ export default function CampGrid() {
       animation: 'fadeInUp 0.8s ease 0.2s backwards'
     },
     titleAccent: {
-      color: '#D4AF37',
+      color: '#FFD700',
       fontWeight: '400'
     },
     decorativeLine: {
       width: '80px',
       height: '1px',
-      backgroundColor: '#D4AF37',
+      backgroundColor: '#FFD700',
       margin: '40px auto',
       position: 'relative',
       animation: 'expandWidth 1s ease 0.4s backwards'
@@ -236,7 +236,7 @@ export default function CampGrid() {
       left: 0,
       right: 0,
       height: '2px',
-      backgroundColor: '#D4AF37',
+      backgroundColor: '#FFD700',
       transform: 'scaleX(0)',
       transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
       boxShadow: '0 0 20px rgba(212, 175, 55, 0.6)'
@@ -302,9 +302,9 @@ export default function CampGrid() {
     },
     button: {
       backgroundColor: 'transparent',
-      color: '#D4AF37',
+      color: '#FFD700',
       padding: '14px 36px',
-      border: '1px solid #D4AF37',
+      border: '1px solid #FFD700',
       borderRadius: '2px',
       fontSize: '12px',
       fontWeight: '500',
@@ -324,7 +324,7 @@ export default function CampGrid() {
       left: 0,
       width: '0%',
       height: '100%',
-      backgroundColor: '#D4AF37',
+      backgroundColor: '#FFD700',
       transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       zIndex: -1
     },
@@ -402,14 +402,14 @@ export default function CampGrid() {
             opacity: 0.3 !important;
           }
           .card-visible .card-title {
-            color: #D4AF37 !important;
+            color: #FFD700 !important;
           }
           .card-visible .button-bg {
             width: 100% !important;
           }
           .card-visible .book-button {
             color: #000000 !important;
-            border-color: #D4AF37 !important;
+            border-color: #FFD700 !important;
           }
           .card-visible .arrow {
             transform: translateX(8px) !important;
@@ -437,8 +437,8 @@ export default function CampGrid() {
               width: 0% !important;
             }
             .card-visible .book-button {
-              color: #D4AF37 !important;
-              border-color: #D4AF37 !important;
+              color: #FFD700 !important;
+              border-color: #FFD700 !important;
             }
             .card-visible .arrow {
               transform: translateX(0) !important;
@@ -519,7 +519,7 @@ export default function CampGrid() {
                   if (overlay) overlay.style.opacity = '0.3';
                   
                   const title = card.querySelector('.card-title');
-                  if (title) title.style.color = '#D4AF37';
+                  if (title) title.style.color = '#FFD700';
 
                   const buttonBg = card.querySelector('.button-bg');
                   if (buttonBg) buttonBg.style.width = '100%';
@@ -527,7 +527,7 @@ export default function CampGrid() {
                   const button = card.querySelector('.book-button');
                   if (button) {
                     button.style.color = '#000000';
-                    button.style.borderColor = '#D4AF37';
+                    button.style.borderColor = '#FFD700';
                   }
 
                   const arrow = card.querySelector('.arrow');
@@ -559,8 +559,8 @@ export default function CampGrid() {
 
                   const button = card.querySelector('.book-button');
                   if (button) {
-                    button.style.color = '#D4AF37';
-                    button.style.borderColor = '#D4AF37';
+                    button.style.color = '#FFD700';
+                    button.style.borderColor = '#FFD700';
                   }
 
                   const arrow = card.querySelector('.arrow');

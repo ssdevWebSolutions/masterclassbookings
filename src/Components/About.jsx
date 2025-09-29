@@ -75,20 +75,19 @@ export default function About() {
     },
     title: {
       fontSize: '3rem',
-      fontWeight: '300',
+      fontWeight: '400',
       color: '#FFFFFF',
       marginBottom: '24px',
       letterSpacing: '0.02em'
     },
     titleAccent: {
-      // color: '#D4AF37',
-     color:'#ffc107',
-      fontWeight: '400'
+      color:'#FFD700',
+      fontWeight: '600'
     },
     decorativeLine: {
       width: '80px',
       height: '1px',
-      backgroundColor: '#ffc107',
+      backgroundColor: '#FFD700',
       margin: '0 auto',
       position: 'relative',
       transform: isVisible ? 'scaleX(1)' : 'scaleX(0)',
@@ -101,23 +100,23 @@ export default function About() {
     },
     paragraph: {
       fontSize: '1.05rem',
-      color: '#999999',
+      color: 'white',
       lineHeight: '2',
       marginBottom: '32px',
-      fontWeight: '300',
+      fontWeight: '400',
       letterSpacing: '0.01em',
       textAlign: 'left'
     },
     strong: {
       color: '#D4AF37',
-      fontWeight: '400'
+      fontWeight: '600'
     },
     lastParagraph: {
       fontSize: '1.05rem',
       color: '#999999',
       lineHeight: '2',
       marginBottom: '0',
-      fontWeight: '300',
+      fontWeight: '400',
       letterSpacing: '0.01em',
       textAlign: 'left'
     },
@@ -130,10 +129,14 @@ export default function About() {
     },
     quote: {
       fontSize: '1.1rem',
-      color: '#CCCCCC',
+      color: 'white',
       lineHeight: '1.9',
       fontStyle: 'italic',
-      fontWeight: '300'
+      fontWeight: '400'
+    },
+    goldText: {
+      color: '#FFD700',
+      fontWeight: '600'
     }
   };
 
@@ -180,7 +183,6 @@ export default function About() {
         <div style={styles.container}>
           {/* Header */}
           <div style={styles.header}>
-            {/* <div style={styles.badge}>Who We Are</div> */}
             <h2 style={styles.title} className="about-title-responsive">
               About Our <span style={styles.titleAccent}>Clinics</span>
             </h2>
@@ -189,23 +191,23 @@ export default function About() {
 
           {/* Content */}
           <div style={styles.content}>
-            <p style={styles.paragraph} className="about-paragraph-responsive text-white" >
-              At <span style={{color:'#ffc107'}} >Masterclass Cricket Academy</span>, our Autumn/Winter Clinic is all about{" "}
-              <span style={{color:'#ffc107'}}>genuine player development</span>. Designed for young cricketers aged 8–13, this 
+            <p style={styles.paragraph} className="about-paragraph-responsive">
+              At <span style={styles.goldText}>Masterclass Cricket Academy</span>, our Autumn/Winter Clinic is all about{" "}
+              <span style={styles.goldText}>genuine player development</span>. Designed for young cricketers aged 8–13, this 
               10-week programme focuses on core technical skills – batting, bowling, and fielding – 
               delivered through structured drills, video analysis, and proven biomechanics expertise.
             </p>
             
-            <p style={styles.paragraph} className="about-paragraph-responsive text-white">
-              Led by <span style={{color:'#ffc107'}}>Head Coach Uzi Arif</span> and the Masterclass team, players don't just 
+            <p style={styles.paragraph} className="about-paragraph-responsive">
+              Led by <span style={styles.goldText}>Head Coach Uzi Arif</span> and the Masterclass team, players don't just 
               train – they learn to perform under pressure, build confidence, and develop repeatable 
               skills that transfer directly into matches.
             </p>
             
-            <div style={styles.quoteAccent} className="about-quote-responsive text-white">
-              <p style={styles.quote} className="about-paragraph-responsive text-white">
+            <div style={styles.quoteAccent} className="about-quote-responsive">
+              <p style={styles.quote} className="about-paragraph-responsive">
                 What makes Masterclass different? We don't run "feel-good" sessions. We deliver{" "}
-                <span style={{color:'#ffc107'}}>measurable improvement</span> in a fun, challenging environment where every 
+                <span style={styles.goldText}>measurable improvement</span> in a fun, challenging environment where every 
                 player is pushed to unlock their true potential.
               </p>
             </div>

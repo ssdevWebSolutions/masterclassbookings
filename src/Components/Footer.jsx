@@ -3,7 +3,7 @@ import React from "react";
 export default function Footer() {
   const styles = {
     footer: {
-      backgroundColor: '#212529',
+      backgroundColor: '#111111',
       color: '#ffffff',
       padding: '40px 20px',
       marginTop: '1px',

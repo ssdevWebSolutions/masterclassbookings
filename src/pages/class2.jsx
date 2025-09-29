@@ -40,6 +40,10 @@ const CricketAcademyBooking = () => {
 
   const dispatch = useDispatch();
 
+  useEffect(()=>{
+      if(loginData.token === null) router.push("/");
+    },[])
+
   useEffect(() => {
     dispatch(fetchSessionsByYear(2026));
     
@@ -1729,7 +1733,7 @@ const CricketAcademyBooking = () => {
                       <li>Access to ALL Sunday Class 1 sessions (10 weeks)</li>
                       <li>Access to ALL Sunday Class 2 sessions (10 weeks)</li>
                       <li>Plus 2 hours free 1-2-1 worth £180.00</li>
-                      <li>Total value worth £1360.00. Save £460.00</li>
+                      {/* <li>Total value worth £1360.00. Save £460.00</li> */}
                       <li>Priority booking for future programmes</li>
                     </ul>
                   </div>
