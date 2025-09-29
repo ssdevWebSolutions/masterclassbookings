@@ -5,13 +5,13 @@ import { useSelector } from "react-redux";
 // Camp data
 const camps = [
   {
-    title: "Winter coaching Clinics - Class 1",
+    title: "Winter coaching Clinics - Block 1",
     desc: "Block 1: Technical Development Programme",
     img: "Block1.png",
     path: "/class1",
   },
   {
-    title: "Winter coaching Clinics - Class 2",
+    title: "Winter coaching Clinics - Block 2",
     desc: "Block 2: Game based scenarios game plan, target practice learning to bat in different scenarios field settings repeated for the games",
     img: "Block2.png",
     path: "/class2",
