@@ -178,7 +178,7 @@ export default function CampGrid() {
     },
     header: {
       textAlign: 'center',
-      marginBottom: '100px'
+      marginBottom: '0px'
     },
     badge: {
       display: 'inline-block',
@@ -475,7 +475,7 @@ export default function CampGrid() {
               font-size: 2rem !important;
             }
             .section-responsive {
-              padding: 80px 20px !important;
+              padding: 0px 20px 60px !important;
             }
           }
         `}

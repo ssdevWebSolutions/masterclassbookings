@@ -33,7 +33,7 @@ export default function About() {
 
   const styles = {
     section: {
-      padding: '120px 40px',
+      padding: '60px 20px',
       backgroundColor: '#000000',
       position: 'relative',
       overflow: 'hidden'
@@ -55,7 +55,7 @@ export default function About() {
     },
     header: {
       textAlign: 'center',
-      marginBottom: '80px',
+      marginBottom: '15px',
       opacity: isVisible ? 1 : 0,
       transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
       transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
@@ -81,13 +81,14 @@ export default function About() {
       letterSpacing: '0.02em'
     },
     titleAccent: {
-      color: '#D4AF37',
+      // color: '#D4AF37',
+     color:'#ffc107',
       fontWeight: '400'
     },
     decorativeLine: {
       width: '80px',
       height: '1px',
-      backgroundColor: '#D4AF37',
+      backgroundColor: '#ffc107',
       margin: '0 auto',
       position: 'relative',
       transform: isVisible ? 'scaleX(1)' : 'scaleX(0)',
@@ -188,23 +189,23 @@ export default function About() {
 
           {/* Content */}
           <div style={styles.content}>
-            <p style={styles.paragraph} className="about-paragraph-responsive">
-              At <span style={styles.strong}>Masterclass Cricket Academy</span>, our Autumn/Winter Clinic is all about{" "}
-              <span style={styles.strong}>genuine player development</span>. Designed for young cricketers aged 8–13, this 
+            <p style={styles.paragraph} className="about-paragraph-responsive text-white" >
+              At <span style={{color:'#ffc107'}} >Masterclass Cricket Academy</span>, our Autumn/Winter Clinic is all about{" "}
+              <span style={{color:'#ffc107'}}>genuine player development</span>. Designed for young cricketers aged 8–13, this 
               10-week programme focuses on core technical skills – batting, bowling, and fielding – 
               delivered through structured drills, video analysis, and proven biomechanics expertise.
             </p>
             
-            <p style={styles.paragraph} className="about-paragraph-responsive">
-              Led by <span style={styles.strong}>Head Coach Uzi Arif</span> and the Masterclass team, players don't just 
+            <p style={styles.paragraph} className="about-paragraph-responsive text-white">
+              Led by <span style={{color:'#ffc107'}}>Head Coach Uzi Arif</span> and the Masterclass team, players don't just 
               train – they learn to perform under pressure, build confidence, and develop repeatable 
               skills that transfer directly into matches.
             </p>
             
-            <div style={styles.quoteAccent} className="about-quote-responsive">
-              <p style={styles.quote} className="about-paragraph-responsive">
+            <div style={styles.quoteAccent} className="about-quote-responsive text-white">
+              <p style={styles.quote} className="about-paragraph-responsive text-white">
                 What makes Masterclass different? We don't run "feel-good" sessions. We deliver{" "}
-                <span style={styles.strong}>measurable improvement</span> in a fun, challenging environment where every 
+                <span style={{color:'#ffc107'}}>measurable improvement</span> in a fun, challenging environment where every 
                 player is pushed to unlock their true potential.
               </p>
             </div>

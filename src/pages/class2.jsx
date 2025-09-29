@@ -355,25 +355,24 @@ const CricketAcademyBooking = () => {
           </button>
   
           <div
-            className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
-            style={{
-              width: "48px",
-              height: "48px",
-              backgroundColor: "#FFD700",
-              transition: "transform 0.3s ease"
-            }}
-          >
-            <img
-              src="logo_.png"
-              alt="Logo"
-              className="img-fluid"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-              }}
-            />
-          </div>
+  className="d-inline-flex align-items-center justify-content-center mb-3"
+  style={{
+    width: "120px",
+    height: "120px",
+    transition: "transform 0.3s ease"
+  }}
+>
+  <img
+    src="logo_.png"
+    alt="Logo"
+    className="img-fluid"
+    style={{
+      width: "100%",
+      height: "100%",
+      objectFit: "contain",
+    }}
+  />
+</div>
   
           <h1 className="h3 fw-bold mb-2" style={{ color: "#FFD700" }}>Masterclass Cricket Academy</h1>
           <p className="mb-3" style={{ color: "#d4d4d4" }}>
@@ -1287,10 +1286,10 @@ const CricketAcademyBooking = () => {
             <div className="modal-dialog modal-dialog-centered" role="document">
               <div className="modal-content" style={{
                 backgroundColor: "#1a1a1a",
-                border: "2px solid #4ade80"
+                border: "2px solid #FFD700"
               }}>
                 <div className="modal-header" style={{
-                  backgroundColor: "#4ade80",
+                  backgroundColor: "#FFD700",
                   color: "#000",
                   borderBottom: "none"
                 }}>
@@ -1301,9 +1300,9 @@ const CricketAcademyBooking = () => {
                 </div>
                 <div className="modal-body text-center">
                   <div className="mb-4">
-                    <i className="bi bi-check-circle" style={{ fontSize: '3rem', color: "#4ade80" }}></i>
+                    <i className="bi bi-check-circle" style={{ fontSize: '3rem', color: "#FFD700" }}></i>
                   </div>
-                  <h5 className="mb-3" style={{ color: "#4ade80" }}>Ready for Payment!</h5>
+                  <h5 className="mb-3" style={{ color: "#FFD700" }}>Ready for Payment!</h5>
                   <div className="alert" style={{
                     backgroundColor: "rgba(255, 215, 0, 0.1)",
                     border: "1px solid #FFD700"
@@ -1338,7 +1337,7 @@ const CricketAcademyBooking = () => {
                     className="btn" 
                     onClick={handleProceedToPayment}
                     style={{
-                      backgroundColor: "#4ade80",
+                      backgroundColor: "#FFD700",
                       color: "#000",
                       border: "none",
                       fontWeight: "600",
@@ -1355,78 +1354,407 @@ const CricketAcademyBooking = () => {
         </>
       )}
   
-      {/* Platinum Info Popup */}
-      {showPlatinumInfo && (
+  {showPlatinumInfo && (
         <>
-          <div className="modal-backdrop fade show" style={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}></div>
+          <style>{`
+            @keyframes cardFlip {
+              0% {
+                transform: perspective(1200px) rotateY(-15deg) rotateX(5deg) translateZ(-100px);
+                opacity: 0;
+              }
+              100% {
+                transform: perspective(1200px) rotateY(0deg) rotateX(0deg) translateZ(0);
+                opacity: 1;
+              }
+            }
+
+            @keyframes metalSheen {
+              0% {
+                background-position: -200% center;
+              }
+              100% {
+                background-position: 200% center;
+              }
+            }
+
+            @keyframes subtleGlow {
+              0%, 100% {
+                box-shadow: 
+                  0 20px 60px rgba(0, 0, 0, 0.5),
+                  0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+                  0 8px 30px rgba(180, 180, 200, 0.3);
+              }
+              50% {
+                box-shadow: 
+                  0 20px 60px rgba(0, 0, 0, 0.5),
+                  0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+                  0 8px 40px rgba(180, 180, 200, 0.5);
+              }
+            }
+
+            @keyframes fadeInUp {
+              from {
+                opacity: 0;
+                transform: translateY(15px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+
+            @keyframes gentleFloat {
+              0%, 100% {
+                transform: translateY(0px);
+              }
+              50% {
+                transform: translateY(-6px);
+              }
+            }
+
+            .platinum-modal-content {
+              background: 
+                linear-gradient(
+                  145deg,
+                  #c8c8c8 0%,
+                  #e8e8e8 15%,
+                  #f8f8f8 30%,
+                  #ffffff 50%,
+                  #f8f8f8 70%,
+                  #e8e8e8 85%,
+                  #c8c8c8 100%
+                ) !important;
+              border: none !important;
+              border-radius: 16px !important;
+              position: relative;
+              overflow: hidden;
+              animation: cardFlip 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), subtleGlow 4s ease-in-out infinite;
+              transform-style: preserve-3d;
+            }
+
+            .platinum-modal-content::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background: 
+                linear-gradient(
+                  110deg,
+                  transparent 20%,
+                  rgba(255, 255, 255, 0) 25%,
+                  rgba(255, 255, 255, 0.5) 50%,
+                  rgba(255, 255, 255, 0) 55%,
+                  transparent 60%
+                );
+              background-size: 200% 100%;
+              animation: metalSheen 4s ease-in-out infinite;
+              pointer-events: none;
+              z-index: 1;
+            }
+
+            .platinum-modal-content::after {
+              content: '';
+              position: absolute;
+              top: -2px;
+              left: -2px;
+              right: -2px;
+              bottom: -2px;
+              background: linear-gradient(145deg, #a0a0a0, #d0d0d0, #f0f0f0, #d0d0d0, #a0a0a0);
+              border-radius: 16px;
+              z-index: -1;
+              opacity: 0.5;
+            }
+
+            .modal-dialog {
+              transform: perspective(1200px);
+              max-width: 450px;
+            }
+
+            .platinum-header {
+              background: 
+                linear-gradient(
+                  135deg,
+                  #b0b0b0 0%,
+                  #d4d4d4 25%,
+                  #e8e8e8 50%,
+                  #d4d4d4 75%,
+                  #b0b0b0 100%
+                ) !important;
+              border-bottom: none !important;
+              border-radius: 14px 14px 0 0 !important;
+              position: relative;
+              z-index: 2;
+              padding: 0.75rem 1rem !important;
+              box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .platinum-header h5 {
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              font-size: 0.75rem;
+              font-weight: 700;
+              color: #2a2a2a;
+              margin: 0;
+            }
+
+            .modal-body {
+              position: relative;
+              z-index: 2;
+              padding: 1rem 1.25rem !important;
+            }
+
+            .platinum-trophy {
+              animation: fadeInUp 0.6s ease-out 0.3s both, gentleFloat 4s ease-in-out 1.5s infinite;
+              filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.15));
+              margin-bottom: 0.75rem !important;
+            }
+
+            .platinum-title {
+              animation: fadeInUp 0.6s ease-out 0.4s both;
+              font-weight: 700;
+              font-size: 1.1rem;
+              color: #1a1a1a;
+              margin-bottom: 0.75rem !important;
+              text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            }
+
+            .platinum-benefits {
+              background: rgba(255, 255, 255, 0.6) !important;
+              border: 1px solid rgba(200, 200, 200, 0.5) !important;
+              border-radius: 10px !important;
+              backdrop-filter: blur(10px);
+              padding: 0.85rem !important;
+              animation: fadeInUp 0.6s ease-out 0.5s both;
+              box-shadow: 
+                0 3px 15px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            }
+
+            .platinum-benefits h6 {
+              font-weight: 700;
+              font-size: 0.75rem;
+              color: #2a2a2a;
+              text-transform: uppercase;
+              letter-spacing: 0.8px;
+              margin-bottom: 0.5rem !important;
+            }
+
+            .platinum-benefits ul {
+              list-style: none;
+              padding-left: 0 !important;
+              margin-bottom: 0 !important;
+            }
+
+            .platinum-benefits ul li {
+              padding: 0.35rem 0;
+              padding-left: 1.3rem;
+              color: #3a3a3a;
+              font-size: 0.75rem;
+              font-weight: 500;
+              position: relative;
+              transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+              animation: fadeInUp 0.4s ease-out both;
+            }
+
+            .platinum-benefits ul li::before {
+              content: '◆';
+              position: absolute;
+              left: 0;
+              color: #888;
+              font-size: 0.6rem;
+              transition: all 0.3s ease;
+            }
+
+            .platinum-benefits ul li:nth-child(1) { animation-delay: 0.6s; }
+            .platinum-benefits ul li:nth-child(2) { animation-delay: 0.65s; }
+            .platinum-benefits ul li:nth-child(3) { animation-delay: 0.7s; }
+            .platinum-benefits ul li:nth-child(4) { animation-delay: 0.75s; }
+            .platinum-benefits ul li:nth-child(5) { animation-delay: 0.8s; }
+            .platinum-benefits ul li:nth-child(6) { animation-delay: 0.85s; }
+
+            .platinum-benefits ul li:hover {
+              padding-left: 1.5rem;
+              color: #1a1a1a;
+            }
+
+            .platinum-benefits ul li:hover::before {
+              color: #2a2a2a;
+              left: 0.2rem;
+            }
+
+            .platinum-price-section {
+              animation: fadeInUp 0.7s ease-out 0.9s both;
+              padding: 0.85rem;
+              margin-top: 0.75rem;
+              background: linear-gradient(135deg, rgba(240, 240, 240, 0.8), rgba(255, 255, 255, 0.6));
+              border-radius: 10px;
+              border: 1px solid rgba(200, 200, 200, 0.4);
+              box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+            }
+
+            .platinum-price-section h6 {
+              color: #666;
+              font-weight: 600;
+              font-size: 0.7rem;
+              margin-bottom: 0.25rem;
+              text-transform: uppercase;
+              letter-spacing: 0.8px;
+            }
+
+            .platinum-price-section h4 {
+              color: #1a1a1a;
+              font-weight: 800;
+              font-size: 1.75rem;
+              margin: 0.4rem 0;
+              text-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .value-badge {
+              display: inline-block;
+              padding: 0.4rem 1rem;
+              background: linear-gradient(135deg, #2a2a2a, #4a4a4a);
+              border-radius: 20px;
+              color: #ffffff;
+              font-weight: 700;
+              font-size: 0.7rem;
+              letter-spacing: 0.4px;
+              box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            .platinum-footer {
+              background: 
+                linear-gradient(
+                  135deg,
+                  #d4d4d4 0%,
+                  #e8e8e8 50%,
+                  #d4d4d4 100%
+                ) !important;
+              border-top: none !important;
+              border-radius: 0 0 14px 14px !important;
+              padding: 0.85rem 1.25rem !important;
+              position: relative;
+              z-index: 2;
+              box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.05);
+            }
+
+            .btn-platinum-primary {
+              background: linear-gradient(135deg, #2a2a2a, #3a3a3a, #2a2a2a) !important;
+              color: #ffffff !important;
+              border: none !important;
+              border-radius: 6px !important;
+              font-weight: 700 !important;
+              font-size: 0.7rem !important;
+              padding: 0.6rem 1.25rem !important;
+              text-transform: uppercase;
+              letter-spacing: 0.8px;
+              transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+              position: relative;
+              overflow: hidden;
+              box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+            }
+
+            .btn-platinum-primary::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: -100%;
+              width: 100%;
+              height: 100%;
+              background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+              transition: left 0.5s ease;
+            }
+
+            .btn-platinum-primary:hover::before {
+              left: 100%;
+            }
+
+            .btn-platinum-primary:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+              background: linear-gradient(135deg, #3a3a3a, #4a4a4a, #3a3a3a) !important;
+            }
+
+            .btn-platinum-secondary {
+              background: transparent !important;
+              border: 2px solid #6a6a6a !important;
+              border-radius: 6px !important;
+              color: #3a3a3a !important;
+              font-weight: 600 !important;
+              font-size: 0.7rem !important;
+              padding: 0.6rem 1.25rem !important;
+              text-transform: uppercase;
+              letter-spacing: 0.8px;
+              transition: all 0.3s ease !important;
+            }
+
+            .btn-platinum-secondary:hover {
+              background: rgba(0, 0, 0, 0.05) !important;
+              border-color: #3a3a3a !important;
+              color: #1a1a1a !important;
+              transform: translateY(-2px);
+            }
+
+            .bi-gem, .bi-trophy-fill, .bi-check-circle-fill {
+              font-size: 0.75rem;
+            }
+
+            .platinum-trophy .bi-trophy-fill {
+              font-size: 2.5rem !important;
+            }
+          `}</style>
+
+          <div className="modal-backdrop fade show" style={{ backgroundColor: "rgba(0, 0, 0, 0.75)" }}></div>
           <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{ zIndex: 1050 }}>
             <div className="modal-dialog modal-dialog-centered" role="document">
-              <div className="modal-content" style={{
-                backgroundColor: "#1a1a1a",
-                border: "2px solid #FFD700"
-              }}>
-                <div className="modal-header" style={{
-                  backgroundColor: "#FFD700",
-                  color: "#000",
-                  borderBottom: "none"
-                }}>
-                  <h5 className="modal-title fw-bold">
-                    <i className="bi bi-star-fill me-2"></i>
+              <div className="modal-content platinum-modal-content">
+                <div className="modal-header platinum-header">
+                  <h5 className="modal-title">
+                    <i className="bi bi-gem me-2"></i>
                     Platinum Pass Benefits
                   </h5>
                 </div>
                 <div className="modal-body text-center">
-                  <div className="mb-3">
-                    <i className="bi bi-trophy-fill" style={{ fontSize: '3rem', color: "#FFD700" }}></i>
+                  <div className="platinum-trophy">
+                    <i className="bi bi-trophy-fill" style={{ color: "#6a6a6a" }}></i>
                   </div>
-                  <h5 className="mb-3" style={{ color: "#FFD700" }}>Ultimate Cricket Experience!</h5>
-                  <div className="alert text-start" style={{
-                    backgroundColor: "rgba(255, 215, 0, 0.1)",
-                    border: "1px solid #FFD700"
-                  }}>
-                    <h6 className="mb-2" style={{ color: "#FFD700" }}>What You Get:</h6>
-                    <ul className="mb-0 small" style={{ color: "#d4d4d4" }}>
+                  <h5 className="platinum-title">
+                    Ultimate Cricket Experience
+                  </h5>
+                  <div className="alert text-start platinum-benefits">
+                    <h6>What You Get</h6>
+                    <ul>
                       <li>Access to ALL Friday sessions (10 weeks)</li>
                       <li>Access to ALL Sunday Class 1 sessions (10 weeks)</li>
                       <li>Access to ALL Sunday Class 2 sessions (10 weeks)</li>
                       <li>Plus 2 hours free 1-2-1 worth £180.00</li>
-                      <li>Total value worth £1360.00. Save £460.00. </li>
+                      <li>Total value worth £1360.00. Save £460.00</li>
                       <li>Priority booking for future programmes</li>
                     </ul>
                   </div>
-                  <div className="text-center">
-                    <h6 style={{ color: "#4ade80" }}>Total Value: £1,200</h6>
-                    <h4 style={{ color: "#FFD700" }}>Your Price: £900</h4>
-                    <p className="fw-bold" style={{ color: "#4ade80" }}>Save £300 + Maximum Flexibility!</p>
+                  <div className="platinum-price-section">
+                    <h6>Total Value: £1200</h6>
+                    <h4>£900</h4>
+                    <div className="value-badge">
+                      Save £300 + Maximum Flexibility
+                    </div>
                   </div>
                 </div>
-                <div className="modal-footer" style={{ backgroundColor: "#0a0a0a", borderTop: "1px solid #FFD700" }}>
+                <div className="modal-footer platinum-footer">
                   <button 
                     type="button" 
-                    className="btn" 
+                    className="btn btn-platinum-secondary"
                     onClick={handlePlatinumMaybeLater}
-                    style={{
-                      backgroundColor: "transparent",
-                      border: "1px solid #FFD700",
-                      color: "#FFD700",
-                      transition: "all 0.3s ease"
-                    }}
                   >
                     Maybe Later
                   </button>
                   <button 
                     type="button" 
-                    className="btn" 
+                    className="btn btn-platinum-primary"
                     onClick={() => setShowPlatinumInfo(false)}
-                    style={{
-                      backgroundColor: "#FFD700",
-                      color: "#000",
-                      border: "none",
-                      fontWeight: "600",
-                      transition: "all 0.3s ease"
-                    }}
                   >
-                    <i className="bi bi-star-fill me-2"></i>
+                    <i className="bi bi-check-circle-fill me-2"></i>
                     Continue with Platinum
                   </button>
                 </div>
@@ -1690,152 +2018,223 @@ const CricketAcademyBooking = () => {
       </>
     )}
 
-    {/* Terms and Conditions Modal */}
-    {showTerms && (
-      <>
-        <div className="modal-backdrop fade show" style={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}></div>
-        <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{ zIndex: 1050 }}>
-          <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
-            <div className="modal-content" style={{
-              backgroundColor: "#1a1a1a",
-              border: "1px solid #FFD700"
-            }}>
-              <div className="modal-header" style={{
-                backgroundColor: "#FFD700",
-                color: "#000",
-                borderBottom: "none"
+     {/* Terms Modal */}
+     {showTerms && (
+              <div style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: "rgba(0,0,0,0.8)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 9999,
+                padding: "20px"
               }}>
-                <h5 className="modal-title fw-bold">Masterclass Cricket Academy – Terms & Conditions</h5>
-                <button type="button" className="btn-close" onClick={() => setShowTerms(false)} style={{ filter: "invert(1)" }}></button>
-              </div>
-              <div 
-                className="modal-body" 
-                style={{ maxHeight: '60vh', overflowY: 'scroll', color: "#d4d4d4" }}
-                onScroll={handleTermsScroll}
-              >
-                <p>These Terms & Conditions ("Terms") apply to all participants ("Players") and their parents/guardians ("Parents") enrolling in programmes, classes, and activities run by Masterclass Cricket Academy ("MCA"). By enrolling, you agree to these Terms.</p>
-                
-                <hr style={{ borderColor: "#FFD700" }} />
-
-                <h6 style={{ color: "#FFD700" }}>1. Programme Requirements</h6>
-                <ul>
-                  <li>Players must arrive 10 minutes early to get padded up and ready.</li>
-                  <li>All kit should be clearly labelled to avoid mix-ups.</li>
-                  <li>Protective gear (helmet and box) is mandatory for all players.</li>
-                  <li>Parents may observe only from designated areas.</li>
-                  <li>Parents must inform MCA of any injuries, medical conditions, or allergies before participation.</li>
-                </ul>
-
-                <hr style={{ borderColor: "#FFD700" }} />
-
-                <h6 style={{ color: "#FFD700" }}>2. Refund & Cancellation Policy</h6>
-                
-                <p><strong style={{ color: "#FFD700" }}>2.1 Missed Sessions</strong></p>
-                <ul>
-                  <li>Credits for missed sessions will be provided only if MCA receives 48+ hours' notice.</li>
-                  <li>No credits or refunds will be issued for late cancellations or no-shows.</li>
-                </ul>
-
-                <p><strong style={{ color: "#FFD700" }}>2.2 Bookings Made Within 7 Days</strong></p>
-                <ul>
-                  <li>Any class or programme booked within 7 days of the start date is strictly non-refundable, regardless of circumstances.</li>
-                </ul>
-
-                <p><strong style={{ color: "#FFD700" }}>2.3 Block Bookings & Platinum Passes</strong></p>
-                <ul>
-                  <li>Fees for Block Bookings (e.g. 10-week packages) and Platinum Passes are non-refundable under all circumstances.</li>
-                  <li>The only exception is a medical exemption, supported by a valid medical certificate, in which case MCA may issue credit at its discretion.</li>
-                </ul>
-
-                <p><strong style={{ color: "#FFD700" }}>2.4 Use of Credits</strong></p>
-                <ul>
-                  <li>Credits will be issued as 1-to-1 coaching sessions or participation in other MCA activities.</li>
-                  <li>Credits are non-transferable and must be used before 01/09/2026.</li>
-                  <li>MCA reserves the right to determine how credits are applied.</li>
-                </ul>
-
-                <p><strong style={{ color: "#FFD700" }}>2.5 Final Authority</strong></p>
-                <ul>
-                  <li>MCA reserves the right to make final decisions on all credit, cancellation, and refund matters.</li>
-                </ul>
-
-                <hr style={{ borderColor: "#FFD700" }} />
-
-                <h6 style={{ color: "#FFD700" }}>3. Safety & Liability</h6>
-                <ul>
-                  <li>Parents acknowledge that cricket involves inherent physical risks.</li>
-                  <li>MCA follows strict safety protocols and maintains appropriate insurance, but Players participate at their own risk.</li>
-                  <li>MCA accepts no liability for:
-                    <ul>
-                      <li>Injuries sustained during participation (unless caused by proven negligence of MCA staff),</li>
-                      <li>Loss or damage to personal belongings.</li>
-                    </ul>
-                  </li>
-                </ul>
-
-                <hr style={{ borderColor: "#FFD700" }} />
-
-                <h6 style={{ color: "#FFD700" }}>4. Conduct & Removal</h6>
-                <ul>
-                  <li>MCA expects all Players to maintain discipline, respect, and sportsmanship.</li>
-                  <li>Parents and Players must comply with coach instructions at all times.</li>
-                  <li>MCA reserves the right to remove a Player from a session or programme without refund for:
-                    <ul>
-                      <li>Unsafe behaviour,</li>
-                      <li>Disruptive conduct,</li>
-                      <li>Breach of these Terms.</li>
-                    </ul>
-                  </li>
-                </ul>
-
-                <hr style={{ borderColor: "#FFD700" }} />
-
-                <h6 style={{ color: "#FFD700" }}>5. Data Protection</h6>
-                <ul>
-                  <li>MCA collects and processes personal information only for:
-                    <ul>
-                      <li>Programme administration,</li>
-                      <li>Safety and emergency purposes,</li>
-                      <li>Communication regarding sessions.</li>
-                    </ul>
-                  </li>
-                  <li>All data will be handled in line with GDPR regulations and not shared with third parties without consent, unless required by law.</li>
-                </ul>
-
-                <hr style={{ borderColor: "#FFD700" }} />
-
-                <h6 style={{ color: "#FFD700" }}>6. Acceptance of Terms</h6>
-                <p>By enrolling in MCA programmes, Parents and Players confirm they have read, understood, and accepted these Terms & Conditions.</p>
-
-                <div className="alert mt-4" style={{
-                  backgroundColor: "rgba(74, 222, 128, 0.1)",
-                  border: "1px solid #4ade80"
+                <div style={{
+                  backgroundColor: "#1a1a1a",
+                  borderRadius: "8px",
+                  maxWidth: "800px",
+                  width: "100%",
+                  maxHeight: "90vh",
+                  display: "flex",
+                  flexDirection: "column",
+                  border: "1px solid #FFD700"
                 }}>
-                  <i className="bi bi-check-circle me-2" style={{ color: "#4ade80" }}></i>
-                  <strong style={{ color: "#4ade80" }}>You have read the complete terms and conditions.</strong>
+                  <div style={{
+                    padding: "20px",
+                    borderBottom: "1px solid #333",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                  }}>
+                    <h5 style={{ color: "#FFD700", margin: 0 }}>Masterclass Cricket Academy – Terms & Conditions</h5>
+                    <button 
+                      onClick={() => setShowTerms(false)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color: "#FFD700",
+                        fontSize: "24px",
+                        cursor: "pointer",
+                        padding: "0",
+                        width: "30px",
+                        height: "30px"
+                      }}
+                    >
+                      ×
+                    </button>
+                  </div>
+                  <div 
+                    onScroll={(e) => {
+                      const element = e.target;
+                      const isAtBottom = Math.abs(element.scrollHeight - element.scrollTop - element.clientHeight) < 5;
+                      if (isAtBottom) {
+                        setTermsScrolledToEnd(true);
+                      }
+                    }}
+                    style={{
+                      padding: "20px",
+                      overflowY: "auto",
+                      flex: 1,
+                      color: "#d4d4d4"
+                    }}
+                  >
+                    <p style={{ marginBottom: "20px" }}>
+                      These Terms & Conditions ("Terms") apply to all participants ("Players") and their parents/guardians ("Parents") enrolling in programmes, classes, and activities run by Masterclass Cricket Academy ("MCA"). By enrolling, you agree to these Terms.
+                    </p>
+
+                    <h6 style={{ color: "#FFD700", marginTop: "20px", marginBottom: "10px" }}>1. Programme Requirements</h6>
+                    <ul style={{ paddingLeft: "20px" }}>
+                      <li>Players must arrive at least 10 minutes before the scheduled start time to get padded and ready.</li>
+                      <li>All kit must be clearly labelled to avoid mix-ups.</li>
+                      <li>Protective equipment (helmet and box) is mandatory for all Players.</li>
+                      <li>Parents may observe only from designated viewing areas.</li>
+                      <li>Parents/Players must inform MCA in writing of any medical conditions, allergies, injuries, or medication before participation.</li>
+                    </ul>
+
+                    <h6 style={{ color: "#FFD700", marginTop: "20px", marginBottom: "10px" }}>2. Refunds, Cancellations & Credits</h6>
+                    
+                    <p style={{ fontWeight: "bold", marginTop: "15px" }}>2.1 No Cash Refunds</p>
+                    <ul style={{ paddingLeft: "20px" }}>
+                      <li>MCA does not issue cash refunds under any circumstances.</li>
+                      <li>All remedies will be in the form of credits, redeemable for MCA coaching sessions or activities.</li>
+                    </ul>
+
+                    <p style={{ fontWeight: "bold", marginTop: "15px" }}>2.2 Missed Sessions (Single Bookings)</p>
+                    <ul style={{ paddingLeft: "20px" }}>
+                      <li>If Parents/Players provide at least 48 hours' notice before a scheduled session, a credit will be issued.</li>
+                      <li>No credits will be given for cancellations with less than 48 hours' notice or for no-shows.</li>
+                    </ul>
+
+                    <p style={{ fontWeight: "bold", marginTop: "15px" }}>2.3 Block Bookings & Platinum Passes</p>
+                    <ul style={{ paddingLeft: "20px" }}>
+                      <li>A minimum of 14 days' notice before the programme start date is required to cancel a block booking or Platinum Pass. If notice is given, MCA will issue credits (no refunds).</li>
+                      <li>If cancellation is requested with less than 14 days' notice, no credits will be issued unless there is a documented medical or family emergency (proof required).</li>
+                      <li>Once a block booking or Platinum Pass has started, it is strictly non-cancellable and non-creditable, except in the event of a medical or family emergency with valid supporting evidence.</li>
+                      <li>In all such cases, only credits will be issued; refunds will not be provided.</li>
+                    </ul>
+
+                    <p style={{ fontWeight: "bold", marginTop: "15px" }}>2.4 Use and Expiry of Credits</p>
+                    <p>Credits may only be redeemed for:</p>
+                    <ul style={{ paddingLeft: "20px" }}>
+                      <li>1-to-1 coaching sessions, or</li>
+                      <li>Participation in another MCA group class (subject to availability).</li>
+                    </ul>
+                    <p>Additional rules:</p>
+                    <ul style={{ paddingLeft: "20px" }}>
+                      <li>Credits are non-transferable and can only be used by the original Player.</li>
+                      <li>All credits must be redeemed by 01/09/2026. Unused credits will expire with no entitlement to refund or further claim.</li>
+                    </ul>
+
+                    <p style={{ fontWeight: "bold", marginTop: "15px" }}>2.5 MCA Authority</p>
+                    <ul style={{ paddingLeft: "20px" }}>
+                      <li>MCA retains the final authority on all credit decisions.</li>
+                      <li>Parents/Players accept that credits are the sole form of compensation for missed, cancelled, or altered bookings.</li>
+                    </ul>
+
+                    <h6 style={{ color: "#FFD700", marginTop: "20px", marginBottom: "10px" }}>3. Safety, Liability & Insurance</h6>
+                    <ul style={{ paddingLeft: "20px" }}>
+                      <li>Parents acknowledge that cricket involves physical risks.</li>
+                      <li>MCA maintains appropriate insurance and follows strict safety protocols.</li>
+                      <li>Except in cases of proven negligence, MCA accepts no liability for:
+                        <ul style={{ paddingLeft: "20px", marginTop: "5px" }}>
+                          <li>Injuries sustained during participation,</li>
+                          <li>Loss, theft, or damage to personal belongings.</li>
+                        </ul>
+                      </li>
+                      <li>Players must follow all safety instructions. Deliberate disregard may result in removal (see Section 4).</li>
+                    </ul>
+
+                    <h6 style={{ color: "#FFD700", marginTop: "20px", marginBottom: "10px" }}>4. Conduct, Removal & Termination</h6>
+                    <ul style={{ paddingLeft: "20px" }}>
+                      <li>Players must behave respectfully, follow coach instructions, and demonstrate good sportsmanship.</li>
+                      <li>MCA reserves the right to remove a Player without refund or credit for:
+                        <ul style={{ paddingLeft: "20px", marginTop: "5px" }}>
+                          <li>Unsafe behaviour,</li>
+                          <li>Disruptive conduct,</li>
+                          <li>Breach of these Terms.</li>
+                        </ul>
+                      </li>
+                      <li>If a Player is removed, no refunds or credits for remaining sessions will be issued.</li>
+                    </ul>
+
+                    <h6 style={{ color: "#FFD700", marginTop: "20px", marginBottom: "10px" }}>5. Data Protection & Media</h6>
+                    <ul style={{ paddingLeft: "20px" }}>
+                      <li>MCA collects and processes personal data only for:
+                        <ul style={{ paddingLeft: "20px", marginTop: "5px" }}>
+                          <li>Programme administration,</li>
+                          <li>Safety and emergency purposes,</li>
+                          <li>Session communications.</li>
+                        </ul>
+                      </li>
+                      <li>Data is handled in line with GDPR. Parents/Players have rights to access, correct, or request deletion of personal data.</li>
+                      <li>MCA may photograph or video sessions for coaching or marketing purposes. Consent will be requested separately; consent may be withdrawn at any time in writing.</li>
+                    </ul>
+
+                    <h6 style={{ color: "#FFD700", marginTop: "20px", marginBottom: "10px" }}>6. Force Majeure & Changes</h6>
+                    <ul style={{ paddingLeft: "20px" }}>
+                      <li>MCA is not liable for failure or delay in delivering sessions caused by events outside its reasonable control (e.g. severe weather, venue closure, restrictions).</li>
+                      <li>If MCA cancels a session, it will endeavour to reschedule or issue a credit (no refunds).</li>
+                      <li>If MCA makes significant and unacceptable changes (e.g. venue relocation or major schedule alteration), Parents may withdraw and receive a pro-rata credit for unused sessions.</li>
+                    </ul>
+
+                    <h6 style={{ color: "#FFD700", marginTop: "20px", marginBottom: "10px" }}>7. Changes to Terms</h6>
+                    <ul style={{ paddingLeft: "20px" }}>
+                      <li>MCA may amend these Terms from time to time. Material changes will be notified at least 14 days in advance.</li>
+                      <li>Continued participation constitutes acceptance of updated Terms.</li>
+                    </ul>
+
+                    <h6 style={{ color: "#FFD700", marginTop: "20px", marginBottom: "10px" }}>8. Governing Law & Disputes</h6>
+                    <ul style={{ paddingLeft: "20px" }}>
+                      <li>These Terms are governed by the laws of England & Wales.</li>
+                      <li>If any provision is found invalid, the remainder will continue in effect.</li>
+                      <li>Disputes should first be raised with MCA in writing. If unresolved, disputes will be handled by the courts of England & Wales.</li>
+                    </ul>
+
+                    <h6 style={{ color: "#FFD700", marginTop: "20px", marginBottom: "10px" }}>9. Acceptance</h6>
+                    <p>
+                      By enrolling in MCA programmes, Parents and Players confirm they have read, understood, and accepted these Terms & Conditions.
+                    </p>
+
+                    <div style={{
+                      marginTop: "30px",
+                      padding: "15px",
+                      backgroundColor: "#2a2a2a",
+                      borderRadius: "5px",
+                      textAlign: "center"
+                    }}>
+                      <p style={{ margin: 0, color: "#FFD700" }}>
+                        {termsScrolledToEnd ? "✓ You have read the complete terms" : "↓ Please scroll to the bottom to continue"}
+                      </p>
+                    </div>
+                  </div>
+                  <div style={{
+                    padding: "20px",
+                    borderTop: "1px solid #333",
+                    textAlign: "right"
+                  }}>
+                    <button 
+                      onClick={() => setShowTerms(false)}
+                      disabled={!termsScrolledToEnd}
+                      style={{
+                        backgroundColor: termsScrolledToEnd ? "#FFD700" : "#666",
+                        color: termsScrolledToEnd ? "#000" : "#999",
+                        border: "none",
+                        padding: "10px 30px",
+                        borderRadius: "5px",
+                        cursor: termsScrolledToEnd ? "pointer" : "not-allowed",
+                        fontWeight: "bold"
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
                 </div>
               </div>
-              <div className="modal-footer" style={{ backgroundColor: "#0a0a0a", borderTop: "1px solid #FFD700" }}>
-                <button 
-                  type="button" 
-                  className="btn" 
-                  onClick={() => setShowTerms(false)}
-                  style={{
-                    backgroundColor: "#FFD700",
-                    color: "#000",
-                    border: "none",
-                    fontWeight: "600",
-                    transition: "all 0.3s ease"
-                  }}
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    )}
+            )}
 
     {/* Single Session Confirmation Dialog */}
     {showConfirmDialog && (
