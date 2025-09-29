@@ -959,8 +959,7 @@ const CricketAcademyBooking = () => {
                     }}
                   />
                   <div className="small" style={{ color: "#d4d4d4" }}>
-                    I give permission to analyse my data and post on social media for promotional purposes.
-                  </div>
+                  I give permission for photos and videos to be taken during sessions for training analysis and promotional use.                  </div>
                 </div>
               </div>
             </div>
