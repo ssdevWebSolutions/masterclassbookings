@@ -3,6 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSessionsByYear } from "@/Redux/Sessions/sessionsSlice";
 import { useRouter } from "next/navigation";
+import Header from "../Components/Header";
+import Footer from "../Components/Footer";
 
 const CricketAcademyBooking = () => {
   const [selectedChild, setSelectedChild] = useState("");
@@ -321,7 +323,8 @@ const CricketAcademyBooking = () => {
     );
   }
 
-  return (
+  return <>
+  <Header />
     <div className="min-vh-100" style={{ backgroundColor: "#0a0a0a" }}>
       {/* Hero Section */}
       <header className="py-4" style={{ 
@@ -333,7 +336,7 @@ const CricketAcademyBooking = () => {
           {/* Back Button */}
           <button
             onClick={() => window.history.back()}
-            className="btn position-absolute top-0 start-0 m-3 btn-sm"
+            className="btn position-absolute top-1 start-0 m-3 btn-sm"
             style={{
               backgroundColor: "transparent",
               border: "1px solid #FFD700",
@@ -1907,7 +1910,8 @@ const CricketAcademyBooking = () => {
       }
     `}</style>
   </div>
-);
+  <Footer />
+  </>;
 }
 
 export default CricketAcademyBooking;

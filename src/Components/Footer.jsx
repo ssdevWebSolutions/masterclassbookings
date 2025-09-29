@@ -6,7 +6,7 @@ export default function Footer() {
       backgroundColor: '#212529',
       color: '#ffffff',
       padding: '40px 20px',
-      marginTop: '80px',
+      marginTop: '1px',
       borderTop: '1px solid rgba(255, 193, 7, 0.1)'
     },
     container: {
@@ -15,7 +15,7 @@ export default function Footer() {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      gap: '16px'
+      // gap: '16px'
     },
     brand: {
       fontSize: '18px',
@@ -65,8 +65,8 @@ export default function Footer() {
           }
         `}
       </style>
-      <footer style={styles.footer}>
-        <div style={styles.container} className="footer-container">
+      <footer style={styles.footer} className="">
+        <div style={styles.container} className="footer-container ">
           <div style={styles.brand}>MasterClass Cricket</div>
           <div style={styles.divider}></div>
           <p style={styles.copyright}>

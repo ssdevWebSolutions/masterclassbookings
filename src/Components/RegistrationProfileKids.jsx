@@ -5,6 +5,7 @@ import { Form, Button, Card, Container, Row, Col, Table } from "react-bootstrap"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { fetchKids, addKid, updateKid, deleteKid } from "../Redux/Kids/KidActions";
 import { useRouter } from "next/router";
+import { fetchBookings } from "@/Redux/bookingSlice/bookingSlice";
 
 export default function RegistrationProfileKids() {
   const dispatch = useDispatch();
