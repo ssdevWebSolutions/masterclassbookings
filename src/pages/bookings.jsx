@@ -162,9 +162,9 @@ export default function Home() {
               <div className="card border-0 shadow-sm h-100 hover-card">
                 <div className="card-body text-center p-4">
                   <div className="text-info mb-2">
-                    <i className="fas fa-rupee-sign fa-2x"></i>
+                    <i className="fas fa-euro-sign fa-2x"></i>
                   </div>
-                  <h3 className="mb-1">₹{bookings.reduce((sum, b) => sum + (b.totalAmount || 0), 0)}</h3>
+                  <h3 className="mb-1">£{bookings.reduce((sum, b) => sum + (b.totalAmount || 0), 0)}</h3>
                   <small className="text-muted">Total Spent</small>
                 </div>
               </div>
@@ -212,8 +212,8 @@ export default function Home() {
                           <span className="small">{booking.kidLevel}</span>
                         </div>
                         <div className="d-flex align-items-center">
-                          <i className="fas fa-rupee-sign text-muted me-2"></i>
-                          <span className="small">₹{booking.totalAmount}</span>
+                          <i className="fas fa-euro-sign text-muted me-2"></i>
+                          <span className="small">£{booking.totalAmount}</span>
                         </div>
                       </div>
 
@@ -299,7 +299,7 @@ export default function Home() {
                           <i className="fas fa-credit-card me-2"></i>Payment Info
                         </h6>
                         <div className="mb-2">
-                          <strong>Total Amount:</strong> ₹{selectedBooking.totalAmount}
+                          <strong>Total Amount:</strong> £{selectedBooking.totalAmount}
                         </div>
                         <div className="mb-2">
                           <strong>Status:</strong>{' '}
