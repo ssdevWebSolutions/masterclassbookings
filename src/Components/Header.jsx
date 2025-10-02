@@ -364,15 +364,17 @@ export default function Header() {
     <header className="sticky-top  text-white shadow-sm" style={{backgroundColor:'black'}}>
       <div className="container d-flex justify-content-between align-items-center py-3">
         {/* Logo + Title */}
-        <div className="d-flex align-items-center">
-          <img 
-            src="logo_.png" 
-            alt="MasterClass Cricket Logo" 
-            className="me-2 img-fluid" 
-            style={{ maxHeight: "80px", width: "auto" }} 
-          />
-          {/* <h1 className="h5 fw-bold text-warning mb-0" style={{color:'#FFD700'}}>MasterClass Cricket</h1> */}
-        </div>
+<div className="d-flex align-items-center">
+  <a href="https://masterclasscricket.co.uk/" style={{ textDecoration: 'none' }}>
+    <img 
+      src="logo_.png" 
+      alt="MasterClass Cricket Logo" 
+      className="me-2 img-fluid" 
+      style={{ maxHeight: "80px", width: "auto", cursor: "pointer" }} 
+    />
+  </a>
+  {/* <h1 className="h5 fw-bold text-warning mb-0" style={{color:'#FFD700'}}>MasterClass Cricket</h1> */}
+</div>
 
         {/* Desktop Nav */}
         <nav className="d-none d-md-flex align-items-center gap-3">
