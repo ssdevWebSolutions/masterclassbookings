@@ -369,9 +369,9 @@ export default function Header() {
             src="logo_.png" 
             alt="MasterClass Cricket Logo" 
             className="me-2 img-fluid" 
-            style={{ maxHeight: "50px", width: "auto" }} 
+            style={{ maxHeight: "80px", width: "auto" }} 
           />
-          <h1 className="h5 fw-bold text-warning mb-0" style={{color:'#FFD700'}}>MasterClass Cricket</h1>
+          {/* <h1 className="h5 fw-bold text-warning mb-0" style={{color:'#FFD700'}}>MasterClass Cricket</h1> */}
         </div>
 
         {/* Desktop Nav */}
