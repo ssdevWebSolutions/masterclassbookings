@@ -842,26 +842,32 @@ export default function Header() {
 
             {/* Professional OTP Grid */}
             <div className="mb-4">
-              <div className="d-flex justify-content-center gap-2 mb-3">
+              <div className="d-flex justify-content-center gap-2 mb-3 flex-wrap">
                 {otpCode.map((digit, index) => (
                   <input
                     key={index}
                     id={`otp-${index}`}
                     type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     maxLength="1"
                     className="form-control text-center fw-bold"
                     style={{
-                      width: '30px',
-                      height: '30px',
-                      fontSize: '20px',
-                      border: '2px solid #dee2e6',
-                      borderRadius: '8px',
-                      backgroundColor: digit ? '#f8f9fa' : '#ffffff'
+                      width: '45px',
+                      height: '55px',
+                      fontSize: '22px',
+                      border: digit ? '2px solid #28a745' : '2px solid #dee2e6',
+                      borderRadius: '10px',
+                      backgroundColor: digit ? '#f8f9fa' : '#ffffff',
+                      color: '#000000',
+                      fontWeight: '600',
+                      flexShrink: 0
                     }}
                     value={digit}
                     onChange={(e) => handleOTPChange(index, e.target.value)}
                     onKeyDown={(e) => handleOTPKeyDown(index, e)}
                     disabled={otpIsLoading}
+                    autoComplete="off"
                   />
                 ))}
               </div>

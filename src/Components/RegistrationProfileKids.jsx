@@ -19,6 +19,7 @@ export default function RegistrationProfileKids() {
   const [parentData, setParentData] = useState({ firstName: "", lastName: "", email: "", phone: "" });
   const [newKid, setNewKid] = useState({ firstName: "", lastName: "", age: "", club: "", medicalInfo: "", level: "" });
   const [editKidId, setEditKidId] = useState(null);
+  const [ageError, setAgeError] = useState("");
   const kidstate = useSelector(state => state.kids.list);
   const router = useRouter();
 
@@ -48,11 +49,30 @@ export default function RegistrationProfileKids() {
 
   const handleKidChange = (e) => {
     const { name, value } = e.target;
+    
+    // Validate age input
+    if (name === "age") {
+      const ageValue = parseInt(value);
+      if (value && ageValue > 14) {
+        setAgeError("Kids above 14 years old cannot be registered");
+      } else {
+        setAgeError("");
+      }
+    }
+    
     setNewKid({ ...newKid, [name]: value });
   };
 
   const handleAddOrUpdateKid = (e) => {
     e.preventDefault();
+    
+    // Validate age before submission
+    const ageValue = parseInt(newKid.age);
+    if (ageValue > 14) {
+      alert("Cannot register kids above 14 years old. Please check the age and try again.");
+      return;
+    }
+    
     if (editKidId) {
       dispatch(updateKid(editKidId, newKid ,loginData.token));
       setEditKidId(null);
@@ -61,6 +81,7 @@ export default function RegistrationProfileKids() {
       dispatch(addKid( loginData.id, newKid ,loginData.token));
     }
     setNewKid({ firstName:"", lastName:"", age:"", club:"", medicalInfo:"", level:"" });
+    setAgeError("");
   };
 
   const handleEditKid = (kid) => {
@@ -110,7 +131,27 @@ export default function RegistrationProfileKids() {
                 <Col md={4}>
                   <Form.Group controlId="kidAge">
                     <Form.Label>Age*</Form.Label>
-                    <Form.Control type="number" placeholder="Age" name="age" value={newKid.age} onChange={handleKidChange} required />
+                    <Form.Control 
+                      type="number" 
+                      placeholder="Age" 
+                      name="age" 
+                      value={newKid.age} 
+                      onChange={handleKidChange} 
+                      required 
+                      min="1"
+                      max="14"
+                      isInvalid={ageError !== ""}
+                      className={ageError ? "border-danger" : ""}
+                    />
+                    {ageError && (
+                      <Form.Control.Feedback type="invalid" className="d-block">
+                        <i className="bi bi-exclamation-circle me-1"></i>
+                        {ageError}
+                      </Form.Control.Feedback>
+                    )}
+                    <Form.Text className="text-muted">
+                      Age must be 14 years or below
+                    </Form.Text>
                   </Form.Group>
                 </Col>
                 <Col md={4}>
@@ -137,9 +178,15 @@ export default function RegistrationProfileKids() {
                 <Form.Label>Medical Info</Form.Label>
                 <Form.Control as="textarea" rows={2} placeholder="Medical Info" name="medicalInfo" value={newKid.medicalInfo} onChange={handleKidChange} />
               </Form.Group>
-              <Button type="submit" className="btn-warning text-dark fw-bold me-2">
+              <Button type="submit" className="btn-warning text-dark fw-bold me-2" disabled={ageError !== ""}>
                 {editKidId ? "Update Kid" : "Add Kid"}
               </Button>
+              {ageError && (
+                <small className="text-danger d-block mt-2">
+                  <i className="bi bi-exclamation-triangle-fill me-1"></i>
+                  Please correct the errors before submitting
+                </small>
+              )}
             </Form>
           </Card.Body>
         </Card>
