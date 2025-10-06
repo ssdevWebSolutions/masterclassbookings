@@ -639,7 +639,7 @@ const CricketAcademyBooking = () => {
                     )}
                   </div>
   
-                  {/* Fridays Section */}
+                {/* Fridays Section */}
                   <div className="mb-3">
                     <div className="d-flex justify-content-between align-items-center mb-2">
                       <button
@@ -649,14 +649,51 @@ const CricketAcademyBooking = () => {
                           backgroundColor: "transparent",
                           border: "1px solid #FFD700",
                           color: "#FFD700",
-                          transition: "all 0.3s ease"
+                          transition: "all 0.3s ease",
+                          position: "relative"
                         }}
                       >
-                        <i className="bi bi-calendar me-2"></i>
-                        Fridays ({fridayDates.length} sessions available)
-                        <i className={`bi bi-chevron-${showFridays ? 'up' : 'down'} ms-auto`}></i>
+                        <div className="d-flex align-items-center gap-2 flex-grow-1">
+                          <i className="bi bi-calendar"></i>
+                          <div className="d-flex flex-column align-items-start flex-grow-1">
+                            <span>Fridays ({fridayDates.length} sessions available)</span>
+                            <small style={{ fontSize: "0.75rem", color: "#999", fontWeight: "normal" }}>
+                              Click to select individual sessions
+                            </small>
+                          </div>
+                          <div 
+                            className="d-flex align-items-center justify-content-center"
+                            style={{
+                              width: "32px",
+                              height: "32px",
+                              backgroundColor: showFridays ? "#FFD700" : "rgba(255, 215, 0, 0.1)",
+                              borderRadius: "4px",
+                              transition: "all 0.3s ease"
+                            }}
+                          >
+                            <svg 
+                              width="16" 
+                              height="16" 
+                              viewBox="0 0 16 16" 
+                              fill="none" 
+                              xmlns="http://www.w3.org/2000/svg"
+                              style={{ 
+                                transition: "transform 0.3s ease",
+                                transform: showFridays ? "rotate(180deg)" : "rotate(0deg)"
+                              }}
+                            >
+                              <path 
+                                d="M2 5L8 11L14 5" 
+                                stroke={showFridays ? "#000" : "#FFD700"}
+                                strokeWidth="2.5" 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </div>
+                        </div>
                       </button>
-                      <div className="d-flex gap-2">
+                      <div className="d-flex gap-2 align-items-center">
                         {selectedFridayDates.length > 0 && (
                           <button 
                             className="btn btn-sm" 
@@ -667,37 +704,55 @@ const CricketAcademyBooking = () => {
                               color: "#dc3545",
                               transition: "all 0.3s ease"
                             }}
+                            title="Clear all selections"
                           >
                             <i className="bi bi-x"></i>
                           </button>
                         )}
-                        <div 
-                          className={`rounded-circle border d-flex align-items-center justify-content-center`}
-                          style={{ 
-                            width: 28, 
-                            height: 28, 
-                            cursor: 'pointer',
-                            backgroundColor: allFridaysSelected ? "#FFD700" : "transparent",
-                            borderColor: allFridaysSelected ? "#FFD700" : "#666",
-                            transition: "all 0.3s ease"
-                          }}
-                          onClick={(e) => handleSelectAllFridays({ target: { checked: !allFridaysSelected } })}
-                        >
-                          {allFridaysSelected && <i className="bi bi-check-lg" style={{ color: "#000" }} />}
+                        <div className="d-flex flex-column align-items-center">
+                          <div 
+                            className={`rounded-circle border d-flex align-items-center justify-content-center`}
+                            style={{ 
+                              width: 28, 
+                              height: 28, 
+                              cursor: 'pointer',
+                              backgroundColor: allFridaysSelected ? "#FFD700" : "transparent",
+                              borderColor: allFridaysSelected ? "#FFD700" : "#666",
+                              transition: "all 0.3s ease"
+                            }}
+                            onClick={(e) => handleSelectAllFridays({ target: { checked: !allFridaysSelected } })}
+                            title="Select all sessions"
+                          >
+                            {allFridaysSelected && <i className="bi bi-check-lg" style={{ color: "#000" }} />}
+                          </div>
+                          <small style={{ fontSize: "0.65rem", color: "#999", marginTop: "2px", whiteSpace: "nowrap" }}>
+                            Book All
+                          </small>
                         </div>
                       </div>
                     </div>
-                  
+
                     {showFridays && (
                       <div className="mt-2" style={{
                         animation: "fadeIn 0.3s ease-in"
                       }}>
+                        <div className="mb-2 px-2" style={{ 
+                          backgroundColor: "#1a1a1a", 
+                          padding: "8px 12px", 
+                          borderRadius: "4px",
+                          border: "1px solid #333"
+                        }}>
+                          <small style={{ color: "#999", fontSize: "0.85rem" }}>
+                            <i className="bi bi-info-circle me-1" style={{ color: "#FFD700" }}></i>
+                            Select individual sessions below or use "Book All" above
+                          </small>
+                        </div>
                         <div className="list-group">
                           {fridayDates.map((session, index) => {
                             const isSelected = selectedFridayDates.includes(session.id);
                             const status = getAvailabilityStatus(session.bookedCount);
                             const isDisabled = status === "not-available";
-  
+
                             return (
                               <button
                                 key={session.id}
@@ -739,7 +794,7 @@ const CricketAcademyBooking = () => {
                       </div>
                     )}
                   </div>
-  
+
                   {/* Sunday Class 1 Section */}
                   <div className="mb-3">
                     <div className="d-flex justify-content-between align-items-center mb-2">
@@ -750,14 +805,51 @@ const CricketAcademyBooking = () => {
                           backgroundColor: "transparent",
                           border: "1px solid #FFD700",
                           color: "#FFD700",
-                          transition: "all 0.3s ease"
+                          transition: "all 0.3s ease",
+                          position: "relative"
                         }}
                       >
-                        <i className="bi bi-calendar me-2"></i>
-                        Sunday Class 1 (4:30pm-6:00pm) - {sundayClass1Dates.length} sessions
-                        <i className={`bi bi-chevron-${showSundayClass1 ? 'up' : 'down'} ms-auto`}></i>
+                        <div className="d-flex align-items-center gap-2 flex-grow-1">
+                          <i className="bi bi-calendar"></i>
+                          <div className="d-flex flex-column align-items-start flex-grow-1">
+                            <span>Sunday Class 1 (4:30pm-6:00pm) - {sundayClass1Dates.length} sessions</span>
+                            <small style={{ fontSize: "0.75rem", color: "#999", fontWeight: "normal" }}>
+                              Click to select individual sessions
+                            </small>
+                          </div>
+                          <div 
+                            className="d-flex align-items-center justify-content-center"
+                            style={{
+                              width: "32px",
+                              height: "32px",
+                              backgroundColor: showSundayClass1 ? "#FFD700" : "rgba(255, 215, 0, 0.1)",
+                              borderRadius: "4px",
+                              transition: "all 0.3s ease"
+                            }}
+                          >
+                            <svg 
+                              width="16" 
+                              height="16" 
+                              viewBox="0 0 16 16" 
+                              fill="none" 
+                              xmlns="http://www.w3.org/2000/svg"
+                              style={{ 
+                                transition: "transform 0.3s ease",
+                                transform: showSundayClass1 ? "rotate(180deg)" : "rotate(0deg)"
+                              }}
+                            >
+                              <path 
+                                d="M2 5L8 11L14 5" 
+                                stroke={showSundayClass1 ? "#000" : "#FFD700"}
+                                strokeWidth="2.5" 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </div>
+                        </div>
                       </button>
-                      <div className="d-flex gap-2">
+                      <div className="d-flex gap-2 align-items-center">
                         {selectedSundayClass1Dates.length > 0 && (
                           <button 
                             className="btn btn-sm" 
@@ -768,23 +860,30 @@ const CricketAcademyBooking = () => {
                               color: "#dc3545",
                               transition: "all 0.3s ease"
                             }}
+                            title="Clear all selections"
                           >
                             <i className="bi bi-x"></i>
                           </button>
                         )}
-                        <div 
-                          className={`rounded-circle border d-flex align-items-center justify-content-center`}
-                          style={{ 
-                            width: 28, 
-                            height: 28, 
-                            cursor: 'pointer',
-                            backgroundColor: allSundayClass1Selected ? "#FFD700" : "transparent",
-                            borderColor: allSundayClass1Selected ? "#FFD700" : "#666",
-                            transition: "all 0.3s ease"
-                          }}
-                          onClick={(e) => handleSelectAllSundayClass1({ target: { checked: !allSundayClass1Selected } })}
-                        >
-                          {allSundayClass1Selected && <i className="bi bi-check-lg" style={{ color: "#000" }} />}
+                        <div className="d-flex flex-column align-items-center">
+                          <div 
+                            className={`rounded-circle border d-flex align-items-center justify-content-center`}
+                            style={{ 
+                              width: 28, 
+                              height: 28, 
+                              cursor: 'pointer',
+                              backgroundColor: allSundayClass1Selected ? "#FFD700" : "transparent",
+                              borderColor: allSundayClass1Selected ? "#FFD700" : "#666",
+                              transition: "all 0.3s ease"
+                            }}
+                            onClick={(e) => handleSelectAllSundayClass1({ target: { checked: !allSundayClass1Selected } })}
+                            title="Select all sessions"
+                          >
+                            {allSundayClass1Selected && <i className="bi bi-check-lg" style={{ color: "#000" }} />}
+                          </div>
+                          <small style={{ fontSize: "0.65rem", color: "#999", marginTop: "2px", whiteSpace: "nowrap" }}>
+                            Book All
+                          </small>
                         </div>
                       </div>
                     </div>
@@ -793,12 +892,23 @@ const CricketAcademyBooking = () => {
                       <div className="mt-2" style={{
                         animation: "fadeIn 0.3s ease-in"
                       }}>
+                        <div className="mb-2 px-2" style={{ 
+                          backgroundColor: "#1a1a1a", 
+                          padding: "8px 12px", 
+                          borderRadius: "4px",
+                          border: "1px solid #333"
+                        }}>
+                          <small style={{ color: "#999", fontSize: "0.85rem" }}>
+                            <i className="bi bi-info-circle me-1" style={{ color: "#FFD700" }}></i>
+                            Select individual sessions below or use "Book All" above
+                          </small>
+                        </div>
                         <div className="list-group">
                           {sundayClass1Dates.map((session) => {
                             const isSelected = selectedSundayClass1Dates.includes(session.id);
                             const status = getAvailabilityStatus(session.bookedCount);
                             const isDisabled = status === "not-available";
-  
+
                             return (
                               <button
                                 key={session.id}
@@ -840,7 +950,7 @@ const CricketAcademyBooking = () => {
                       </div>
                     )}
                   </div>
-  
+
                   {/* Sunday Class 2 Section */}
                   <div className="mb-3">
                     <div className="d-flex justify-content-between align-items-center mb-2">
@@ -851,14 +961,51 @@ const CricketAcademyBooking = () => {
                           backgroundColor: "transparent",
                           border: "1px solid #FFD700",
                           color: "#FFD700",
-                          transition: "all 0.3s ease"
+                          transition: "all 0.3s ease",
+                          position: "relative"
                         }}
                       >
-                        <i className="bi bi-calendar me-2"></i>
-                        Sunday Class 2 (6:00pm-7:30pm) - {sundayClass2Dates.length} sessions
-                        <i className={`bi bi-chevron-${showSundayClass2 ? 'up' : 'down'} ms-auto`}></i>
+                        <div className="d-flex align-items-center gap-2 flex-grow-1">
+                          <i className="bi bi-calendar"></i>
+                          <div className="d-flex flex-column align-items-start flex-grow-1">
+                            <span>Sunday Class 2 (6:00pm-7:30pm) - {sundayClass2Dates.length} sessions</span>
+                            <small style={{ fontSize: "0.75rem", color: "#999", fontWeight: "normal" }}>
+                              Click to select individual sessions
+                            </small>
+                          </div>
+                          <div 
+                            className="d-flex align-items-center justify-content-center"
+                            style={{
+                              width: "32px",
+                              height: "32px",
+                              backgroundColor: showSundayClass2 ? "#FFD700" : "rgba(255, 215, 0, 0.1)",
+                              borderRadius: "4px",
+                              transition: "all 0.3s ease"
+                            }}
+                          >
+                            <svg 
+                              width="16" 
+                              height="16" 
+                              viewBox="0 0 16 16" 
+                              fill="none" 
+                              xmlns="http://www.w3.org/2000/svg"
+                              style={{ 
+                                transition: "transform 0.3s ease",
+                                transform: showSundayClass2 ? "rotate(180deg)" : "rotate(0deg)"
+                              }}
+                            >
+                              <path 
+                                d="M2 5L8 11L14 5" 
+                                stroke={showSundayClass2 ? "#000" : "#FFD700"}
+                                strokeWidth="2.5" 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </div>
+                        </div>
                       </button>
-                      <div className="d-flex gap-2">
+                      <div className="d-flex gap-2 align-items-center">
                         {selectedSundayClass2Dates.length > 0 && (
                           <button 
                             className="btn btn-sm" 
@@ -869,23 +1016,30 @@ const CricketAcademyBooking = () => {
                               color: "#dc3545",
                               transition: "all 0.3s ease"
                             }}
+                            title="Clear all selections"
                           >
                             <i className="bi bi-x"></i>
                           </button>
                         )}
-                        <div 
-                          className={`rounded-circle border d-flex align-items-center justify-content-center`}
-                          style={{ 
-                            width: 28, 
-                            height: 28, 
-                            cursor: 'pointer',
-                            backgroundColor: allSundayClass2Selected ? "#FFD700" : "transparent",
-                            borderColor: allSundayClass2Selected ? "#FFD700" : "#666",
-                            transition: "all 0.3s ease"
-                          }}
-                          onClick={(e) => handleSelectAllSundayClass2({ target: { checked: !allSundayClass2Selected } })}
-                        >
-                          {allSundayClass2Selected && <i className="bi bi-check-lg" style={{ color: "#000" }} />}
+                        <div className="d-flex flex-column align-items-center">
+                          <div 
+                            className={`rounded-circle border d-flex align-items-center justify-content-center`}
+                            style={{ 
+                              width: 28, 
+                              height: 28, 
+                              cursor: 'pointer',
+                              backgroundColor: allSundayClass2Selected ? "#FFD700" : "transparent",
+                              borderColor: allSundayClass2Selected ? "#FFD700" : "#666",
+                              transition: "all 0.3s ease"
+                            }}
+                            onClick={(e) => handleSelectAllSundayClass2({ target: { checked: !allSundayClass2Selected } })}
+                            title="Select all sessions"
+                          >
+                            {allSundayClass2Selected && <i className="bi bi-check-lg" style={{ color: "#000" }} />}
+                          </div>
+                          <small style={{ fontSize: "0.65rem", color: "#999", marginTop: "2px", whiteSpace: "nowrap" }}>
+                            Book All
+                          </small>
                         </div>
                       </div>
                     </div>
@@ -894,12 +1048,23 @@ const CricketAcademyBooking = () => {
                       <div className="mt-2" style={{
                         animation: "fadeIn 0.3s ease-in"
                       }}>
+                        <div className="mb-2 px-2" style={{ 
+                          backgroundColor: "#1a1a1a", 
+                          padding: "8px 12px", 
+                          borderRadius: "4px",
+                          border: "1px solid #333"
+                        }}>
+                          <small style={{ color: "#999", fontSize: "0.85rem" }}>
+                            <i className="bi bi-info-circle me-1" style={{ color: "#FFD700" }}></i>
+                            Select individual sessions below or use "Book All" above
+                          </small>
+                        </div>
                         <div className="list-group">
                           {sundayClass2Dates.map((session) => {
                             const isSelected = selectedSundayClass2Dates.includes(session.id);
                             const status = getAvailabilityStatus(session.bookedCount);
                             const isDisabled = status === "not-available";
-  
+
                             return (
                               <button
                                 key={session.id}
