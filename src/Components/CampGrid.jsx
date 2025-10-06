@@ -110,7 +110,7 @@ function CenterToast({ message, onClose }) {
             e.target.style.boxShadow = 'none';
           }}
         >
-          Close
+          Login
         </button>
       </div>
     </div>
