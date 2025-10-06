@@ -137,6 +137,15 @@ export default function About() {
     goldText: {
       color: '#FFD700',
       fontWeight: '600'
+    },
+    highlightedText: {
+      color: '#FFD700',
+      fontWeight: '700',
+      fontSize: '1.25rem',
+      lineHeight: '1.6',
+      display: 'inline-block',
+      verticalAlign: 'middle',
+      letterSpacing: '0.02em'
     }
   };
 
@@ -159,6 +168,9 @@ export default function About() {
               font-size: 1.05rem !important;
               padding-left: 24px !important;
             }
+            .about-highlighted-responsive {
+              font-size: 1.15rem !important;
+            }
           }
           @media (max-width: 480px) {
             .about-section-responsive {
@@ -169,6 +181,9 @@ export default function About() {
             }
             .about-paragraph-responsive {
               font-size: 0.95rem !important;
+            }
+            .about-highlighted-responsive {
+              font-size: 1.05rem !important;
             }
           }
         `}
@@ -192,7 +207,7 @@ export default function About() {
           {/* Content */}
           <div style={styles.content}>
             <p style={styles.paragraph} className="about-paragraph-responsive">
-              At <span style={styles.goldText}>Masterclass Cricket Academy</span>, our Autumn/Winter Clinic is all about{" "}
+              At <span style={styles.highlightedText} className="about-highlighted-responsive">Masterclass Cricket Academy</span>, our Autumn/Winter Clinic is all about{" "}
               <span style={styles.goldText}>genuine player development</span>. Designed for young cricketers aged 8–13, this 
               10-week programme focuses on core technical skills – batting, bowling, and fielding – 
               delivered through structured drills, video analysis, and proven biomechanics expertise.

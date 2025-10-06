@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { Modal, Button, Dropdown, Form, Alert, Row, Col } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch, useSelector } from "react-redux";
-import { loginUserWithType, logOutUserWithType } from "../Redux/Authentication/AuthenticationAction";
+import { loginModalForSlice, loginUserWithType, logOutUserWithType } from "../Redux/Authentication/AuthenticationAction";
 import { fetchKids } from "@/Redux/Kids/KidActions";
 import { persistor } from "@/store";
 import { useRouter } from "next/router";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const [showLogin, setShowLogin] = useState(true);
   const [showRegister, setShowRegister] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -54,6 +54,12 @@ export default function Header() {
   const dispatch = useDispatch();
   const loginData = useSelector(state => state.auth.loginData);
   const loginStatus = useSelector(state => state.auth);
+  const loginModal = useSelector(state => state.auth.loginModal);
+
+  useEffect(()=>{
+    console.log(loginModal);
+    setShowLogin(true);
+  },[loginModal]);
   
   const isLoggedIn = loginData && loginData.token && loginData.token !== null && loginData.token !== "";
 
@@ -344,6 +350,8 @@ export default function Header() {
   };
 
   const handleModalClose = () => {
+    console.log("close");
+    
     setShowLogin(false);
     setShowRegister(false);
     setShowForgotPassword(false);
@@ -358,6 +366,9 @@ export default function Header() {
     setRegIsLoading(false);
     setForgotIsLoading(false);
     setOtpIsLoading(false);
+    setTimeout(() => {
+      dispatch(loginModalForSlice(false));
+    }, 0);
   };
 
   return (

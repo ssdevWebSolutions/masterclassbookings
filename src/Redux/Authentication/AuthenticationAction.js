@@ -1,7 +1,7 @@
 
 import { clearBookings } from '../bookingSlice/bookingSlice';
 import { setKidsList } from '../Kids/KidsSlice';
-import {getLoginUserData} from  './AuthenticationSlice';
+import {getLoginModalStatus, getLoginUserData} from  './AuthenticationSlice';
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 
@@ -72,4 +72,16 @@ export const loginUserWithType = (loginData) => async (dispatch) => {
     }
   };
   
+
+
+  export const loginModalForSlice = (data) => async(dispatch)=>{
+    try{
+      
+      dispatch(getLoginModalStatus(data));
+    }
+    catch(e)
+    {
+      console.log("error trying login modal open"+  e);
+    }
+  }
   

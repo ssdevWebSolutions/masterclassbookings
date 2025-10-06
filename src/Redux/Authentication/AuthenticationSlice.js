@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialAuthSlice = {
   registerStatus: false,
-  loginData :{}
+  loginData :{},
+  loginModal:false
 };
 
 const authSlice = createSlice({
@@ -14,9 +15,12 @@ const authSlice = createSlice({
     },
     getLoginUserData:(state,action)=>{
         state.loginData = action.payload
+    },
+    getLoginModalStatus:(state,action)=>{
+      state.loginModal = action.payload
     }
   },
 });
 
-export const { getRegisterAuthStatus,getLoginUserData } = authSlice.actions;
+export const { getRegisterAuthStatus,getLoginUserData,getLoginModalStatus } = authSlice.actions;
 export default authSlice.reducer;

@@ -1,6 +1,7 @@
+import { loginModal, loginModalForSlice } from "@/Redux/Authentication/AuthenticationAction";
 import { useRouter } from "next/router";
 import React, { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // Camp data
 const camps = [
@@ -78,15 +79,24 @@ function CenterToast({ message, onClose }) {
       textTransform: 'uppercase'
     }
   };
+   
+
+  const dispatch = useDispatch();
+
+  const handleClose = () => {
+    console.log("hello");
+    dispatch(loginModalForSlice(true));
+    onClose();
+  };
 
   return (
-    <div style={toastStyles.overlay} onClick={onClose}>
+    <div style={toastStyles.overlay} onClick={handleClose}>
       <div style={toastStyles.toast} onClick={(e) => e.stopPropagation()}>
         <div style={toastStyles.accent}></div>
         <div style={toastStyles.message}>{message}</div>
         <button 
           style={toastStyles.button}
-          onClick={onClose}
+          onClick={handleClose}
           onMouseOver={(e) => {
             e.target.style.backgroundColor = '#FFD700';
             e.target.style.color = '#000000';
