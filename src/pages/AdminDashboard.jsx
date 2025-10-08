@@ -15,7 +15,7 @@ export default function AdminDashboard() {
   
   const { data: sessions, loading } = useSelector((state) => state.sessions);
   const loginData = useSelector((state) => state.auth.loginData);
-  const bookings = useSelector(state => state.bookings.bookings);
+  const bookings = useSelector(state => state.bookings.bookings || []);
 
   const [activeNav, setActiveNav] = useState("Sessions");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -50,7 +50,7 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-    if(sessions.length === 0) setInitiateButton(false);
+    if(sessions && sessions.length === 0) setInitiateButton(false);
     setTimeout(() => setPageLoaded(true), 100);
   }, [sessions]);
 
@@ -60,59 +60,85 @@ export default function AdminDashboard() {
     }
   }, [year, loginData, dispatch]);
 
-  // UPDATED: Get day-wise booking counts with separate Sunday classes and hidden Friday null
+  // FIXED: Get counts for the 3 specific day types with proper null checks
   const getDayWiseBookings = () => {
-    if (!bookings || bookings.length === 0) return {};
-    const dayMap = {};
+    // Initialize with default values
+    const dayMap = {
+      "Friday": { count: 0, revenue: 0 },
+      "Sunday Class 1": { count: 0, revenue: 0 },
+      "Sunday Class 2": { count: 0, revenue: 0 }
+    };
+    
+    // Return default if no bookings
+    if (!bookings || !Array.isArray(bookings) || bookings.length === 0) {
+      return dayMap;
+    }
     
     bookings.forEach(booking => {
-      // For each booking, check which days it includes
-      const daysInBooking = new Set();
+      // Skip if booking doesn't have sessionDetails
+      if (!booking.sessionDetails || !Array.isArray(booking.sessionDetails)) {
+        return;
+      }
+      
+      let hasFriday = false;
+      let hasSundayClass1 = false;
+      let hasSundayClass2 = false;
+      
+      // Check which types this booking includes
       booking.sessionDetails.forEach(session => {
-        const parts = session.split(" - ");
-        const day = parts[0]; // "Sunday" or "Friday"
-        const classInfo = parts[1]; // "Class 1", "Class 2", or "null"
-        
-        let dayKey;
-        if (day === "Sunday" && classInfo && classInfo !== "null") {
-          dayKey = `${day} - ${classInfo}`; // "Sunday - Class 1" or "Sunday - Class 2"
-        } else if (day === "Friday") {
-          dayKey = "Friday Sessions"; // Hide the "null" part
-        } else {
-          dayKey = day; // Fallback
+        if (typeof session === 'string') {
+          if (session.includes("Friday")) {
+            hasFriday = true;
+          }
+          if (session.includes("Sunday - Class 1")) {
+            hasSundayClass1 = true;
+          }
+          if (session.includes("Sunday - Class 2")) {
+            hasSundayClass2 = true;
+          }
         }
-        
-        daysInBooking.add(dayKey);
       });
       
-      // Count this booking for each unique day it includes
-      daysInBooking.forEach(dayKey => {
-        if (!dayMap[dayKey]) {
-          dayMap[dayKey] = { count: 0, revenue: 0 };
-        }
-        dayMap[dayKey].count += 1;
-        dayMap[dayKey].revenue += booking.totalAmount;
-      });
+      // Count this booking for each type it includes
+      const totalAmount = booking.totalAmount || 0;
+      
+      if (hasFriday) {
+        dayMap["Friday"].count += 1;
+        dayMap["Friday"].revenue += totalAmount;
+      }
+      if (hasSundayClass1) {
+        dayMap["Sunday Class 1"].count += 1;
+        dayMap["Sunday Class 1"].revenue += totalAmount;
+      }
+      if (hasSundayClass2) {
+        dayMap["Sunday Class 2"].count += 1;
+        dayMap["Sunday Class 2"].revenue += totalAmount;
+      }
     });
+    
     return dayMap;
   };
 
   const dayWiseData = getDayWiseBookings();
-  const uniqueDays = Object.keys(dayWiseData).sort();
 
-  // NEW: Get unique years from booking session details
+  // FIXED: Get unique years from booking session details with proper null checks
   const getBookingYears = () => {
-    if (!bookings || bookings.length === 0) return [];
+    if (!bookings || !Array.isArray(bookings) || bookings.length === 0) return [];
+    
     const years = new Set();
     
     bookings.forEach(booking => {
+      if (!booking.sessionDetails || !Array.isArray(booking.sessionDetails)) return;
+      
       booking.sessionDetails.forEach(session => {
-        // Extract year from date like "2025-12-07" at the end
-        const datePart = session.split(' ').pop(); // Gets "2025-12-07"
-        if (datePart && datePart.includes('-')) {
-          const year = datePart.split('-')[0];
-          if (year && year.length === 4) {
-            years.add(year);
+        if (typeof session === 'string') {
+          // Extract year from date like "2025-12-07" at the end
+          const datePart = session.split(' ').pop(); // Gets "2025-12-07"
+          if (datePart && datePart.includes('-')) {
+            const year = datePart.split('-')[0];
+            if (year && year.length === 4 && !isNaN(year)) {
+              years.add(year);
+            }
           }
         }
       });
@@ -125,7 +151,7 @@ export default function AdminDashboard() {
 
   // Update selected day stats when day changes
   useEffect(() => {
-    if (selectedDay !== "All" && dayWiseData[selectedDay]) {
+    if (selectedDay !== "All" && dayWiseData && dayWiseData[selectedDay]) {
       setSelectedDayStats(dayWiseData[selectedDay]);
     } else {
       setSelectedDayStats(null);
@@ -172,8 +198,8 @@ export default function AdminDashboard() {
     );
   }
 
-  // UPDATED: Filter bookings by year and updated day logic
-  const filteredBookings = bookings.filter((b) => {
+  // UPDATED: Filter bookings by year and specific day types with proper null checks
+  const filteredBookings = (bookings || []).filter((b) => {
     // Payment status filter
     if (paymentStatusFilter !== "All") {
       if (paymentStatusFilter === "Paid" && !b.paymentStatus) return false;
@@ -185,43 +211,49 @@ export default function AdminDashboard() {
     
     // Year filter - NEW
     if (bookingYearFilter !== "All") {
+      if (!b.sessionDetails || !Array.isArray(b.sessionDetails)) return false;
+      
       const hasYear = b.sessionDetails.some(session => {
+        if (typeof session !== 'string') return false;
         const datePart = session.split(' ').pop();
         return datePart && datePart.startsWith(bookingYearFilter);
       });
       if (!hasYear) return false;
     }
     
-    // Day filter - UPDATED to handle Sunday classes and Friday sessions
+    // UPDATED: Day filter with 3 specific options
     if (selectedDay !== "All") {
-      let hasDay = false;
+      if (!b.sessionDetails || !Array.isArray(b.sessionDetails)) return false;
       
-      if (selectedDay === "Sunday - Class 1") {
-        hasDay = b.sessionDetails.some(s => s.includes("Sunday - Class 1"));
-      } else if (selectedDay === "Sunday - Class 2") {
-        hasDay = b.sessionDetails.some(s => s.includes("Sunday - Class 2"));
-      } else if (selectedDay === "Friday Sessions") {
-        hasDay = b.sessionDetails.some(s => s.startsWith("Friday"));
-      } else {
-        // Legacy support for old day format
-        hasDay = b.sessionDetails.some(s => s.startsWith(selectedDay));
+      let hasMatchingDay = false;
+      
+      if (selectedDay === "Friday") {
+        hasMatchingDay = b.sessionDetails.some(s => typeof s === 'string' && s.includes("Friday"));
+      } else if (selectedDay === "Sunday Class 1") {
+        hasMatchingDay = b.sessionDetails.some(s => typeof s === 'string' && s.includes("Sunday - Class 1"));
+      } else if (selectedDay === "Sunday Class 2") {
+        hasMatchingDay = b.sessionDetails.some(s => typeof s === 'string' && s.includes("Sunday - Class 2"));
       }
       
-      if (!hasDay) return false;
+      if (!hasMatchingDay) return false;
     }
     
     // Search filter
     if (bookingSearch) {
       const search = bookingSearch.toLowerCase();
-      if (!b.parentName.toLowerCase().includes(search) &&
-          !b.parentEmail.toLowerCase().includes(search) &&
-          !b.kidName.toLowerCase().includes(search)) return false;
+      const parentName = (b.parentName || "").toLowerCase();
+      const parentEmail = (b.parentEmail || "").toLowerCase();
+      const kidName = (b.kidName || "").toLowerCase();
+      
+      if (!parentName.includes(search) &&
+          !parentEmail.includes(search) &&
+          !kidName.includes(search)) return false;
     }
     
     return true;
   });
 
-  const filteredSessions = sessions.filter((s) => {
+  const filteredSessions = (sessions || []).filter((s) => {
     if (monthFilter !== "All") {
       const sessionDate = new Date(s.date);
       const sessionMonth = sessionDate.toLocaleString('default', { month: 'long' });
@@ -229,8 +261,8 @@ export default function AdminDashboard() {
     }
     if (dayFilter !== "All" && s.day !== dayFilter) return false;
     if (dayFilter === "Sunday" && classFilter !== "All" && s.sessionClass !== classFilter) return false;
-    if (sessionSearch && !s.date.toLowerCase().includes(sessionSearch.toLowerCase()) && 
-        !s.day.toLowerCase().includes(sessionSearch.toLowerCase())) return false;
+    if (sessionSearch && !s.date?.toLowerCase().includes(sessionSearch.toLowerCase()) && 
+        !s.day?.toLowerCase().includes(sessionSearch.toLowerCase())) return false;
     return true;
   });
 
@@ -357,6 +389,8 @@ export default function AdminDashboard() {
 
   // UPDATED: Format session details to hide null and show proper labels
   const formatSessionDetail = (session) => {
+    if (typeof session !== 'string') return session;
+    
     const parts = session.split(" - ");
     const day = parts[0];
     const classInfo = parts[1];
@@ -1490,20 +1524,20 @@ export default function AdminDashboard() {
                     <StatCard 
                       title="Friday Sessions" 
                       value={filteredSessions.filter(s => s.day === 'Friday').length}
-                      subtitle={`${filteredSessions.filter(s => s.day === 'Friday').reduce((sum, s) => sum + s.bookedCount, 0)} slots booked`}
+                      subtitle={`${filteredSessions.filter(s => s.day === 'Friday').reduce((sum, s) => sum + (s.bookedCount || 0), 0)} slots booked`}
                       icon={<FaChartLine />}
                       color="#00c853"
                     />
                     <StatCard 
                       title="Sunday Sessions" 
                       value={filteredSessions.filter(s => s.day === 'Sunday').length}
-                      subtitle={`${filteredSessions.filter(s => s.day === 'Sunday').reduce((sum, s) => sum + s.bookedCount, 0)} slots booked`}
+                      subtitle={`${filteredSessions.filter(s => s.day === 'Sunday').reduce((sum, s) => sum + (s.bookedCount || 0), 0)} slots booked`}
                       icon={<FaChartLine />}
                       color="#2196f3"
                     />
                     <StatCard 
                       title="Total Bookings" 
-                      value={filteredSessions.reduce((sum, s) => sum + s.bookedCount, 0)}
+                      value={filteredSessions.reduce((sum, s) => sum + (s.bookedCount || 0), 0)}
                       subtitle="Across all sessions"
                       icon={<FaCheck />}
                       color="#ff5252"
@@ -1611,7 +1645,7 @@ export default function AdminDashboard() {
                                 <td style={{ color: '#999' }}>{s.time}</td>
                                 <td>{s.type}</td>
                                 <td>{s.sessionClass || "-"}</td>
-                                <td><span className="badge badge-primary">{s.bookedCount}</span></td>
+                                <td><span className="badge badge-primary">{s.bookedCount || 0}</span></td>
                               </tr>
                             ))}
                           </tbody>
@@ -1650,7 +1684,7 @@ export default function AdminDashboard() {
                     />
                     <StatCard 
                       title="Total Revenue" 
-                      value={`€${bookings.filter(b => b.paymentStatus).reduce((sum, b) => sum + b.totalAmount, 0)}`}
+                      value={`€${bookings.filter(b => b.paymentStatus).reduce((sum, b) => sum + (b.totalAmount || 0), 0)}`}
                       subtitle="From paid bookings"
                       icon={<FaChartLine />}
                       color="#00c853"
@@ -1658,14 +1692,14 @@ export default function AdminDashboard() {
                     <StatCard 
                       title="Pending Payments" 
                       value={bookings.filter(b => !b.paymentStatus).length}
-                      subtitle={`€${bookings.filter(b => !b.paymentStatus).reduce((sum, b) => sum + b.totalAmount, 0)} pending`}
+                      subtitle={`€${bookings.filter(b => !b.paymentStatus).reduce((sum, b) => sum + (b.totalAmount || 0), 0)} pending`}
                       icon={<FaClock />}
                       color="#ff5252"
                     />
                     <StatCard 
-                      title="Unique Days" 
-                      value={uniqueDays.length}
-                      subtitle="Sessions scheduled"
+                      title="Available Years" 
+                      value={availableBookingYears.length}
+                      subtitle="Years with bookings"
                       icon={<FaCalendarAlt />}
                       color="#2196f3"
                     />
@@ -1692,7 +1726,7 @@ export default function AdminDashboard() {
                   </div>
                 )}
 
-                {/* Filters - UPDATED WITH YEAR FILTER */}
+                {/* Filters - FIXED WITH 3 SPECIFIC OPTIONS */}
                 <div className="content-card mb-4">
                   <h3 style={{ color: '#ffc107', fontSize: '20px', marginBottom: '16px' }}>
                     <FaFilter className="me-2" />
@@ -1720,9 +1754,9 @@ export default function AdminDashboard() {
                         </select>
                       </div>
 
-                      {/* UPDATED DAY FILTER */}
+                      {/* FIXED: 3 SPECIFIC OPTIONS ONLY */}
                       <div className="col-lg-3 col-md-6 mb-3">
-                        <label className="form-label">Filter by Day/Class</label>
+                        <label className="form-label">Session Type</label>
                         <select 
                           className="form-select" 
                           value={selectedDay} 
@@ -1731,12 +1765,10 @@ export default function AdminDashboard() {
                             setBookingsCurrentPage(1);
                           }}
                         >
-                          <option value="All">All Days ({bookings.length})</option>
-                          {uniqueDays.map(day => (
-                            <option key={day} value={day}>
-                              {day} ({dayWiseData[day].count} bookings)
-                            </option>
-                          ))}
+                          <option value="All">All Sessions ({bookings.length})</option>
+                          <option value="Friday">Friday ({dayWiseData["Friday"]?.count || 0} bookings)</option>
+                          <option value="Sunday Class 1">Sunday Class 1 ({dayWiseData["Sunday Class 1"]?.count || 0} bookings)</option>
+                          <option value="Sunday Class 2">Sunday Class 2 ({dayWiseData["Sunday Class 2"]?.count || 0} bookings)</option>
                         </select>
                       </div>
 
@@ -1827,10 +1859,10 @@ export default function AdminDashboard() {
                               <div className="booking-section">
                                 <div className="section-label">Parent Information</div>
                                 <div className="section-content">
-                                  <div className="booking-name">{booking.parentName}</div>
+                                  <div className="booking-name">{booking.parentName || "N/A"}</div>
                                   <div className="booking-contact">
                                     <FaEnvelope size={13} />
-                                    {booking.parentEmail}
+                                    {booking.parentEmail || "N/A"}
                                   </div>
                                   {booking.parentPhone && (
                                     <div className="booking-contact">
@@ -1846,8 +1878,8 @@ export default function AdminDashboard() {
                                 <div className="section-label">Student Information</div>
                                 <div className="kid-info">
                                   <FaChild size={16} style={{ color: '#666' }} />
-                                  <span className="kid-name">{booking.kidName}</span>
-                                  <span className="kid-level">{booking.kidLevel}</span>
+                                  <span className="kid-name">{booking.kidName || "N/A"}</span>
+                                  <span className="kid-level">{booking.kidLevel || "N/A"}</span>
                                 </div>
                               </div>
 
@@ -1855,10 +1887,10 @@ export default function AdminDashboard() {
                               <div className="booking-meta">
                                 <div className="meta-item">
                                   <FaCalendarAlt />
-                                  {booking.sessionDetails.length} Session{booking.sessionDetails.length > 1 ? 's' : ''}
+                                  {(booking.sessionDetails?.length || 0)} Session{(booking.sessionDetails?.length || 0) > 1 ? 's' : ''}
                                 </div>
                                 <div className="meta-item amount-highlight">
-                                  €{booking.totalAmount}
+                                  €{booking.totalAmount || 0}
                                 </div>
                               </div>
                             </div>
@@ -1876,15 +1908,15 @@ export default function AdminDashboard() {
                               <div className="details-header">
                                 <h6>Session Details</h6>
                                 <span className="session-count-badge">
-                                  {booking.sessionDetails.length} Sessions
+                                  {booking.sessionDetails?.length || 0} Sessions
                                 </span>
                               </div>
                               
                               <div className="session-list">
-                                {booking.sessionDetails.map((session, idx) => {
+                                {(booking.sessionDetails || []).map((session, idx) => {
                                   const formattedSession = formatSessionDetail(session);
                                   const parts = formattedSession.split(" at ");
-                                  const sessionType = parts[0];
+                                  const sessionType = parts[0] || "Session";
                                   const timeAndDate = parts[1] || "";
                                   
                                   return (
@@ -1905,19 +1937,19 @@ export default function AdminDashboard() {
                                 <div className="summary-grid">
                                   <div className="summary-item">
                                     <div className="summary-label">Parent Name</div>
-                                    <div className="summary-value">{booking.parentName}</div>
+                                    <div className="summary-value">{booking.parentName || "N/A"}</div>
                                   </div>
                                   <div className="summary-item">
                                     <div className="summary-label">Parent Email</div>
-                                    <div className="summary-value">{booking.parentEmail}</div>
+                                    <div className="summary-value">{booking.parentEmail || "N/A"}</div>
                                   </div>
                                   <div className="summary-item">
                                     <div className="summary-label">Student Name</div>
-                                    <div className="summary-value">{booking.kidName}</div>
+                                    <div className="summary-value">{booking.kidName || "N/A"}</div>
                                   </div>
                                   <div className="summary-item">
                                     <div className="summary-label">Total Amount</div>
-                                    <div className="summary-value highlight">€{booking.totalAmount}</div>
+                                    <div className="summary-value highlight">€{booking.totalAmount || 0}</div>
                                   </div>
                                 </div>
                               </div>
