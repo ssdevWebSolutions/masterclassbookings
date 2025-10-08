@@ -9,6 +9,7 @@ import { fetchBookings } from "@/Redux/bookingSlice/bookingSlice";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function AdminDashboard() {
+  // MOVED ALL HOOKS TO THE TOP - BEFORE ANY CONDITIONAL RETURNS
   const dispatch = useDispatch();
   const router = useRouter();
   
@@ -42,6 +43,7 @@ export default function AdminDashboard() {
   const [bookingsPerPage, setBookingsPerPage] = useState(10);
   const [initiateButton, setInitiateButton] = useState(true);
 
+  // ALL USE_EFFECT HOOKS MOVED HERE - BEFORE CONDITIONAL RETURNS
   useEffect(() => {
     import('bootstrap/dist/js/bootstrap.bundle.min.js');
   }, []);
@@ -57,9 +59,47 @@ export default function AdminDashboard() {
     }
   }, [year, loginData, dispatch]);
 
+  // Get day-wise booking counts - MOVED BEFORE EARLY RETURNS
+  const getDayWiseBookings = () => {
+    if (!bookings || bookings.length === 0) return {};
+    const dayMap = {};
+    bookings.forEach(booking => {
+      // For each booking, check which days it includes
+      const daysInBooking = new Set();
+      booking.sessionDetails.forEach(session => {
+        const day = session.split(" - ")[0];
+        daysInBooking.add(day);
+      });
+      
+      // Count this booking for each unique day it includes
+      daysInBooking.forEach(day => {
+        if (!dayMap[day]) {
+          dayMap[day] = { count: 0, revenue: 0 };
+        }
+        dayMap[day].count += 1; // Count the individual booking
+        dayMap[day].revenue += booking.totalAmount; // Add full booking amount
+      });
+    });
+    return dayMap;
+  };
+
+  const dayWiseData = getDayWiseBookings();
+  const uniqueDays = Object.keys(dayWiseData).sort();
+
+  // Update selected day stats when day changes
+  useEffect(() => {
+    if (selectedDay !== "All" && dayWiseData[selectedDay]) {
+      setSelectedDayStats(dayWiseData[selectedDay]);
+    } else {
+      setSelectedDayStats(null);
+    }
+  }, [selectedDay, dayWiseData]);
+
+  // Handler functions
   const handleLoginRoute = () => router.push("/");
   const handleLogout = () => dispatch(logOutUserWithType());
 
+  // NOW THE CONDITIONAL RETURNS - AFTER ALL HOOKS
   if (!loginData?.token) {
     return (
       <div className="min-vh-100 d-flex align-items-center justify-content-center" style={{ background: "linear-gradient(135deg, #000000 0%, #1a1a1a 100%)" }}>
@@ -94,41 +134,6 @@ export default function AdminDashboard() {
       </div>
     );
   }
-
-  // FIXED: Get day-wise booking counts - count individual bookings, not sessions
-  const getDayWiseBookings = () => {
-    const dayMap = {};
-    bookings.forEach(booking => {
-      // For each booking, check which days it includes
-      const daysInBooking = new Set();
-      booking.sessionDetails.forEach(session => {
-        const day = session.split(" - ")[0];
-        daysInBooking.add(day);
-      });
-      
-      // Count this booking for each unique day it includes
-      daysInBooking.forEach(day => {
-        if (!dayMap[day]) {
-          dayMap[day] = { count: 0, revenue: 0 };
-        }
-        dayMap[day].count += 1; // Count the individual booking
-        dayMap[day].revenue += booking.totalAmount; // Add full booking amount
-      });
-    });
-    return dayMap;
-  };
-
-  const dayWiseData = getDayWiseBookings();
-  const uniqueDays = Object.keys(dayWiseData).sort();
-
-  // Update selected day stats when day changes
-  useEffect(() => {
-    if (selectedDay !== "All" && dayWiseData[selectedDay]) {
-      setSelectedDayStats(dayWiseData[selectedDay]);
-    } else {
-      setSelectedDayStats(null);
-    }
-  }, [selectedDay]);
 
   // Filter bookings by selected day
   const filteredBookings = bookings.filter((b) => {
@@ -1081,30 +1086,25 @@ export default function AdminDashboard() {
           color: #666;
         }
 
-        /* Mobile Responsive Styles - FIXED */
+        /* Mobile Responsive Styles */
         @media (max-width: 992px) {
-          /* Show mobile menu button */
           .mobile-menu-btn {
             display: flex;
           }
 
-          /* Remove sidebar margin from main content */
           .main-wrapper {
             margin-left: 0;
             width: 100%;
           }
 
-          /* Hide sidebar by default on mobile */
           .sidebar {
             transform: translateX(-100%);
           }
 
-          /* Show sidebar when open */
           .sidebar.open {
             transform: translateX(0);
           }
 
-          /* Show close button in sidebar on mobile */
           .sidebar-close-btn {
             display: flex;
             align-items: center;
@@ -1160,13 +1160,11 @@ export default function AdminDashboard() {
             justify-content: space-around;
           }
 
-          /* Fix table responsiveness */
           .table-responsive {
             margin: 0 -20px;
             padding: 0 20px;
           }
 
-          /* Fix row layout */
           .row {
             margin: 0 -8px;
           }
@@ -1218,7 +1216,6 @@ export default function AdminDashboard() {
             grid-template-columns: 1fr;
           }
 
-          /* Fix small screen table */
           .table thead th {
             padding: 12px 8px;
             font-size: 11px;
@@ -1228,7 +1225,6 @@ export default function AdminDashboard() {
             padding: 12px 8px;
           }
 
-          /* Fix row spacing on small screens */
           .row {
             margin: 0 -4px;
           }
@@ -1385,7 +1381,7 @@ export default function AdminDashboard() {
             <h1 className="header-title">
               {activeNav === "Sessions" ? "Sessions Management" : "Bookings Overview"}
             </h1>
-            <div style={{ width: '44px', flexShrink: 0 }}></div> {/* Spacer for centering */}
+            <div style={{ width: '44px', flexShrink: 0 }}></div>
           </header>
 
           <main className="main-content">
