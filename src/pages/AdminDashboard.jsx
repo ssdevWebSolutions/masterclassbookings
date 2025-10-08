@@ -29,11 +29,12 @@ export default function AdminDashboard() {
   const [classFilter, setClassFilter] = useState("All");
   const [sessionSearch, setSessionSearch] = useState("");
   
-  // Booking filters
+  // Booking filters - ADDED YEAR FILTER
   const [bookingSearch, setBookingSearch] = useState("");
   const [paymentStatusFilter, setPaymentStatusFilter] = useState("All");
   const [levelFilter, setLevelFilter] = useState("All");
   const [selectedDay, setSelectedDay] = useState("All");
+  const [bookingYearFilter, setBookingYearFilter] = useState("All"); // NEW YEAR FILTER
   const [expandedBooking, setExpandedBooking] = useState(null);
   const [selectedDayStats, setSelectedDayStats] = useState(null);
   
@@ -59,25 +60,38 @@ export default function AdminDashboard() {
     }
   }, [year, loginData, dispatch]);
 
-  // Get day-wise booking counts - MOVED BEFORE EARLY RETURNS
+  // UPDATED: Get day-wise booking counts with separate Sunday classes and hidden Friday null
   const getDayWiseBookings = () => {
     if (!bookings || bookings.length === 0) return {};
     const dayMap = {};
+    
     bookings.forEach(booking => {
       // For each booking, check which days it includes
       const daysInBooking = new Set();
       booking.sessionDetails.forEach(session => {
-        const day = session.split(" - ")[0];
-        daysInBooking.add(day);
+        const parts = session.split(" - ");
+        const day = parts[0]; // "Sunday" or "Friday"
+        const classInfo = parts[1]; // "Class 1", "Class 2", or "null"
+        
+        let dayKey;
+        if (day === "Sunday" && classInfo && classInfo !== "null") {
+          dayKey = `${day} - ${classInfo}`; // "Sunday - Class 1" or "Sunday - Class 2"
+        } else if (day === "Friday") {
+          dayKey = "Friday Sessions"; // Hide the "null" part
+        } else {
+          dayKey = day; // Fallback
+        }
+        
+        daysInBooking.add(dayKey);
       });
       
       // Count this booking for each unique day it includes
-      daysInBooking.forEach(day => {
-        if (!dayMap[day]) {
-          dayMap[day] = { count: 0, revenue: 0 };
+      daysInBooking.forEach(dayKey => {
+        if (!dayMap[dayKey]) {
+          dayMap[dayKey] = { count: 0, revenue: 0 };
         }
-        dayMap[day].count += 1; // Count the individual booking
-        dayMap[day].revenue += booking.totalAmount; // Add full booking amount
+        dayMap[dayKey].count += 1;
+        dayMap[dayKey].revenue += booking.totalAmount;
       });
     });
     return dayMap;
@@ -85,6 +99,29 @@ export default function AdminDashboard() {
 
   const dayWiseData = getDayWiseBookings();
   const uniqueDays = Object.keys(dayWiseData).sort();
+
+  // NEW: Get unique years from booking session details
+  const getBookingYears = () => {
+    if (!bookings || bookings.length === 0) return [];
+    const years = new Set();
+    
+    bookings.forEach(booking => {
+      booking.sessionDetails.forEach(session => {
+        // Extract year from date like "2025-12-07" at the end
+        const datePart = session.split(' ').pop(); // Gets "2025-12-07"
+        if (datePart && datePart.includes('-')) {
+          const year = datePart.split('-')[0];
+          if (year && year.length === 4) {
+            years.add(year);
+          }
+        }
+      });
+    });
+    
+    return Array.from(years).sort();
+  };
+
+  const availableBookingYears = getBookingYears();
 
   // Update selected day stats when day changes
   useEffect(() => {
@@ -135,23 +172,52 @@ export default function AdminDashboard() {
     );
   }
 
-  // Filter bookings by selected day
+  // UPDATED: Filter bookings by year and updated day logic
   const filteredBookings = bookings.filter((b) => {
+    // Payment status filter
     if (paymentStatusFilter !== "All") {
       if (paymentStatusFilter === "Paid" && !b.paymentStatus) return false;
       if (paymentStatusFilter === "Pending" && b.paymentStatus) return false;
     }
+    
+    // Level filter
     if (levelFilter !== "All" && b.kidLevel !== levelFilter) return false;
+    
+    // Year filter - NEW
+    if (bookingYearFilter !== "All") {
+      const hasYear = b.sessionDetails.some(session => {
+        const datePart = session.split(' ').pop();
+        return datePart && datePart.startsWith(bookingYearFilter);
+      });
+      if (!hasYear) return false;
+    }
+    
+    // Day filter - UPDATED to handle Sunday classes and Friday sessions
     if (selectedDay !== "All") {
-      const hasDay = b.sessionDetails.some(s => s.startsWith(selectedDay));
+      let hasDay = false;
+      
+      if (selectedDay === "Sunday - Class 1") {
+        hasDay = b.sessionDetails.some(s => s.includes("Sunday - Class 1"));
+      } else if (selectedDay === "Sunday - Class 2") {
+        hasDay = b.sessionDetails.some(s => s.includes("Sunday - Class 2"));
+      } else if (selectedDay === "Friday Sessions") {
+        hasDay = b.sessionDetails.some(s => s.startsWith("Friday"));
+      } else {
+        // Legacy support for old day format
+        hasDay = b.sessionDetails.some(s => s.startsWith(selectedDay));
+      }
+      
       if (!hasDay) return false;
     }
+    
+    // Search filter
     if (bookingSearch) {
       const search = bookingSearch.toLowerCase();
       if (!b.parentName.toLowerCase().includes(search) &&
           !b.parentEmail.toLowerCase().includes(search) &&
           !b.kidName.toLowerCase().includes(search)) return false;
     }
+    
     return true;
   });
 
@@ -288,6 +354,21 @@ export default function AdminDashboard() {
       </div>
     </div>
   );
+
+  // UPDATED: Format session details to hide null and show proper labels
+  const formatSessionDetail = (session) => {
+    const parts = session.split(" - ");
+    const day = parts[0];
+    const classInfo = parts[1];
+    const timePart = parts[2];
+    const datePart = parts[3];
+    
+    if (day === "Friday" && classInfo === "null") {
+      return `Friday Session ${timePart ? `at ${timePart}` : ''} ${datePart || ''}`.trim();
+    }
+    
+    return session.replace(" - null", "");
+  };
 
   return (
     <>
@@ -1595,7 +1676,7 @@ export default function AdminDashboard() {
                 {selectedDayStats && (
                   <div className="selected-day-banner">
                     <div className="selected-day-info">
-                      <h4>{selectedDay} Sessions</h4>
+                      <h4>{selectedDay}</h4>
                       <p>Viewing bookings for {selectedDay} only</p>
                     </div>
                     <div className="selected-day-stats">
@@ -1611,7 +1692,7 @@ export default function AdminDashboard() {
                   </div>
                 )}
 
-                {/* Filters */}
+                {/* Filters - UPDATED WITH YEAR FILTER */}
                 <div className="content-card mb-4">
                   <h3 style={{ color: '#ffc107', fontSize: '20px', marginBottom: '16px' }}>
                     <FaFilter className="me-2" />
@@ -1619,8 +1700,29 @@ export default function AdminDashboard() {
                   </h3>
                   <div className="filter-section">
                     <div className="row">
+                      {/* NEW YEAR FILTER */}
+                      <div className="col-lg-2 col-md-6 mb-3">
+                        <label className="form-label">Year</label>
+                        <select 
+                          className="form-select" 
+                          value={bookingYearFilter} 
+                          onChange={(e) => {
+                            setBookingYearFilter(e.target.value);
+                            setBookingsCurrentPage(1);
+                          }}
+                        >
+                          <option value="All">All Years</option>
+                          {availableBookingYears.map(year => (
+                            <option key={year} value={year}>
+                              {year}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* UPDATED DAY FILTER */}
                       <div className="col-lg-3 col-md-6 mb-3">
-                        <label className="form-label">Filter by Day</label>
+                        <label className="form-label">Filter by Day/Class</label>
                         <select 
                           className="form-select" 
                           value={selectedDay} 
@@ -1638,7 +1740,7 @@ export default function AdminDashboard() {
                         </select>
                       </div>
 
-                      <div className="col-lg-3 col-md-6 mb-3">
+                      <div className="col-lg-2 col-md-6 mb-3">
                         <label className="form-label">Payment Status</label>
                         <select className="form-select" value={paymentStatusFilter} onChange={(e) => setPaymentStatusFilter(e.target.value)}>
                           <option value="All">All Status</option>
@@ -1647,7 +1749,7 @@ export default function AdminDashboard() {
                         </select>
                       </div>
 
-                      <div className="col-lg-3 col-md-6 mb-3">
+                      <div className="col-lg-2 col-md-6 mb-3">
                         <label className="form-label">Kid Level</label>
                         <select className="form-select" value={levelFilter} onChange={(e) => setLevelFilter(e.target.value)}>
                           <option value="All">All Levels</option>
@@ -1780,21 +1882,16 @@ export default function AdminDashboard() {
                               
                               <div className="session-list">
                                 {booking.sessionDetails.map((session, idx) => {
-                                  const parts = session.split(" - ");
-                                  const day = parts[0];
-                                  const classInfo = parts[1] || "";
-                                  const timeInfo = parts[2] || "";
-                                  const dateInfo = parts[3] || "";
+                                  const formattedSession = formatSessionDetail(session);
+                                  const parts = formattedSession.split(" at ");
+                                  const sessionType = parts[0];
+                                  const timeAndDate = parts[1] || "";
                                   
                                   return (
                                     <div key={idx} className="session-item">
                                       <div className="session-info">
-                                        <h6>{day} Session</h6>
-                                        <p>
-                                          {classInfo && <span>{classInfo}</span>}
-                                          {timeInfo && <span> • {timeInfo}</span>}
-                                          {dateInfo && <span> • {dateInfo}</span>}
-                                        </p>
+                                        <h6>{sessionType}</h6>
+                                        <p>{timeAndDate}</p>
                                       </div>
                                       <div className="session-check">
                                         <FaCheck />
