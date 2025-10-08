@@ -311,6 +311,23 @@ export default function AdminDashboard() {
           display: flex;
           min-height: 100vh;
           background: #0a0a0a;
+          position: relative;
+        }
+
+        /* Sidebar Overlay */
+        .sidebar-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.5);
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.3s ease;
+          z-index: 950;
+        }
+        
+        .sidebar-overlay.show {
+          opacity: 1;
+          visibility: visible;
         }
 
         /* Sidebar Styles */
@@ -325,6 +342,7 @@ export default function AdminDashboard() {
           z-index: 1000;
           transition: transform 0.3s ease;
           overflow-y: auto;
+          transform: translateX(0);
         }
 
         .sidebar-header {
@@ -460,6 +478,26 @@ export default function AdminDashboard() {
           margin: 0;
         }
 
+        /* Mobile menu button */
+        .mobile-menu-btn {
+          display: none;
+          background: transparent;
+          border: 2px solid #ffc107;
+          color: #ffc107;
+          width: 44px;
+          height: 44px;
+          border-radius: 8px;
+          cursor: pointer;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+        }
+
+        .mobile-menu-btn:hover {
+          background: rgba(255, 193, 7, 0.1);
+          transform: scale(1.05);
+        }
+
         /* Main Content */
         .main-wrapper {
           flex: 1;
@@ -484,6 +522,8 @@ export default function AdminDashboard() {
           font-weight: 700;
           color: #fff;
           margin: 0;
+          flex: 1;
+          text-align: center;
         }
 
         .main-content {
@@ -766,7 +806,7 @@ export default function AdminDashboard() {
 
         .details-header {
           display: flex;
-          justify-content: between;
+          justify-content: space-between;
           align-items: center;
           margin-bottom: 20px;
         }
@@ -1014,26 +1054,41 @@ export default function AdminDashboard() {
           color: #666;
         }
 
-        /* Mobile Styles */
+        /* Mobile Responsive Styles */
         @media (max-width: 992px) {
-          .sidebar {
-            transform: translateX(-100%);
-          }
-
-          .sidebar.open {
-            transform: translateX(0);
-          }
-
-          .sidebar-close-btn {
+          /* Show mobile menu button */
+          .mobile-menu-btn {
             display: flex;
           }
 
+          /* Remove sidebar margin from main content */
           .main-wrapper {
             margin-left: 0;
           }
 
-          .mobile-menu-btn {
-            display: block;
+          /* Hide sidebar by default on mobile */
+          .sidebar {
+            transform: translateX(-100%);
+          }
+
+          /* Show sidebar when open */
+          .sidebar.open {
+            transform: translateX(0);
+          }
+
+          /* Show close button in sidebar on mobile */
+          .sidebar-close-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .main-header {
+            padding: 16px 20px;
+          }
+
+          .header-title {
+            font-size: 22px;
           }
 
           .main-content {
@@ -1077,11 +1132,11 @@ export default function AdminDashboard() {
 
         @media (max-width: 576px) {
           .main-header {
-            padding: 16px;
+            padding: 12px 16px;
           }
 
           .header-title {
-            font-size: 20px;
+            font-size: 18px;
           }
 
           .main-content {
@@ -1116,31 +1171,6 @@ export default function AdminDashboard() {
           .summary-grid {
             grid-template-columns: 1fr;
           }
-        }
-
-        .mobile-menu-btn {
-          display: none;
-          background: #1a1a1a;
-          border: 1px solid #2a2a2a;
-          color: #ffc107;
-          padding: 10px;
-          border-radius: 8px;
-          cursor: pointer;
-        }
-
-        .sidebar-overlay {
-          display: none;
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.7);
-          z-index: 999;
-        }
-
-        .sidebar-overlay.show {
-          display: block;
         }
 
         .spinner-border {
@@ -1282,13 +1312,14 @@ export default function AdminDashboard() {
             <button 
               className="mobile-menu-btn"
               onClick={() => setSidebarOpen(true)}
+              aria-label="Open sidebar"
             >
               <FaBars size={20} />
             </button>
             <h1 className="header-title">
               {activeNav === "Sessions" ? "Sessions Management" : "Bookings Overview"}
             </h1>
-            <div></div>
+            <div style={{ width: '44px' }}></div> {/* Spacer for centering */}
           </header>
 
           <main className="main-content">
