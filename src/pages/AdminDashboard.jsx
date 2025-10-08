@@ -280,6 +280,22 @@ export default function AdminDashboard() {
   return (
     <>
       <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+          from { 
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to { 
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         * {
           box-sizing: border-box;
         }
@@ -295,23 +311,6 @@ export default function AdminDashboard() {
           display: flex;
           min-height: 100vh;
           background: #0a0a0a;
-          position: relative;
-        }
-
-        /* Sidebar Overlay */
-        .sidebar-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(0,0,0,0.5);
-          opacity: 0;
-          visibility: hidden;
-          transition: all 0.3s ease;
-          z-index: 950;
-        }
-        
-        .sidebar-overlay.show {
-          opacity: 1;
-          visibility: visible;
         }
 
         /* Sidebar Styles */
@@ -326,7 +325,6 @@ export default function AdminDashboard() {
           z-index: 1000;
           transition: transform 0.3s ease;
           overflow-y: auto;
-          transform: translateX(0);
         }
 
         .sidebar-header {
@@ -348,6 +346,8 @@ export default function AdminDashboard() {
           border-radius: 8px;
           cursor: pointer;
           transition: all 0.3s ease;
+          align-items: center;
+          justify-content: center;
         }
 
         .sidebar-close-btn:hover {
@@ -460,26 +460,6 @@ export default function AdminDashboard() {
           margin: 0;
         }
 
-        /* Mobile menu button */
-        .mobile-menu-btn {
-          display: none;
-          background: transparent;
-          border: 2px solid #ffc107;
-          color: #ffc107;
-          width: 44px;
-          height: 44px;
-          border-radius: 8px;
-          cursor: pointer;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s ease;
-        }
-
-        .mobile-menu-btn:hover {
-          background: rgba(255, 193, 7, 0.1);
-          transform: scale(1.05);
-        }
-
         /* Main Content */
         .main-wrapper {
           flex: 1;
@@ -504,8 +484,6 @@ export default function AdminDashboard() {
           font-weight: 700;
           color: #fff;
           margin: 0;
-          flex: 1;
-          text-align: center;
         }
 
         .main-content {
@@ -528,6 +506,22 @@ export default function AdminDashboard() {
           transition: all 0.3s ease;
           position: relative;
           overflow: hidden;
+        }
+
+        .stat-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: linear-gradient(90deg, #ffc107, #ffb300);
+          transform: scaleX(0);
+          transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+          transform: scaleX(1);
         }
 
         .stat-card:hover {
@@ -569,6 +563,350 @@ export default function AdminDashboard() {
           margin-top: 4px;
         }
 
+        /* Selected Day Stats Banner */
+        .selected-day-banner {
+          background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+          border-radius: 12px;
+          padding: 20px 24px;
+          margin-bottom: 24px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          box-shadow: 0 4px 16px rgba(255, 193, 7, 0.3);
+        }
+
+        .selected-day-info h4 {
+          color: #000;
+          font-size: 20px;
+          font-weight: 700;
+          margin: 0 0 4px 0;
+        }
+
+        .selected-day-info p {
+          color: rgba(0, 0, 0, 0.7);
+          font-size: 14px;
+          margin: 0;
+        }
+
+        .selected-day-stats {
+          display: flex;
+          gap: 24px;
+        }
+
+        .day-stat-item {
+          text-align: center;
+        }
+
+        .day-stat-value {
+          font-size: 28px;
+          font-weight: 700;
+          color: #000;
+          margin: 0;
+        }
+
+        .day-stat-label {
+          font-size: 12px;
+          color: rgba(0, 0, 0, 0.7);
+          text-transform: uppercase;
+          font-weight: 600;
+          margin: 0;
+        }
+
+        /* Booking Cards */
+        .booking-card {
+          background: #242424;
+          border: 2px solid #2a2a2a;
+          border-radius: 16px;
+          padding: 24px;
+          margin-bottom: 16px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .booking-card:hover {
+          border-color: #ffc107;
+          box-shadow: 0 8px 24px rgba(255, 193, 7, 0.2);
+          transform: translateY(-2px);
+        }
+
+        .booking-card.expanded {
+          border-color: #ffc107;
+          background: #1f1f1f;
+          box-shadow: 0 8px 24px rgba(255, 193, 7, 0.3);
+        }
+
+        .booking-header {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 20px;
+          align-items: start;
+        }
+
+        .booking-main-info {
+          display: grid;
+          gap: 16px;
+        }
+
+        .booking-section {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .section-label {
+          font-size: 11px;
+          color: #666;
+          text-transform: uppercase;
+          font-weight: 600;
+          letter-spacing: 0.5px;
+        }
+
+        .section-content {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .booking-id {
+          font-size: 13px;
+          color: #ffc107;
+          font-weight: 600;
+        }
+
+        .booking-name {
+          font-size: 20px;
+          font-weight: 700;
+          color: #fff;
+          margin: 0;
+        }
+
+        .booking-contact {
+          font-size: 14px;
+          color: #999;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .booking-contact svg {
+          color: #666;
+          flex-shrink: 0;
+        }
+
+        .kid-info {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+
+        .kid-name {
+          font-size: 16px;
+          font-weight: 600;
+          color: #fff;
+        }
+
+        .kid-level {
+          background: rgba(255, 193, 7, 0.2);
+          color: #ffc107;
+          padding: 4px 10px;
+          border-radius: 6px;
+          font-size: 12px;
+          font-weight: 600;
+        }
+
+        .booking-meta {
+          display: flex;
+          gap: 16px;
+          flex-wrap: wrap;
+          padding-top: 12px;
+          border-top: 1px solid #2a2a2a;
+        }
+
+        .meta-item {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 13px;
+          color: #999;
+        }
+
+        .meta-item svg {
+          color: #666;
+        }
+
+        .amount-highlight {
+          color: #00c853;
+          font-weight: 700;
+          font-size: 15px;
+        }
+
+        .booking-actions {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 12px;
+        }
+
+        .expand-icon {
+          color: #ffc107;
+          transition: transform 0.3s ease;
+          font-size: 20px;
+        }
+
+        .booking-card.expanded .expand-icon {
+          transform: rotate(90deg);
+        }
+
+        .booking-details {
+          margin-top: 24px;
+          padding-top: 24px;
+          border-top: 2px solid #2a2a2a;
+        }
+
+        .details-header {
+          display: flex;
+          justify-content: between;
+          align-items: center;
+          margin-bottom: 20px;
+        }
+
+        .details-header h6 {
+          color: #ffc107;
+          font-size: 14px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          margin: 0;
+        }
+
+        .session-count-badge {
+          background: rgba(255, 193, 7, 0.2);
+          color: #ffc107;
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+        }
+
+        .session-list {
+          display: grid;
+          gap: 12px;
+        }
+
+        .session-item {
+          background: #1a1a1a;
+          border: 1px solid #2a2a2a;
+          border-radius: 12px;
+          padding: 16px 20px;
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 16px;
+          align-items: center;
+          transition: all 0.2s ease;
+        }
+
+        .session-item:hover {
+          border-color: #ffc107;
+          background: #242424;
+        }
+
+        .session-info h6 {
+          color: #ffc107;
+          font-size: 15px;
+          font-weight: 700;
+          margin: 0 0 6px 0;
+        }
+
+        .session-info p {
+          color: #999;
+          font-size: 13px;
+          margin: 0;
+          line-height: 1.5;
+        }
+
+        .session-check {
+          width: 32px;
+          height: 32px;
+          background: rgba(0, 200, 83, 0.2);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #00c853;
+          font-size: 16px;
+        }
+
+        .booking-summary {
+          margin-top: 24px;
+          padding: 20px;
+          background: #242424;
+          border-radius: 12px;
+          border: 1px solid #2a2a2a;
+        }
+
+        .summary-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 20px;
+        }
+
+        .summary-item {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .summary-label {
+          font-size: 12px;
+          color: #666;
+          text-transform: uppercase;
+          font-weight: 600;
+        }
+
+        .summary-value {
+          font-size: 16px;
+          color: #fff;
+          font-weight: 600;
+        }
+
+        .summary-value.highlight {
+          color: #00c853;
+          font-size: 24px;
+          font-weight: 700;
+        }
+
+        .badge {
+          padding: 8px 14px;
+          border-radius: 8px;
+          font-weight: 700;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .badge-success {
+          background: linear-gradient(135deg, #00c853, #00e676);
+          color: #fff;
+          box-shadow: 0 4px 12px rgba(0, 200, 83, 0.3);
+        }
+
+        .badge-danger {
+          background: linear-gradient(135deg, #ff5252, #ff1744);
+          color: #fff;
+          box-shadow: 0 4px 12px rgba(255, 82, 82, 0.3);
+        }
+
+        .badge-warning {
+          background: linear-gradient(135deg, #ffc107, #ffb300);
+          color: #000;
+        }
+
+        .badge-primary {
+          background: linear-gradient(135deg, #2196f3, #1976d2);
+          color: #fff;
+        }
+
         /* Forms */
         .form-select, .form-control {
           background: #242424;
@@ -599,6 +937,11 @@ export default function AdminDashboard() {
           font-weight: 600;
           padding: 10px 24px;
           border-radius: 8px;
+        }
+
+        .btn-warning:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(255, 193, 7, 0.4);
         }
 
         .btn-outline-warning {
@@ -646,35 +989,6 @@ export default function AdminDashboard() {
           vertical-align: middle;
         }
 
-        .badge {
-          padding: 8px 14px;
-          border-radius: 8px;
-          font-weight: 700;
-          font-size: 11px;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-
-        .badge-success {
-          background: linear-gradient(135deg, #00c853, #00e676);
-          color: #fff;
-        }
-
-        .badge-danger {
-          background: linear-gradient(135deg, #ff5252, #ff1744);
-          color: #fff;
-        }
-
-        .badge-warning {
-          background: linear-gradient(135deg, #ffc107, #ffb300);
-          color: #000;
-        }
-
-        .badge-primary {
-          background: linear-gradient(135deg, #2196f3, #1976d2);
-          color: #fff;
-        }
-
         /* Pagination */
         .page-link {
           background: #1a1a1a;
@@ -692,6 +1006,141 @@ export default function AdminDashboard() {
           background: #ffc107;
           border-color: #ffc107;
           color: #000;
+        }
+
+        .page-item.disabled .page-link {
+          background: #1a1a1a;
+          border-color: #2a2a2a;
+          color: #666;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 992px) {
+          .sidebar {
+            transform: translateX(-100%);
+          }
+
+          .sidebar.open {
+            transform: translateX(0);
+          }
+
+          .sidebar-close-btn {
+            display: flex;
+          }
+
+          .main-wrapper {
+            margin-left: 0;
+          }
+
+          .mobile-menu-btn {
+            display: block;
+          }
+
+          .main-content {
+            padding: 20px 16px;
+          }
+
+          .content-card {
+            padding: 20px;
+          }
+
+          .stat-value {
+            font-size: 24px;
+          }
+
+          .booking-card {
+            padding: 20px;
+          }
+
+          .booking-header {
+            grid-template-columns: 1fr;
+          }
+
+          .booking-actions {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+          }
+
+          .selected-day-banner {
+            flex-direction: column;
+            gap: 16px;
+            align-items: flex-start;
+          }
+
+          .selected-day-stats {
+            width: 100%;
+            justify-content: space-around;
+          }
+        }
+
+        @media (max-width: 576px) {
+          .main-header {
+            padding: 16px;
+          }
+
+          .header-title {
+            font-size: 20px;
+          }
+
+          .main-content {
+            padding: 16px;
+          }
+
+          .content-card {
+            padding: 16px;
+          }
+
+          .stat-card-body {
+            padding: 16px;
+          }
+
+          .booking-card {
+            padding: 16px;
+          }
+
+          .booking-name {
+            font-size: 18px;
+          }
+
+          .session-item {
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+
+          .session-check {
+            justify-self: end;
+          }
+
+          .summary-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        .mobile-menu-btn {
+          display: none;
+          background: #1a1a1a;
+          border: 1px solid #2a2a2a;
+          color: #ffc107;
+          padding: 10px;
+          border-radius: 8px;
+          cursor: pointer;
+        }
+
+        .sidebar-overlay {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.7);
+          z-index: 999;
+        }
+
+        .sidebar-overlay.show {
+          display: block;
         }
 
         .spinner-border {
@@ -723,76 +1172,36 @@ export default function AdminDashboard() {
           border: 1px solid #2a2a2a;
         }
 
-        /* Mobile Responsive Styles */
-        @media (max-width: 992px) {
-          /* Show mobile menu button */
-          .mobile-menu-btn {
-            display: flex;
-          }
-
-          /* Remove sidebar margin from main content */
-          .main-wrapper {
-            margin-left: 0;
-          }
-
-          /* Hide sidebar by default on mobile */
-          .sidebar {
-            transform: translateX(-100%);
-          }
-
-          /* Show sidebar when open */
-          .sidebar.open {
-            transform: translateX(0);
-          }
-
-          /* Show close button in sidebar on mobile */
-          .sidebar-close-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-
-          .main-header {
-            padding: 16px 20px;
-          }
-
-          .header-title {
-            font-size: 22px;
-          }
-
-          .main-content {
-            padding: 20px 16px;
-          }
-
-          .content-card {
-            padding: 20px;
-          }
+        .dropdown-menu {
+          background: #1a1a1a;
+          border: 1px solid #333;
+          border-radius: 8px;
         }
 
-        @media (max-width: 576px) {
-          .main-header {
-            padding: 12px 16px;
-          }
+        .dropdown-item {
+          color: #fff;
+          padding: 10px 16px;
+        }
 
-          .header-title {
-            font-size: 18px;
-          }
+        .dropdown-item:hover {
+          background: rgba(255, 193, 7, 0.1);
+          color: #ffc107;
+        }
 
-          .main-content {
-            padding: 16px;
-          }
+        .empty-state {
+          text-align: center;
+          padding: 60px 20px;
+        }
 
-          .content-card {
-            padding: 16px;
-          }
+        .empty-state-icon {
+          font-size: 64px;
+          color: #666;
+          margin-bottom: 20px;
+        }
 
-          .stat-card-body {
-            padding: 16px;
-          }
-
-          .stat-value {
-            font-size: 24px;
-          }
+        .empty-state-text {
+          color: #999;
+          font-size: 16px;
         }
       `}</style>
 
@@ -873,14 +1282,13 @@ export default function AdminDashboard() {
             <button 
               className="mobile-menu-btn"
               onClick={() => setSidebarOpen(true)}
-              aria-label="Open sidebar"
             >
               <FaBars size={20} />
             </button>
             <h1 className="header-title">
               {activeNav === "Sessions" ? "Sessions Management" : "Bookings Overview"}
             </h1>
-            <div style={{ width: '44px' }}></div> {/* Spacer for centering */}
+            <div></div>
           </header>
 
           <main className="main-content">
@@ -1050,13 +1458,295 @@ export default function AdminDashboard() {
               </div>
             )}
 
-            {/* Bookings Tab - Minimal implementation */}
+            {/* Bookings Tab */}
             {activeNav === "Bookings" && (
-              <div className="content-card">
-                <h2 style={{ color: '#ffc107', fontSize: '24px', marginBottom: '20px' }}>
-                  Bookings Overview
-                </h2>
-                <p style={{ color: '#999' }}>Bookings functionality will be displayed here.</p>
+              <div>
+                {/* Stats */}
+                <div className="content-card mb-4">
+                  <h2 style={{ color: '#ffc107', fontSize: '24px', marginBottom: '24px' }}>
+                    Booking Statistics
+                  </h2>
+                  <div className="row">
+                    <StatCard 
+                      title="Total Bookings" 
+                      value={bookings.length}
+                      subtitle={`${bookings.filter(b => b.paymentStatus).length} paid bookings`}
+                      icon={<FaCheck />}
+                      color="#ffc107"
+                    />
+                    <StatCard 
+                      title="Total Revenue" 
+                      value={`€${bookings.filter(b => b.paymentStatus).reduce((sum, b) => sum + b.totalAmount, 0)}`}
+                      subtitle="From paid bookings"
+                      icon={<FaChartLine />}
+                      color="#00c853"
+                    />
+                    <StatCard 
+                      title="Pending Payments" 
+                      value={bookings.filter(b => !b.paymentStatus).length}
+                      subtitle={`€${bookings.filter(b => !b.paymentStatus).reduce((sum, b) => sum + b.totalAmount, 0)} pending`}
+                      icon={<FaClock />}
+                      color="#ff5252"
+                    />
+                    <StatCard 
+                      title="Unique Days" 
+                      value={uniqueDays.length}
+                      subtitle="Sessions scheduled"
+                      icon={<FaCalendarAlt />}
+                      color="#2196f3"
+                    />
+                  </div>
+                </div>
+
+                {/* Selected Day Banner */}
+                {selectedDayStats && (
+                  <div className="selected-day-banner">
+                    <div className="selected-day-info">
+                      <h4>{selectedDay} Sessions</h4>
+                      <p>Viewing bookings for {selectedDay} only</p>
+                    </div>
+                    <div className="selected-day-stats">
+                      <div className="day-stat-item">
+                        <p className="day-stat-value">{selectedDayStats.count}</p>
+                        <p className="day-stat-label">Bookings</p>
+                      </div>
+                      <div className="day-stat-item">
+                        <p className="day-stat-value">€{selectedDayStats.revenue.toFixed(0)}</p>
+                        <p className="day-stat-label">Revenue</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Filters */}
+                <div className="content-card mb-4">
+                  <h3 style={{ color: '#ffc107', fontSize: '20px', marginBottom: '16px' }}>
+                    <FaFilter className="me-2" />
+                    Filter Bookings
+                  </h3>
+                  <div className="filter-section">
+                    <div className="row">
+                      <div className="col-lg-3 col-md-6 mb-3">
+                        <label className="form-label">Filter by Day</label>
+                        <select 
+                          className="form-select" 
+                          value={selectedDay} 
+                          onChange={(e) => {
+                            setSelectedDay(e.target.value);
+                            setBookingsCurrentPage(1);
+                          }}
+                        >
+                          <option value="All">All Days ({bookings.length})</option>
+                          {uniqueDays.map(day => (
+                            <option key={day} value={day}>
+                              {day} ({dayWiseData[day].count} bookings)
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="col-lg-3 col-md-6 mb-3">
+                        <label className="form-label">Payment Status</label>
+                        <select className="form-select" value={paymentStatusFilter} onChange={(e) => setPaymentStatusFilter(e.target.value)}>
+                          <option value="All">All Status</option>
+                          <option value="Paid">Paid</option>
+                          <option value="Pending">Pending</option>
+                        </select>
+                      </div>
+
+                      <div className="col-lg-3 col-md-6 mb-3">
+                        <label className="form-label">Kid Level</label>
+                        <select className="form-select" value={levelFilter} onChange={(e) => setLevelFilter(e.target.value)}>
+                          <option value="All">All Levels</option>
+                          <option value="Beginner">Beginner</option>
+                          <option value="Intermediate">Intermediate</option>
+                          <option value="Advanced">Advanced</option>
+                          <option value="Club">Club</option>
+                          <option value="School">School</option>
+                          <option value="Borough/District">Borough/District</option>
+                          <option value="County">County</option>
+                          <option value="Regional">Regional</option>
+                        </select>
+                      </div>
+
+                      <div className="col-lg-3 col-md-6 mb-3">
+                        <label className="form-label">Search</label>
+                        <div className="search-box">
+                          <FaSearch className="search-icon" />
+                          <input 
+                            type="text" 
+                            className="form-control" 
+                            placeholder="Search..." 
+                            value={bookingSearch}
+                            onChange={(e) => setBookingSearch(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bookings List */}
+                <div className="content-card">
+                  <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h3 style={{ color: '#ffc107', fontSize: '20px', margin: 0 }}>
+                      Bookings List
+                      <span style={{ color: '#999', fontSize: '14px', fontWeight: '400', marginLeft: '12px' }}>
+                        ({filteredBookings.length} results)
+                      </span>
+                    </h3>
+                    <button className="btn btn-outline-warning">
+                      <FaDownload className="me-2" />
+                      Export
+                    </button>
+                  </div>
+
+                  {loading ? (
+                    <div className="text-center py-5">
+                      <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                      <p className="mt-3 text-muted">Loading bookings...</p>
+                    </div>
+                  ) : currentBookings.length === 0 ? (
+                    <div className="empty-state">
+                      <FaInfoCircle className="empty-state-icon" />
+                      <p className="empty-state-text">No bookings found matching your filters</p>
+                    </div>
+                  ) : (
+                    <>
+                      {currentBookings.map((booking) => (
+                        <div 
+                          key={booking.bookingId}
+                          className={`booking-card ${expandedBooking === booking.bookingId ? 'expanded' : ''}`}
+                          onClick={() => setExpandedBooking(expandedBooking === booking.bookingId ? null : booking.bookingId)}
+                        >
+                          <div className="booking-header">
+                            <div className="booking-main-info">
+                              {/* Booking ID */}
+                              <div className="booking-id">
+                                Booking #{booking.bookingId}
+                              </div>
+
+                              {/* Parent Information */}
+                              <div className="booking-section">
+                                <div className="section-label">Parent Information</div>
+                                <div className="section-content">
+                                  <div className="booking-name">{booking.parentName}</div>
+                                  <div className="booking-contact">
+                                    <FaEnvelope size={13} />
+                                    {booking.parentEmail}
+                                  </div>
+                                  {booking.parentPhone && (
+                                    <div className="booking-contact">
+                                      <FaPhone size={13} />
+                                      {booking.parentPhone}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Kid Information */}
+                              <div className="booking-section">
+                                <div className="section-label">Student Information</div>
+                                <div className="kid-info">
+                                  <FaChild size={16} style={{ color: '#666' }} />
+                                  <span className="kid-name">{booking.kidName}</span>
+                                  <span className="kid-level">{booking.kidLevel}</span>
+                                </div>
+                              </div>
+
+                              {/* Meta Information */}
+                              <div className="booking-meta">
+                                <div className="meta-item">
+                                  <FaCalendarAlt />
+                                  {booking.sessionDetails.length} Session{booking.sessionDetails.length > 1 ? 's' : ''}
+                                </div>
+                                <div className="meta-item amount-highlight">
+                                  €{booking.totalAmount}
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="booking-actions">
+                              <span className={`badge ${booking.paymentStatus ? 'badge-success' : 'badge-danger'}`}>
+                                {booking.paymentStatus ? "PAID" : "PENDING"}
+                              </span>
+                              <FaChevronRight className="expand-icon" />
+                            </div>
+                          </div>
+
+                          {expandedBooking === booking.bookingId && (
+                            <div className="booking-details">
+                              <div className="details-header">
+                                <h6>Session Details</h6>
+                                <span className="session-count-badge">
+                                  {booking.sessionDetails.length} Sessions
+                                </span>
+                              </div>
+                              
+                              <div className="session-list">
+                                {booking.sessionDetails.map((session, idx) => {
+                                  const parts = session.split(" - ");
+                                  const day = parts[0];
+                                  const classInfo = parts[1] || "";
+                                  const timeInfo = parts[2] || "";
+                                  const dateInfo = parts[3] || "";
+                                  
+                                  return (
+                                    <div key={idx} className="session-item">
+                                      <div className="session-info">
+                                        <h6>{day} Session</h6>
+                                        <p>
+                                          {classInfo && <span>{classInfo}</span>}
+                                          {timeInfo && <span> • {timeInfo}</span>}
+                                          {dateInfo && <span> • {dateInfo}</span>}
+                                        </p>
+                                      </div>
+                                      <div className="session-check">
+                                        <FaCheck />
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                              
+                              <div className="booking-summary">
+                                <div className="summary-grid">
+                                  <div className="summary-item">
+                                    <div className="summary-label">Parent Name</div>
+                                    <div className="summary-value">{booking.parentName}</div>
+                                  </div>
+                                  <div className="summary-item">
+                                    <div className="summary-label">Parent Email</div>
+                                    <div className="summary-value">{booking.parentEmail}</div>
+                                  </div>
+                                  <div className="summary-item">
+                                    <div className="summary-label">Student Name</div>
+                                    <div className="summary-value">{booking.kidName}</div>
+                                  </div>
+                                  <div className="summary-item">
+                                    <div className="summary-label">Total Amount</div>
+                                    <div className="summary-value highlight">€{booking.totalAmount}</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      
+                      <Pagination
+                        currentPage={bookingsCurrentPage}
+                        totalPages={totalBookingsPages}
+                        onPageChange={setBookingsCurrentPage}
+                        itemsPerPage={bookingsPerPage}
+                        setItemsPerPage={setBookingsPerPage}
+                        totalItems={filteredBookings.length}
+                      />
+                    </>
+                  )}
+                </div>
               </div>
             )}
           </main>
