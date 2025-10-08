@@ -95,17 +95,24 @@ export default function AdminDashboard() {
     );
   }
 
-  // Get day-wise booking counts
+  // FIXED: Get day-wise booking counts - count individual bookings, not sessions
   const getDayWiseBookings = () => {
     const dayMap = {};
-    bookings.forEach(b => {
-      b.sessionDetails.forEach(s => {
-        const day = s.split(" - ")[0];
+    bookings.forEach(booking => {
+      // For each booking, check which days it includes
+      const daysInBooking = new Set();
+      booking.sessionDetails.forEach(session => {
+        const day = session.split(" - ")[0];
+        daysInBooking.add(day);
+      });
+      
+      // Count this booking for each unique day it includes
+      daysInBooking.forEach(day => {
         if (!dayMap[day]) {
           dayMap[day] = { count: 0, revenue: 0 };
         }
-        dayMap[day].count += 1;
-        dayMap[day].revenue += b.totalAmount / b.sessionDetails.length;
+        dayMap[day].count += 1; // Count the individual booking
+        dayMap[day].revenue += booking.totalAmount; // Add full booking amount
       });
     });
     return dayMap;
@@ -300,11 +307,13 @@ export default function AdminDashboard() {
           box-sizing: border-box;
         }
 
-        body {
+        html, body {
           background: #0a0a0a;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
           margin: 0;
+          padding: 0;
           overflow-x: hidden;
+          width: 100%;
         }
 
         .dashboard-layout {
@@ -312,6 +321,7 @@ export default function AdminDashboard() {
           min-height: 100vh;
           background: #0a0a0a;
           position: relative;
+          width: 100%;
         }
 
         /* Sidebar Overlay */
@@ -491,6 +501,7 @@ export default function AdminDashboard() {
           align-items: center;
           justify-content: center;
           transition: all 0.2s ease;
+          flex-shrink: 0;
         }
 
         .mobile-menu-btn:hover {
@@ -503,6 +514,8 @@ export default function AdminDashboard() {
           flex: 1;
           margin-left: 280px;
           transition: margin-left 0.3s ease;
+          width: calc(100% - 280px);
+          min-height: 100vh;
         }
 
         .main-header {
@@ -515,6 +528,7 @@ export default function AdminDashboard() {
           display: flex;
           justify-content: space-between;
           align-items: center;
+          width: 100%;
         }
 
         .header-title {
@@ -529,6 +543,8 @@ export default function AdminDashboard() {
         .main-content {
           padding: 32px;
           min-height: calc(100vh - 80px);
+          width: 100%;
+          overflow-x: auto;
         }
 
         .content-card {
@@ -536,6 +552,8 @@ export default function AdminDashboard() {
           border-radius: 16px;
           padding: 32px;
           border: 1px solid #2a2a2a;
+          width: 100%;
+          overflow-x: auto;
         }
 
         /* Stats Cards */
@@ -661,6 +679,7 @@ export default function AdminDashboard() {
           margin-bottom: 16px;
           cursor: pointer;
           transition: all 0.3s ease;
+          width: 100%;
         }
 
         .booking-card:hover {
@@ -1002,6 +1021,12 @@ export default function AdminDashboard() {
         .table {
           color: #fff;
           margin-bottom: 0;
+          width: 100%;
+        }
+
+        .table-responsive {
+          overflow-x: auto;
+          width: 100%;
         }
 
         .table thead th {
@@ -1012,6 +1037,7 @@ export default function AdminDashboard() {
           text-transform: uppercase;
           font-size: 12px;
           padding: 16px 12px;
+          white-space: nowrap;
         }
 
         .table tbody tr {
@@ -1027,6 +1053,7 @@ export default function AdminDashboard() {
           padding: 14px 12px;
           border-color: #2a2a2a;
           vertical-align: middle;
+          white-space: nowrap;
         }
 
         /* Pagination */
@@ -1054,7 +1081,7 @@ export default function AdminDashboard() {
           color: #666;
         }
 
-        /* Mobile Responsive Styles */
+        /* Mobile Responsive Styles - FIXED */
         @media (max-width: 992px) {
           /* Show mobile menu button */
           .mobile-menu-btn {
@@ -1064,6 +1091,7 @@ export default function AdminDashboard() {
           /* Remove sidebar margin from main content */
           .main-wrapper {
             margin-left: 0;
+            width: 100%;
           }
 
           /* Hide sidebar by default on mobile */
@@ -1093,10 +1121,12 @@ export default function AdminDashboard() {
 
           .main-content {
             padding: 20px 16px;
+            overflow-x: hidden;
           }
 
           .content-card {
             padding: 20px;
+            overflow-x: auto;
           }
 
           .stat-value {
@@ -1105,6 +1135,7 @@ export default function AdminDashboard() {
 
           .booking-card {
             padding: 20px;
+            width: 100%;
           }
 
           .booking-header {
@@ -1128,6 +1159,21 @@ export default function AdminDashboard() {
             width: 100%;
             justify-content: space-around;
           }
+
+          /* Fix table responsiveness */
+          .table-responsive {
+            margin: 0 -20px;
+            padding: 0 20px;
+          }
+
+          /* Fix row layout */
+          .row {
+            margin: 0 -8px;
+          }
+
+          .row > * {
+            padding: 0 8px;
+          }
         }
 
         @media (max-width: 576px) {
@@ -1140,11 +1186,11 @@ export default function AdminDashboard() {
           }
 
           .main-content {
-            padding: 16px;
+            padding: 16px 8px;
           }
 
           .content-card {
-            padding: 16px;
+            padding: 16px 12px;
           }
 
           .stat-card-body {
@@ -1170,6 +1216,25 @@ export default function AdminDashboard() {
 
           .summary-grid {
             grid-template-columns: 1fr;
+          }
+
+          /* Fix small screen table */
+          .table thead th {
+            padding: 12px 8px;
+            font-size: 11px;
+          }
+
+          .table tbody td {
+            padding: 12px 8px;
+          }
+
+          /* Fix row spacing on small screens */
+          .row {
+            margin: 0 -4px;
+          }
+
+          .row > * {
+            padding: 0 4px;
           }
         }
 
@@ -1200,6 +1265,7 @@ export default function AdminDashboard() {
           padding: 20px;
           margin-bottom: 24px;
           border: 1px solid #2a2a2a;
+          overflow-x: auto;
         }
 
         .dropdown-menu {
@@ -1319,7 +1385,7 @@ export default function AdminDashboard() {
             <h1 className="header-title">
               {activeNav === "Sessions" ? "Sessions Management" : "Bookings Overview"}
             </h1>
-            <div style={{ width: '44px' }}></div> {/* Spacer for centering */}
+            <div style={{ width: '44px', flexShrink: 0 }}></div> {/* Spacer for centering */}
           </header>
 
           <main className="main-content">
@@ -1327,7 +1393,7 @@ export default function AdminDashboard() {
             {activeNav === "Sessions" && (
               <div>
                 <div className="content-card mb-4">
-                  <div className="d-flex justify-content-between align-items-center mb-4">
+                  <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
                     <h2 style={{ color: '#ffc107', fontSize: '24px', margin: 0 }}>
                       Session Statistics
                     </h2>
@@ -1619,7 +1685,7 @@ export default function AdminDashboard() {
 
                 {/* Bookings List */}
                 <div className="content-card">
-                  <div className="d-flex justify-content-between align-items-center mb-4">
+                  <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
                     <h3 style={{ color: '#ffc107', fontSize: '20px', margin: 0 }}>
                       Bookings List
                       <span style={{ color: '#999', fontSize: '14px', fontWeight: '400', marginLeft: '12px' }}>
