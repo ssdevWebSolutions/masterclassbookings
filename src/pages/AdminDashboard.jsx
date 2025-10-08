@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSessionsByYear } from "../Redux/Sessions/sessionsSlice";
-import { FaBars, FaUser, FaSignOutAlt, FaChevronDown, FaCalendarAlt, FaFilter, FaSearch, FaTimes, FaChartLine, FaDownload, FaCheck } from "react-icons/fa";
+import { FaBars, FaUser, FaSignOutAlt, FaChevronDown, FaCalendarAlt, FaFilter, FaSearch, FaTimes, FaChartLine, FaDownload, FaCheck, FaList, FaClock, FaMapMarkerAlt, FaInfoCircle, FaChevronRight, FaPhone, FaEnvelope, FaChild } from "react-icons/fa";
 import { logOutUserWithType } from "@/Redux/Authentication/AuthenticationAction";
 import { useRouter } from "next/router";
 import { fetchBookings } from "@/Redux/bookingSlice/bookingSlice";
 
-// At the top of your file or in _app.js
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function AdminDashboard() {
@@ -17,11 +16,9 @@ export default function AdminDashboard() {
   const loginData = useSelector((state) => state.auth.loginData);
   const bookings = useSelector(state => state.bookings.bookings);
 
-  // Main states
   const [activeNav, setActiveNav] = useState("Sessions");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
   const [pageLoaded, setPageLoaded] = useState(false);
 
   // Session filters
@@ -35,9 +32,10 @@ export default function AdminDashboard() {
   const [bookingSearch, setBookingSearch] = useState("");
   const [paymentStatusFilter, setPaymentStatusFilter] = useState("All");
   const [levelFilter, setLevelFilter] = useState("All");
-  const [dateRangeFilter, setDateRangeFilter] = useState("All");
+  const [selectedDay, setSelectedDay] = useState("All");
+  const [expandedBooking, setExpandedBooking] = useState(null);
+  const [selectedDayStats, setSelectedDayStats] = useState(null);
   
-  // Pagination
   const [sessionsCurrentPage, setSessionsCurrentPage] = useState(1);
   const [sessionsPerPage, setSessionsPerPage] = useState(10);
   const [bookingsCurrentPage, setBookingsCurrentPage] = useState(1);
@@ -45,7 +43,6 @@ export default function AdminDashboard() {
   const [initiateButton, setInitiateButton] = useState(true);
 
   useEffect(() => {
-    // Only import Bootstrap JS on the client side
     import('bootstrap/dist/js/bootstrap.bundle.min.js');
   }, []);
 
@@ -72,7 +69,7 @@ export default function AdminDashboard() {
               <FaUser className="mb-3" style={{ fontSize: "3rem", color: "#ffc107" }} />
               <h4 className="text-white mb-3">Authentication Required</h4>
               <p className="text-muted mb-4">Please login to access the admin dashboard.</p>
-              <button className="btn btn-warning px-4 py-2" onClick={handleLoginRoute} style={{ background: "#ffc107", border: "none", color: "#000" }}>
+              <button className="btn btn-warning px-4 py-2" onClick={handleLoginRoute}>
                 Go to Login
               </button>
             </div>
@@ -98,51 +95,54 @@ export default function AdminDashboard() {
     );
   }
 
-  // Analytics calculations
-  const getAnalytics = () => {
-    const today = new Date();
-    const todayBookings = bookings.filter(b => {
-      const bookingDate = new Date(b.bookingDate);
-      return bookingDate.toDateString() === today.toDateString();
+  // Get day-wise booking counts
+  const getDayWiseBookings = () => {
+    const dayMap = {};
+    bookings.forEach(b => {
+      b.sessionDetails.forEach(s => {
+        const day = s.split(" - ")[0];
+        if (!dayMap[day]) {
+          dayMap[day] = { count: 0, revenue: 0 };
+        }
+        dayMap[day].count += 1;
+        dayMap[day].revenue += b.totalAmount / b.sessionDetails.length;
+      });
     });
-
-    const thisWeekStart = new Date(today);
-    thisWeekStart.setDate(today.getDate() - today.getDay());
-    const weekBookings = bookings.filter(b => {
-      const bookingDate = new Date(b.bookingDate);
-      return bookingDate >= thisWeekStart;
-    });
-
-    const thisMonthBookings = bookings.filter(b => {
-      const bookingDate = new Date(b.bookingDate);
-      return bookingDate.getMonth() === today.getMonth() && bookingDate.getFullYear() === today.getFullYear();
-    });
-
-    const fridayBookings = bookings.filter(b => 
-      b.sessionDetails.some(s => s.toLowerCase().includes('friday'))
-    );
-
-    const sundayBookings = bookings.filter(b => 
-      b.sessionDetails.some(s => s.toLowerCase().includes('sunday'))
-    );
-
-    return {
-      today: todayBookings.length,
-      todayRevenue: todayBookings.reduce((sum, b) => sum + b.totalAmount, 0),
-      thisWeek: weekBookings.length,
-      weekRevenue: weekBookings.reduce((sum, b) => sum + b.totalAmount, 0),
-      thisMonth: thisMonthBookings.length,
-      monthRevenue: thisMonthBookings.reduce((sum, b) => sum + b.totalAmount, 0),
-      friday: fridayBookings.length,
-      fridayRevenue: fridayBookings.reduce((sum, b) => sum + b.totalAmount, 0),
-      sunday: sundayBookings.length,
-      sundayRevenue: sundayBookings.reduce((sum, b) => sum + b.totalAmount, 0),
-    };
+    return dayMap;
   };
 
-  const analytics = getAnalytics();
+  const dayWiseData = getDayWiseBookings();
+  const uniqueDays = Object.keys(dayWiseData).sort();
 
-  // Filtering logic
+  // Update selected day stats when day changes
+  useEffect(() => {
+    if (selectedDay !== "All" && dayWiseData[selectedDay]) {
+      setSelectedDayStats(dayWiseData[selectedDay]);
+    } else {
+      setSelectedDayStats(null);
+    }
+  }, [selectedDay]);
+
+  // Filter bookings by selected day
+  const filteredBookings = bookings.filter((b) => {
+    if (paymentStatusFilter !== "All") {
+      if (paymentStatusFilter === "Paid" && !b.paymentStatus) return false;
+      if (paymentStatusFilter === "Pending" && b.paymentStatus) return false;
+    }
+    if (levelFilter !== "All" && b.kidLevel !== levelFilter) return false;
+    if (selectedDay !== "All") {
+      const hasDay = b.sessionDetails.some(s => s.startsWith(selectedDay));
+      if (!hasDay) return false;
+    }
+    if (bookingSearch) {
+      const search = bookingSearch.toLowerCase();
+      if (!b.parentName.toLowerCase().includes(search) &&
+          !b.parentEmail.toLowerCase().includes(search) &&
+          !b.kidName.toLowerCase().includes(search)) return false;
+    }
+    return true;
+  });
+
   const filteredSessions = sessions.filter((s) => {
     if (monthFilter !== "All") {
       const sessionDate = new Date(s.date);
@@ -156,22 +156,6 @@ export default function AdminDashboard() {
     return true;
   });
 
-  const filteredBookings = bookings.filter((b) => {
-    if (paymentStatusFilter !== "All") {
-      if (paymentStatusFilter === "Paid" && !b.paymentStatus) return false;
-      if (paymentStatusFilter === "Pending" && b.paymentStatus) return false;
-    }
-    if (levelFilter !== "All" && b.kidLevel !== levelFilter) return false;
-    if (bookingSearch) {
-      const search = bookingSearch.toLowerCase();
-      if (!b.parentName.toLowerCase().includes(search) &&
-          !b.parentEmail.toLowerCase().includes(search) &&
-          !b.kidName.toLowerCase().includes(search)) return false;
-    }
-    return true;
-  });
-
-  // Pagination
   const indexOfLastSession = sessionsCurrentPage * sessionsPerPage;
   const indexOfFirstSession = indexOfLastSession - sessionsPerPage;
   const currentSessions = filteredSessions.slice(indexOfFirstSession, indexOfLastSession);
@@ -216,7 +200,8 @@ export default function AdminDashboard() {
         <div className="d-flex align-items-center">
           <label className="me-2 text-muted small">Show:</label>
           <select 
-            className="form-select form-select-sm pagination-select" 
+            className="form-select form-select-sm" 
+            style={{ width: '80px' }}
             value={itemsPerPage}
             onChange={(e) => {
               setItemsPerPage(parseInt(e.target.value));
@@ -228,7 +213,6 @@ export default function AdminDashboard() {
             <option value={15}>15</option>
             <option value={20}>20</option>
             <option value={25}>25</option>
-            <option value={50}>50</option>
           </select>
         </div>
         
@@ -240,21 +224,21 @@ export default function AdminDashboard() {
           <nav>
             <ul className="pagination pagination-sm mb-0">
               <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                <button className="page-link custom-pagination" onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}>
+                <button className="page-link" onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}>
                   Previous
                 </button>
               </li>
               
               {pages.map(page => (
                 <li key={page} className={`page-item ${currentPage === page ? 'active' : ''}`}>
-                  <button className="page-link custom-pagination" onClick={() => onPageChange(page)}>
+                  <button className="page-link" onClick={() => onPageChange(page)}>
                     {page}
                   </button>
                 </li>
               ))}
               
               <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                <button className="page-link custom-pagination" onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+                <button className="page-link" onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}>
                   Next
                 </button>
               </li>
@@ -267,6 +251,7 @@ export default function AdminDashboard() {
 
   const handleNavSwitch = (item) => {
     setActiveNav(item);
+    setSidebarOpen(false);
     if (item === "Bookings" && loginData.token && loginData.role) {
       const token = loginData.token;
       const role = loginData.role;
@@ -276,7 +261,7 @@ export default function AdminDashboard() {
   };
 
   const StatCard = ({ title, value, subtitle, icon, color, delay = 0 }) => (
-    <div className={`col-xl-3 col-md-6 col-sm-6 mb-3 animate-slide-up`} style={{ animationDelay: `${delay}ms` }}>
+    <div className={`col-lg-3 col-md-6 col-sm-6 mb-3`}>
       <div className="stat-card h-100">
         <div className="stat-card-body">
           <div className="d-flex justify-content-between align-items-start mb-2">
@@ -311,109 +296,216 @@ export default function AdminDashboard() {
           }
         }
 
-        @keyframes slideInRight {
-          from {
-            opacity: 0;
-            transform: translateX(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        .animate-fade-in {
-          animation: fadeIn 0.5s ease-out;
-        }
-
-        .animate-slide-up {
-          animation: slideUp 0.6s ease-out forwards;
-          opacity: 0;
-        }
-
-        .animate-slide-right {
-          animation: slideInRight 0.4s ease-out;
+        * {
+          box-sizing: border-box;
         }
 
         body {
-          background: #000000;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+          background: #0a0a0a;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          margin: 0;
+          overflow-x: hidden;
         }
 
-        .dashboard-header {
-          background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-          border-bottom: 2px solid #ffc107;
-          box-shadow: 0 4px 20px rgba(255, 193, 7, 0.1);
+        .dashboard-layout {
+          display: flex;
+          min-height: 100vh;
+          background: #0a0a0a;
         }
 
-        .nav-pills .nav-link {
-          border-radius: 25px;
-          padding: 10px 24px;
+        /* Sidebar Styles */
+        .sidebar {
+          width: 280px;
+          background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
+          border-right: 2px solid #ffc107;
+          position: fixed;
+          height: 100vh;
+          left: 0;
+          top: 0;
+          z-index: 1000;
+          transition: transform 0.3s ease;
+          overflow-y: auto;
+        }
+
+        .sidebar-header {
+          padding: 24px;
+          border-bottom: 1px solid #2a2a2a;
+          background: #000;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .sidebar-close-btn {
+          display: none;
+          background: transparent;
+          border: 2px solid #ffc107;
+          color: #ffc107;
+          width: 36px;
+          height: 36px;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .sidebar-close-btn:hover {
+          background: #ffc107;
+          color: #000;
+          transform: rotate(90deg);
+        }
+
+        .sidebar-logo {
+          font-size: 24px;
+          font-weight: 700;
+          color: #ffc107;
+          margin: 0;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .sidebar-nav {
+          padding: 20px 0;
+        }
+
+        .nav-item {
+          margin: 4px 12px;
+        }
+
+        .nav-link {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 20px;
+          color: #999;
+          text-decoration: none;
+          border-radius: 12px;
+          transition: all 0.3s ease;
           font-weight: 500;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           border: 2px solid transparent;
         }
 
-        .nav-pills .nav-link:not(.active) {
-          color: #999 !important;
-          background: transparent !important;
-        }
-
-        .nav-pills .nav-link:not(.active):hover {
-          background: rgba(255, 193, 7, 0.1) !important;
-          border-color: #ffc107;
-          color: #ffc107 !important;
-          transform: translateY(-2px);
-        }
-
-        .nav-pills .nav-link.active {
-          background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%) !important;
-          color: #000 !important;
-          box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
-          transform: translateY(-2px);
-        }
-
-        .profile-dropdown {
-          background: #1a1a1a;
-          border: 1px solid #ffc107;
-          border-radius: 12px;
-          padding: 8px 16px;
+        .nav-link:hover {
+          background: rgba(255, 193, 7, 0.1);
           color: #ffc107;
+          border-color: #ffc107;
+          transform: translateX(4px);
+        }
+
+        .nav-link.active {
+          background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+          color: #000;
+          box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+        }
+
+        .nav-link svg {
+          font-size: 20px;
+        }
+
+        .sidebar-footer {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          padding: 20px;
+          border-top: 1px solid #2a2a2a;
+          background: #000;
+        }
+
+        .user-profile {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px;
+          background: #1a1a1a;
+          border-radius: 12px;
+          border: 1px solid #2a2a2a;
+          cursor: pointer;
           transition: all 0.3s ease;
         }
 
-        .profile-dropdown:hover {
+        .user-profile:hover {
           background: rgba(255, 193, 7, 0.1);
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+          border-color: #ffc107;
+        }
+
+        .user-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #ffc107, #ffb300);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #000;
+          font-weight: 700;
+        }
+
+        .user-info {
+          flex: 1;
+        }
+
+        .user-name {
+          color: #fff;
+          font-weight: 600;
+          font-size: 14px;
+          margin: 0;
+        }
+
+        .user-role {
+          color: #999;
+          font-size: 12px;
+          margin: 0;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+          flex: 1;
+          margin-left: 280px;
+          transition: margin-left 0.3s ease;
+        }
+
+        .main-header {
+          background: #1a1a1a;
+          border-bottom: 1px solid #2a2a2a;
+          padding: 20px 32px;
+          position: sticky;
+          top: 0;
+          z-index: 900;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .header-title {
+          font-size: 28px;
+          font-weight: 700;
+          color: #fff;
+          margin: 0;
         }
 
         .main-content {
-          background: #000000;
-          min-height: 100vh;
-          padding: 24px 16px;
+          padding: 32px;
+          min-height: calc(100vh - 80px);
         }
 
         .content-card {
           background: #1a1a1a;
           border-radius: 16px;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
           padding: 32px;
           border: 1px solid #2a2a2a;
-          transition: all 0.3s ease;
         }
 
-        .content-card:hover {
-          box-shadow: 0 12px 40px rgba(255, 193, 7, 0.1);
-        }
-
+        /* Stats Cards */
         .stat-card {
           background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
           border-radius: 16px;
           border: 1px solid #2a2a2a;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          overflow: hidden;
+          transition: all 0.3s ease;
           position: relative;
+          overflow: hidden;
         }
 
         .stat-card::before {
@@ -433,8 +525,8 @@ export default function AdminDashboard() {
         }
 
         .stat-card:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 12px 32px rgba(255, 193, 7, 0.2);
+          transform: translateY(-4px);
+          box-shadow: 0 8px 24px rgba(255, 193, 7, 0.2);
           border-color: #ffc107;
         }
 
@@ -450,65 +542,401 @@ export default function AdminDashboard() {
           align-items: center;
           justify-content: center;
           font-size: 20px;
-          margin-bottom: 12px;
         }
 
         .stat-value {
           font-size: 32px;
           font-weight: 700;
+          margin-top: 12px;
           margin-bottom: 4px;
-          letter-spacing: -1px;
         }
 
         .stat-title {
           font-size: 14px;
           color: #999;
           font-weight: 500;
-          margin-bottom: 4px;
         }
 
         .stat-subtitle {
           font-size: 12px;
           color: #666;
+          margin-top: 4px;
         }
 
-        .filter-section {
+        /* Selected Day Stats Banner */
+        .selected-day-banner {
+          background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+          border-radius: 12px;
+          padding: 20px 24px;
+          margin-bottom: 24px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          box-shadow: 0 4px 16px rgba(255, 193, 7, 0.3);
+        }
+
+        .selected-day-info h4 {
+          color: #000;
+          font-size: 20px;
+          font-weight: 700;
+          margin: 0 0 4px 0;
+        }
+
+        .selected-day-info p {
+          color: rgba(0, 0, 0, 0.7);
+          font-size: 14px;
+          margin: 0;
+        }
+
+        .selected-day-stats {
+          display: flex;
+          gap: 24px;
+        }
+
+        .day-stat-item {
+          text-align: center;
+        }
+
+        .day-stat-value {
+          font-size: 28px;
+          font-weight: 700;
+          color: #000;
+          margin: 0;
+        }
+
+        .day-stat-label {
+          font-size: 12px;
+          color: rgba(0, 0, 0, 0.7);
+          text-transform: uppercase;
+          font-weight: 600;
+          margin: 0;
+        }
+
+        /* Booking Cards */
+        .booking-card {
+          background: #242424;
+          border: 2px solid #2a2a2a;
+          border-radius: 16px;
+          padding: 24px;
+          margin-bottom: 16px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .booking-card:hover {
+          border-color: #ffc107;
+          box-shadow: 0 8px 24px rgba(255, 193, 7, 0.2);
+          transform: translateY(-2px);
+        }
+
+        .booking-card.expanded {
+          border-color: #ffc107;
+          background: #1f1f1f;
+          box-shadow: 0 8px 24px rgba(255, 193, 7, 0.3);
+        }
+
+        .booking-header {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 20px;
+          align-items: start;
+        }
+
+        .booking-main-info {
+          display: grid;
+          gap: 16px;
+        }
+
+        .booking-section {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .section-label {
+          font-size: 11px;
+          color: #666;
+          text-transform: uppercase;
+          font-weight: 600;
+          letter-spacing: 0.5px;
+        }
+
+        .section-content {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .booking-id {
+          font-size: 13px;
+          color: #ffc107;
+          font-weight: 600;
+        }
+
+        .booking-name {
+          font-size: 20px;
+          font-weight: 700;
+          color: #fff;
+          margin: 0;
+        }
+
+        .booking-contact {
+          font-size: 14px;
+          color: #999;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .booking-contact svg {
+          color: #666;
+          flex-shrink: 0;
+        }
+
+        .kid-info {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+
+        .kid-name {
+          font-size: 16px;
+          font-weight: 600;
+          color: #fff;
+        }
+
+        .kid-level {
+          background: rgba(255, 193, 7, 0.2);
+          color: #ffc107;
+          padding: 4px 10px;
+          border-radius: 6px;
+          font-size: 12px;
+          font-weight: 600;
+        }
+
+        .booking-meta {
+          display: flex;
+          gap: 16px;
+          flex-wrap: wrap;
+          padding-top: 12px;
+          border-top: 1px solid #2a2a2a;
+        }
+
+        .meta-item {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 13px;
+          color: #999;
+        }
+
+        .meta-item svg {
+          color: #666;
+        }
+
+        .amount-highlight {
+          color: #00c853;
+          font-weight: 700;
+          font-size: 15px;
+        }
+
+        .booking-actions {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 12px;
+        }
+
+        .expand-icon {
+          color: #ffc107;
+          transition: transform 0.3s ease;
+          font-size: 20px;
+        }
+
+        .booking-card.expanded .expand-icon {
+          transform: rotate(90deg);
+        }
+
+        .booking-details {
+          margin-top: 24px;
+          padding-top: 24px;
+          border-top: 2px solid #2a2a2a;
+        }
+
+        .details-header {
+          display: flex;
+          justify-content: between;
+          align-items: center;
+          margin-bottom: 20px;
+        }
+
+        .details-header h6 {
+          color: #ffc107;
+          font-size: 14px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          margin: 0;
+        }
+
+        .session-count-badge {
+          background: rgba(255, 193, 7, 0.2);
+          color: #ffc107;
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+        }
+
+        .session-list {
+          display: grid;
+          gap: 12px;
+        }
+
+        .session-item {
+          background: #1a1a1a;
+          border: 1px solid #2a2a2a;
+          border-radius: 12px;
+          padding: 16px 20px;
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 16px;
+          align-items: center;
+          transition: all 0.2s ease;
+        }
+
+        .session-item:hover {
+          border-color: #ffc107;
+          background: #242424;
+        }
+
+        .session-info h6 {
+          color: #ffc107;
+          font-size: 15px;
+          font-weight: 700;
+          margin: 0 0 6px 0;
+        }
+
+        .session-info p {
+          color: #999;
+          font-size: 13px;
+          margin: 0;
+          line-height: 1.5;
+        }
+
+        .session-check {
+          width: 32px;
+          height: 32px;
+          background: rgba(0, 200, 83, 0.2);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #00c853;
+          font-size: 16px;
+        }
+
+        .booking-summary {
+          margin-top: 24px;
+          padding: 20px;
           background: #242424;
           border-radius: 12px;
-          padding: 20px;
-          margin-bottom: 24px;
           border: 1px solid #2a2a2a;
         }
 
+        .summary-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 20px;
+        }
+
+        .summary-item {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .summary-label {
+          font-size: 12px;
+          color: #666;
+          text-transform: uppercase;
+          font-weight: 600;
+        }
+
+        .summary-value {
+          font-size: 16px;
+          color: #fff;
+          font-weight: 600;
+        }
+
+        .summary-value.highlight {
+          color: #00c853;
+          font-size: 24px;
+          font-weight: 700;
+        }
+
+        .badge {
+          padding: 8px 14px;
+          border-radius: 8px;
+          font-weight: 700;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .badge-success {
+          background: linear-gradient(135deg, #00c853, #00e676);
+          color: #fff;
+          box-shadow: 0 4px 12px rgba(0, 200, 83, 0.3);
+        }
+
+        .badge-danger {
+          background: linear-gradient(135deg, #ff5252, #ff1744);
+          color: #fff;
+          box-shadow: 0 4px 12px rgba(255, 82, 82, 0.3);
+        }
+
+        .badge-warning {
+          background: linear-gradient(135deg, #ffc107, #ffb300);
+          color: #000;
+        }
+
+        .badge-primary {
+          background: linear-gradient(135deg, #2196f3, #1976d2);
+          color: #fff;
+        }
+
+        /* Forms */
         .form-select, .form-control {
-          background: #1a1a1a;
+          background: #242424;
           border: 1px solid #333;
           color: #fff;
           border-radius: 8px;
           padding: 10px 14px;
-          transition: all 0.3s ease;
         }
 
         .form-select:focus, .form-control:focus {
-          background: #1a1a1a;
+          background: #242424;
           border-color: #ffc107;
           color: #fff;
           box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
         }
 
-        .form-select option {
-          background: #1a1a1a;
-          color: #fff;
+        .form-label {
+          color: #999;
+          font-size: 13px;
+          font-weight: 500;
+          margin-bottom: 6px;
         }
 
         .btn-warning {
-          background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+          background: linear-gradient(135deg, #ffc107, #ffb300);
           border: none;
           color: #000;
           font-weight: 600;
           padding: 10px 24px;
           border-radius: 8px;
-          transition: all 0.3s ease;
         }
 
         .btn-warning:hover {
@@ -523,22 +951,17 @@ export default function AdminDashboard() {
           font-weight: 600;
           padding: 8px 20px;
           border-radius: 8px;
-          transition: all 0.3s ease;
         }
 
         .btn-outline-warning:hover {
           background: #ffc107;
           color: #000;
-          transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(255, 193, 7, 0.3);
         }
 
+        /* Table Styles */
         .table {
           color: #fff;
-        }
-
-        .table-dark {
-          background: #1a1a1a;
+          margin-bottom: 0;
         }
 
         .table thead th {
@@ -548,11 +971,7 @@ export default function AdminDashboard() {
           font-weight: 600;
           text-transform: uppercase;
           font-size: 12px;
-          letter-spacing: 0.5px;
           padding: 16px 12px;
-          position: sticky;
-          top: 0;
-          z-index: 10;
         }
 
         .table tbody tr {
@@ -562,7 +981,6 @@ export default function AdminDashboard() {
 
         .table tbody tr:hover {
           background: rgba(255, 193, 7, 0.05);
-          transform: scale(1.01);
         }
 
         .table tbody td {
@@ -571,82 +989,163 @@ export default function AdminDashboard() {
           vertical-align: middle;
         }
 
-        .badge {
-          padding: 6px 12px;
-          border-radius: 6px;
-          font-weight: 600;
-          font-size: 11px;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-
-        .badge.bg-success {
-          background: linear-gradient(135deg, #00c853 0%, #00e676 100%) !important;
-        }
-
-        .badge.bg-warning {
-          background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%) !important;
-          color: #000 !important;
-        }
-
-        .badge.bg-danger {
-          background: linear-gradient(135deg, #ff5252 0%, #ff1744 100%) !important;
-        }
-
-        .badge.bg-primary {
-          background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%) !important;
-        }
-
-        .dropdown-menu {
-          background: #1a1a1a;
-          border: 1px solid #333;
-          border-radius: 8px;
-          padding: 8px;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-        }
-
-        .dropdown-item {
-          color: #fff;
-          border-radius: 6px;
-          padding: 10px 16px;
-          transition: all 0.2s ease;
-        }
-
-        .dropdown-item:hover {
-          background: rgba(255, 193, 7, 0.1);
-          color: #ffc107;
-        }
-
-        .pagination-select {
-          width: 80px;
-          background: #1a1a1a;
-          border: 1px solid #333;
-          color: #fff;
-        }
-
-        .custom-pagination {
+        /* Pagination */
+        .page-link {
           background: #1a1a1a;
           border: 1px solid #333;
           color: #ffc107;
-          transition: all 0.2s ease;
         }
 
-        .custom-pagination:hover {
+        .page-link:hover {
           background: rgba(255, 193, 7, 0.1);
           border-color: #ffc107;
           color: #ffc107;
         }
 
-        .page-item.active .custom-pagination {
+        .page-item.active .page-link {
           background: #ffc107;
           border-color: #ffc107;
           color: #000;
         }
 
-        .page-item.disabled .custom-pagination {
+        .page-item.disabled .page-link {
           background: #1a1a1a;
           border-color: #2a2a2a;
           color: #666;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 992px) {
+          .sidebar {
+            transform: translateX(-100%);
+          }
+
+          .sidebar.open {
+            transform: translateX(0);
+          }
+
+          .sidebar-close-btn {
+            display: flex;
+          }
+
+          .main-wrapper {
+            margin-left: 0;
+          }
+
+          .mobile-menu-btn {
+            display: block;
+          }
+
+          .main-content {
+            padding: 20px 16px;
+          }
+
+          .content-card {
+            padding: 20px;
+          }
+
+          .stat-value {
+            font-size: 24px;
+          }
+
+          .booking-card {
+            padding: 20px;
+          }
+
+          .booking-header {
+            grid-template-columns: 1fr;
+          }
+
+          .booking-actions {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+          }
+
+          .selected-day-banner {
+            flex-direction: column;
+            gap: 16px;
+            align-items: flex-start;
+          }
+
+          .selected-day-stats {
+            width: 100%;
+            justify-content: space-around;
+          }
+        }
+
+        @media (max-width: 576px) {
+          .main-header {
+            padding: 16px;
+          }
+
+          .header-title {
+            font-size: 20px;
+          }
+
+          .main-content {
+            padding: 16px;
+          }
+
+          .content-card {
+            padding: 16px;
+          }
+
+          .stat-card-body {
+            padding: 16px;
+          }
+
+          .booking-card {
+            padding: 16px;
+          }
+
+          .booking-name {
+            font-size: 18px;
+          }
+
+          .session-item {
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+
+          .session-check {
+            justify-self: end;
+          }
+
+          .summary-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        .mobile-menu-btn {
+          display: none;
+          background: #1a1a1a;
+          border: 1px solid #2a2a2a;
+          color: #ffc107;
+          padding: 10px;
+          border-radius: 8px;
+          cursor: pointer;
+        }
+
+        .sidebar-overlay {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.7);
+          z-index: 999;
+        }
+
+        .sidebar-overlay.show {
+          display: block;
+        }
+
+        .spinner-border {
+          border-color: #ffc107;
+          border-right-color: transparent;
         }
 
         .search-box {
@@ -657,176 +1156,162 @@ export default function AdminDashboard() {
           padding-left: 40px;
         }
 
-        .search-box .search-icon {
+        .search-icon {
           position: absolute;
           left: 14px;
           top: 50%;
           transform: translateY(-50%);
           color: #666;
-          z-index: 10;
         }
 
-        .filter-badge {
+        .filter-section {
+          background: #242424;
+          border-radius: 12px;
+          padding: 20px;
+          margin-bottom: 24px;
+          border: 1px solid #2a2a2a;
+        }
+
+        .dropdown-menu {
+          background: #1a1a1a;
+          border: 1px solid #333;
+          border-radius: 8px;
+        }
+
+        .dropdown-item {
+          color: #fff;
+          padding: 10px 16px;
+        }
+
+        .dropdown-item:hover {
           background: rgba(255, 193, 7, 0.1);
           color: #ffc107;
-          border: 1px solid #ffc107;
-          padding: 6px 12px;
-          border-radius: 20px;
-          font-size: 12px;
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          margin-right: 8px;
-          margin-bottom: 8px;
         }
 
-        .mobile-nav-bottom {
-          position: fixed;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          background: #1a1a1a;
-          border-top: 2px solid #ffc107;
-          padding: 12px 0;
-          z-index: 1000;
-          display: none;
-          box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+        .empty-state {
+          text-align: center;
+          padding: 60px 20px;
         }
 
-        @media (max-width: 768px) {
-          .mobile-nav-bottom {
-            display: block;
-          }
-
-          .main-content {
-            padding-bottom: 80px;
-          }
-
-          .content-card {
-            padding: 20px;
-          }
-
-          .stat-card-body {
-            padding: 16px;
-          }
-
-          .stat-value {
-            font-size: 24px;
-          }
-
-          .table-responsive {
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-          }
+        .empty-state-icon {
+          font-size: 64px;
+          color: #666;
+          margin-bottom: 20px;
         }
 
-        .table-responsive {
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-        }
-
-        .spinner-border {
-          border-color: #ffc107;
-          border-right-color: transparent;
-        }
-
-        @media (max-width: 576px) {
-          .stat-value {
-            font-size: 20px;
-          }
-
-          .stat-title {
-            font-size: 12px;
-          }
-
-          .content-card {
-            padding: 16px;
-          }
-
-          .filter-section {
-            padding: 16px;
-          }
+        .empty-state-text {
+          color: #999;
+          font-size: 16px;
         }
       `}</style>
 
-      <div className={`min-vh-100 ${pageLoaded ? 'animate-fade-in' : ''}`}>
-        {/* Header */}
-        <header className="dashboard-header">
-          <div className="container-fluid">
-            <div className="row align-items-center py-3">
-              <div className="col-6">
-                <h4 className="mb-0 fw-bold" style={{ color: '#ffc107' }}>Admin Dashboard</h4>
-              </div>
-              
-              <div className="col-6 text-end">
-                <div className="dropdown d-inline-block position-relative">
-                  <button
-                    className="profile-dropdown d-inline-flex align-items-center"
-                    onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                    type="button"
-                  >
-                    <FaUser className="me-2" />
-                    <span className="d-none d-sm-inline">Admin</span>
-                    <FaChevronDown className="ms-2" style={{ fontSize: '0.8em' }} />
-                  </button>
-                  {profileDropdownOpen && (
-                    <div className="dropdown-menu dropdown-menu-end show position-absolute animate-slide-right" style={{ top: '100%', right: 0, zIndex: 1050 }}>
-                      <button className="dropdown-item" onClick={handleLogout}>
-                        <FaSignOutAlt className="me-2" />
-                        Logout
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-            
-            {/* Desktop Navigation */}
-            <div className="row d-none d-md-block pb-3">
-              <div className="col-12">
-                <nav className="nav nav-pills justify-content-center">
-                  {["Sessions", "Bookings", "Finance"].map((item) => (
-                    <button
-                      key={item}
-                      onClick={() => handleNavSwitch(item)}
-                      className={`nav-link mx-1 ${activeNav === item ? 'active' : ''}`}
-                    >
-                      {item}
-                    </button>
-                  ))}
-                </nav>
-              </div>
-            </div>
+      <div className="dashboard-layout">
+        {/* Sidebar Overlay */}
+        <div 
+          className={`sidebar-overlay ${sidebarOpen ? 'show' : ''}`}
+          onClick={() => setSidebarOpen(false)}
+        />
+
+        {/* Sidebar */}
+        <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+          <div className="sidebar-header">
+            <h1 className="sidebar-logo">
+              <FaChartLine />
+              Admin Panel
+            </h1>
+            <button 
+              className="sidebar-close-btn"
+              onClick={() => setSidebarOpen(false)}
+              aria-label="Close sidebar"
+            >
+              <FaTimes />
+            </button>
           </div>
-        </header>
+
+          <nav className="sidebar-nav">
+            <div className="nav-item">
+              <a
+                href="#"
+                className={`nav-link ${activeNav === "Sessions" ? 'active' : ''}`}
+                onClick={(e) => { e.preventDefault(); handleNavSwitch("Sessions"); }}
+              >
+                <FaCalendarAlt />
+                Sessions Management
+              </a>
+            </div>
+            <div className="nav-item">
+              <a
+                href="#"
+                className={`nav-link ${activeNav === "Bookings" ? 'active' : ''}`}
+                onClick={(e) => { e.preventDefault(); handleNavSwitch("Bookings"); }}
+              >
+                <FaList />
+                Bookings Overview
+              </a>
+            </div>
+          </nav>
+
+          <div className="sidebar-footer">
+            <div className="user-profile" onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}>
+              <div className="user-avatar">
+                <FaUser />
+              </div>
+              <div className="user-info">
+                <p className="user-name">Admin</p>
+                <p className="user-role">Administrator</p>
+              </div>
+              <FaChevronDown style={{ color: '#999', fontSize: '14px' }} />
+            </div>
+            {profileDropdownOpen && (
+              <div className="mt-2">
+                <button 
+                  className="btn btn-outline-warning w-100"
+                  onClick={handleLogout}
+                >
+                  <FaSignOutAlt className="me-2" />
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        </aside>
 
         {/* Main Content */}
-        <main className="main-content">
-          <div className="container-fluid">
-            <div className="content-card">
-              
-              {/* Sessions Tab */}
-              {activeNav === "Sessions" && (
-                <div className="animate-slide-up">
+        <div className="main-wrapper">
+          <header className="main-header">
+            <button 
+              className="mobile-menu-btn"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <FaBars size={20} />
+            </button>
+            <h1 className="header-title">
+              {activeNav === "Sessions" ? "Sessions Management" : "Bookings Overview"}
+            </h1>
+            <div></div>
+          </header>
+
+          <main className="main-content">
+            {/* Sessions Tab */}
+            {activeNav === "Sessions" && (
+              <div>
+                <div className="content-card mb-4">
                   <div className="d-flex justify-content-between align-items-center mb-4">
-                    <h2 className="mb-0" style={{ color: '#ffc107' }}>
-                      <FaCalendarAlt className="me-2" />
-                      Sessions Management
+                    <h2 style={{ color: '#ffc107', fontSize: '24px', margin: 0 }}>
+                      Session Statistics
                     </h2>
                     <button className="btn btn-warning" disabled={initiateButton} onClick={initSessions}>
                       Initialize Sessions
                     </button>
                   </div>
 
-                  {/* Quick Stats */}
-                  <div className="row mb-4">
+                  <div className="row">
                     <StatCard 
                       title="Total Sessions" 
                       value={filteredSessions.length} 
                       subtitle="All time"
                       icon={<FaCalendarAlt />}
                       color="#ffc107"
-                      delay={0}
                     />
                     <StatCard 
                       title="Friday Sessions" 
@@ -834,7 +1319,6 @@ export default function AdminDashboard() {
                       subtitle={`${filteredSessions.filter(s => s.day === 'Friday').reduce((sum, s) => sum + s.bookedCount, 0)} slots booked`}
                       icon={<FaChartLine />}
                       color="#00c853"
-                      delay={100}
                     />
                     <StatCard 
                       title="Sunday Sessions" 
@@ -842,7 +1326,6 @@ export default function AdminDashboard() {
                       subtitle={`${filteredSessions.filter(s => s.day === 'Sunday').reduce((sum, s) => sum + s.bookedCount, 0)} slots booked`}
                       icon={<FaChartLine />}
                       color="#2196f3"
-                      delay={200}
                     />
                     <StatCard 
                       title="Total Bookings" 
@@ -850,36 +1333,28 @@ export default function AdminDashboard() {
                       subtitle="Across all sessions"
                       icon={<FaCheck />}
                       color="#ff5252"
-                      delay={300}
                     />
                   </div>
+                </div>
 
-                  {/* Filters */}
+                <div className="content-card">
+                  <h3 style={{ color: '#ffc107', fontSize: '20px', marginBottom: '20px' }}>
+                    <FaFilter className="me-2" />
+                    Filters & Sessions
+                  </h3>
+
                   <div className="filter-section">
-                    <div className="d-flex justify-content-between align-items-center mb-3">
-                      <h6 className="mb-0" style={{ color: '#ffc107' }}>
-                        <FaFilter className="me-2" />
-                        Filters
-                      </h6>
-                      <button 
-                        className="btn btn-sm btn-outline-warning d-md-none"
-                        onClick={() => setShowFilters(!showFilters)}
-                      >
-                        {showFilters ? <FaTimes /> : <FaFilter />}
-                      </button>
-                    </div>
-
-                    <div className={`row ${showFilters || window.innerWidth > 768 ? '' : 'd-none'}`}>
-                      <div className="col-lg-2 col-md-4 col-sm-6 mb-3">
-                        <label className="form-label small" style={{ color: '#999' }}>Year</label>
+                    <div className="row">
+                      <div className="col-lg-2 col-md-4 col-6 mb-3">
+                        <label className="form-label">Year</label>
                         <select className="form-select" value={year} onChange={(e) => setYear(e.target.value)}>
                           <option value="2025">2025</option>
                           <option value="2026">2026</option>
                         </select>
                       </div>
 
-                      <div className="col-lg-2 col-md-4 col-sm-6 mb-3">
-                        <label className="form-label small" style={{ color: '#999' }}>Month</label>
+                      <div className="col-lg-2 col-md-4 col-6 mb-3">
+                        <label className="form-label">Month</label>
                         <select className="form-select" value={monthFilter} onChange={(e) => setMonthFilter(e.target.value)}>
                           <option value="All">All Months</option>
                           <option value="January">January</option>
@@ -897,8 +1372,8 @@ export default function AdminDashboard() {
                         </select>
                       </div>
 
-                      <div className="col-lg-2 col-md-4 col-sm-6 mb-3">
-                        <label className="form-label small" style={{ color: '#999' }}>Day</label>
+                      <div className="col-lg-2 col-md-4 col-6 mb-3">
+                        <label className="form-label">Day</label>
                         <select className="form-select" value={dayFilter} onChange={(e) => setDayFilter(e.target.value)}>
                           <option value="All">All Days</option>
                           <option value="Friday">Friday</option>
@@ -907,8 +1382,8 @@ export default function AdminDashboard() {
                       </div>
 
                       {dayFilter === "Sunday" && (
-                        <div className="col-lg-2 col-md-4 col-sm-6 mb-3">
-                          <label className="form-label small" style={{ color: '#999' }}>Class</label>
+                        <div className="col-lg-2 col-md-4 col-6 mb-3">
+                          <label className="form-label">Class</label>
                           <select className="form-select" value={classFilter} onChange={(e) => setClassFilter(e.target.value)}>
                             <option value="All">All Classes</option>
                             <option value="Class 1">Class 1</option>
@@ -917,8 +1392,8 @@ export default function AdminDashboard() {
                         </div>
                       )}
 
-                      <div className="col-lg-4 col-md-8 col-sm-12 mb-3">
-                        <label className="form-label small" style={{ color: '#999' }}>Search</label>
+                      <div className="col-lg-4 col-md-8 col-12 mb-3">
+                        <label className="form-label">Search</label>
                         <div className="search-box">
                           <FaSearch className="search-icon" />
                           <input 
@@ -930,39 +1405,6 @@ export default function AdminDashboard() {
                           />
                         </div>
                       </div>
-                    </div>
-
-                    {/* Active Filters */}
-                    <div className="mt-2">
-                      {(monthFilter !== "All" || dayFilter !== "All" || classFilter !== "All" || sessionSearch) && (
-                        <div className="d-flex flex-wrap align-items-center">
-                          <span className="text-muted small me-2">Active filters:</span>
-                          {monthFilter !== "All" && (
-                            <span className="filter-badge">
-                              Month: {monthFilter}
-                              <FaTimes style={{ cursor: 'pointer' }} onClick={() => setMonthFilter("All")} />
-                            </span>
-                          )}
-                          {dayFilter !== "All" && (
-                            <span className="filter-badge">
-                              Day: {dayFilter}
-                              <FaTimes style={{ cursor: 'pointer' }} onClick={() => setDayFilter("All")} />
-                            </span>
-                          )}
-                          {classFilter !== "All" && (
-                            <span className="filter-badge">
-                              Class: {classFilter}
-                              <FaTimes style={{ cursor: 'pointer' }} onClick={() => setClassFilter("All")} />
-                            </span>
-                          )}
-                          {sessionSearch && (
-                            <span className="filter-badge">
-                              Search: {sessionSearch}
-                              <FaTimes style={{ cursor: 'pointer' }} onClick={() => setSessionSearch("")} />
-                            </span>
-                          )}
-                        </div>
-                      )}
                     </div>
                   </div>
 
@@ -984,20 +1426,18 @@ export default function AdminDashboard() {
                               <th>Time</th>
                               <th>Type</th>
                               <th>Class</th>
-                              <th>Booked Slots</th>
+                              <th>Booked</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {currentSessions.map((s, index) => (
-                              <tr key={s.id} className="animate-slide-up" style={{ animationDelay: `${index * 50}ms` }}>
+                            {currentSessions.map((s) => (
+                              <tr key={s.id}>
                                 <td style={{ color: '#ffc107' }}>{s.date}</td>
-                                <td><span className="badge bg-warning">{s.day}</span></td>
+                                <td><span className="badge badge-warning">{s.day}</span></td>
                                 <td style={{ color: '#999' }}>{s.time}</td>
                                 <td>{s.type}</td>
                                 <td>{s.sessionClass || "-"}</td>
-                                <td>
-                                  <span className="badge bg-primary">{s.bookedCount}</span>
-                                </td>
+                                <td><span className="badge badge-primary">{s.bookedCount}</span></td>
                               </tr>
                             ))}
                           </tbody>
@@ -1015,114 +1455,98 @@ export default function AdminDashboard() {
                     </>
                   )}
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* Bookings Tab */}
-              {activeNav === "Bookings" && (
-                <div className="animate-slide-up">
-                  <div className="d-flex justify-content-between align-items-center mb-4">
-                    <h2 className="mb-0" style={{ color: '#ffc107' }}>
-                      <FaChartLine className="me-2" />
-                      Bookings Overview
-                    </h2>
-                    <button className="btn btn-outline-warning">
-                      <FaDownload className="me-2" />
-                      Export
-                    </button>
-                  </div>
-
-                  {/* Analytics Cards */}
-                  <div className="row mb-4">
-                    <StatCard 
-                      title="Today" 
-                      value={analytics.today}
-                      subtitle={`€${analytics.todayRevenue} revenue`}
-                      icon={<FaCalendarAlt />}
-                      color="#ffc107"
-                      delay={0}
-                    />
-                    <StatCard 
-                      title="This Week" 
-                      value={analytics.thisWeek}
-                      subtitle={`€${analytics.weekRevenue} revenue`}
-                      icon={<FaChartLine />}
-                      color="#00c853"
-                      delay={100}
-                    />
-                    <StatCard 
-                      title="This Month" 
-                      value={analytics.thisMonth}
-                      subtitle={`€${analytics.monthRevenue} revenue`}
-                      icon={<FaChartLine />}
-                      color="#2196f3"
-                      delay={200}
-                    />
+            {/* Bookings Tab */}
+            {activeNav === "Bookings" && (
+              <div>
+                {/* Stats */}
+                <div className="content-card mb-4">
+                  <h2 style={{ color: '#ffc107', fontSize: '24px', marginBottom: '24px' }}>
+                    Booking Statistics
+                  </h2>
+                  <div className="row">
                     <StatCard 
                       title="Total Bookings" 
                       value={bookings.length}
-                      subtitle={`${bookings.filter(b => b.paymentStatus).length} paid`}
+                      subtitle={`${bookings.filter(b => b.paymentStatus).length} paid bookings`}
                       icon={<FaCheck />}
+                      color="#ffc107"
+                    />
+                    <StatCard 
+                      title="Total Revenue" 
+                      value={`€${bookings.filter(b => b.paymentStatus).reduce((sum, b) => sum + b.totalAmount, 0)}`}
+                      subtitle="From paid bookings"
+                      icon={<FaChartLine />}
+                      color="#00c853"
+                    />
+                    <StatCard 
+                      title="Pending Payments" 
+                      value={bookings.filter(b => !b.paymentStatus).length}
+                      subtitle={`€${bookings.filter(b => !b.paymentStatus).reduce((sum, b) => sum + b.totalAmount, 0)} pending`}
+                      icon={<FaClock />}
                       color="#ff5252"
-                      delay={300}
+                    />
+                    <StatCard 
+                      title="Unique Days" 
+                      value={uniqueDays.length}
+                      subtitle="Sessions scheduled"
+                      icon={<FaCalendarAlt />}
+                      color="#2196f3"
                     />
                   </div>
+                </div>
 
-                  {/* Day-wise Breakdown */}
-                  <div className="row mb-4">
-                    <div className="col-md-6 mb-3">
-                      <div className="stat-card">
-                        <div className="stat-card-body">
-                          <h6 style={{ color: '#ffc107' }}>Friday Bookings</h6>
-                          <div className="d-flex justify-content-between align-items-center mt-3">
-                            <div>
-                              <div className="stat-value" style={{ color: '#00c853' }}>{analytics.friday}</div>
-                              <div className="stat-subtitle">Total bookings</div>
-                            </div>
-                            <div className="text-end">
-                              <div className="stat-value" style={{ color: '#ffc107', fontSize: '24px' }}>€{analytics.fridayRevenue}</div>
-                              <div className="stat-subtitle">Revenue</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                {/* Selected Day Banner */}
+                {selectedDayStats && (
+                  <div className="selected-day-banner">
+                    <div className="selected-day-info">
+                      <h4>{selectedDay} Sessions</h4>
+                      <p>Viewing bookings for {selectedDay} only</p>
                     </div>
-                    <div className="col-md-6 mb-3">
-                      <div className="stat-card">
-                        <div className="stat-card-body">
-                          <h6 style={{ color: '#ffc107' }}>Sunday Bookings</h6>
-                          <div className="d-flex justify-content-between align-items-center mt-3">
-                            <div>
-                              <div className="stat-value" style={{ color: '#2196f3' }}>{analytics.sunday}</div>
-                              <div className="stat-subtitle">Total bookings</div>
-                            </div>
-                            <div className="text-end">
-                              <div className="stat-value" style={{ color: '#ffc107', fontSize: '24px' }}>€{analytics.sundayRevenue}</div>
-                              <div className="stat-subtitle">Revenue</div>
-                            </div>
-                          </div>
-                        </div>
+                    <div className="selected-day-stats">
+                      <div className="day-stat-item">
+                        <p className="day-stat-value">{selectedDayStats.count}</p>
+                        <p className="day-stat-label">Bookings</p>
+                      </div>
+                      <div className="day-stat-item">
+                        <p className="day-stat-value">€{selectedDayStats.revenue.toFixed(0)}</p>
+                        <p className="day-stat-label">Revenue</p>
                       </div>
                     </div>
                   </div>
+                )}
 
-                  {/* Filters */}
+                {/* Filters */}
+                <div className="content-card mb-4">
+                  <h3 style={{ color: '#ffc107', fontSize: '20px', marginBottom: '16px' }}>
+                    <FaFilter className="me-2" />
+                    Filter Bookings
+                  </h3>
                   <div className="filter-section">
-                    <div className="d-flex justify-content-between align-items-center mb-3">
-                      <h6 className="mb-0" style={{ color: '#ffc107' }}>
-                        <FaFilter className="me-2" />
-                        Filters
-                      </h6>
-                      <button 
-                        className="btn btn-sm btn-outline-warning d-md-none"
-                        onClick={() => setShowFilters(!showFilters)}
-                      >
-                        {showFilters ? <FaTimes /> : <FaFilter />}
-                      </button>
-                    </div>
+                    <div className="row">
+                      <div className="col-lg-3 col-md-6 mb-3">
+                        <label className="form-label">Filter by Day</label>
+                        <select 
+                          className="form-select" 
+                          value={selectedDay} 
+                          onChange={(e) => {
+                            setSelectedDay(e.target.value);
+                            setBookingsCurrentPage(1);
+                          }}
+                        >
+                          <option value="All">All Days ({bookings.length})</option>
+                          {uniqueDays.map(day => (
+                            <option key={day} value={day}>
+                              {day} ({dayWiseData[day].count} bookings)
+                            </option>
+                          ))}
+                        </select>
+                      </div>
 
-                    <div className={`row ${showFilters || window.innerWidth > 768 ? '' : 'd-none'}`}>
-                      <div className="col-lg-3 col-md-6 col-sm-6 mb-3">
-                        <label className="form-label small" style={{ color: '#999' }}>Payment Status</label>
+                      <div className="col-lg-3 col-md-6 mb-3">
+                        <label className="form-label">Payment Status</label>
                         <select className="form-select" value={paymentStatusFilter} onChange={(e) => setPaymentStatusFilter(e.target.value)}>
                           <option value="All">All Status</option>
                           <option value="Paid">Paid</option>
@@ -1130,57 +1554,51 @@ export default function AdminDashboard() {
                         </select>
                       </div>
 
-                      <div className="col-lg-3 col-md-6 col-sm-6 mb-3">
-                        <label className="form-label small" style={{ color: '#999' }}>Kid Level</label>
+                      <div className="col-lg-3 col-md-6 mb-3">
+                        <label className="form-label">Kid Level</label>
                         <select className="form-select" value={levelFilter} onChange={(e) => setLevelFilter(e.target.value)}>
                           <option value="All">All Levels</option>
                           <option value="Beginner">Beginner</option>
                           <option value="Intermediate">Intermediate</option>
                           <option value="Advanced">Advanced</option>
+                          <option value="Club">Club</option>
+                          <option value="School">School</option>
+                          <option value="Borough/District">Borough/District</option>
+                          <option value="County">County</option>
+                          <option value="Regional">Regional</option>
                         </select>
                       </div>
 
-                      <div className="col-lg-6 col-md-12 mb-3">
-                        <label className="form-label small" style={{ color: '#999' }}>Search</label>
+                      <div className="col-lg-3 col-md-6 mb-3">
+                        <label className="form-label">Search</label>
                         <div className="search-box">
                           <FaSearch className="search-icon" />
                           <input 
                             type="text" 
                             className="form-control" 
-                            placeholder="Search by parent, email, or kid name..." 
+                            placeholder="Search..." 
                             value={bookingSearch}
                             onChange={(e) => setBookingSearch(e.target.value)}
                           />
                         </div>
                       </div>
                     </div>
+                  </div>
+                </div>
 
-                    {/* Active Filters */}
-                    <div className="mt-2">
-                      {(paymentStatusFilter !== "All" || levelFilter !== "All" || bookingSearch) && (
-                        <div className="d-flex flex-wrap align-items-center">
-                          <span className="text-muted small me-2">Active filters:</span>
-                          {paymentStatusFilter !== "All" && (
-                            <span className="filter-badge">
-                              Status: {paymentStatusFilter}
-                              <FaTimes style={{ cursor: 'pointer' }} onClick={() => setPaymentStatusFilter("All")} />
-                            </span>
-                          )}
-                          {levelFilter !== "All" && (
-                            <span className="filter-badge">
-                              Level: {levelFilter}
-                              <FaTimes style={{ cursor: 'pointer' }} onClick={() => setLevelFilter("All")} />
-                            </span>
-                          )}
-                          {bookingSearch && (
-                            <span className="filter-badge">
-                              Search: {bookingSearch}
-                              <FaTimes style={{ cursor: 'pointer' }} onClick={() => setBookingSearch("")} />
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                {/* Bookings List */}
+                <div className="content-card">
+                  <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h3 style={{ color: '#ffc107', fontSize: '20px', margin: 0 }}>
+                      Bookings List
+                      <span style={{ color: '#999', fontSize: '14px', fontWeight: '400', marginLeft: '12px' }}>
+                        ({filteredBookings.length} results)
+                      </span>
+                    </h3>
+                    <button className="btn btn-outline-warning">
+                      <FaDownload className="me-2" />
+                      Export
+                    </button>
                   </div>
 
                   {loading ? (
@@ -1190,85 +1608,133 @@ export default function AdminDashboard() {
                       </div>
                       <p className="mt-3 text-muted">Loading bookings...</p>
                     </div>
+                  ) : currentBookings.length === 0 ? (
+                    <div className="empty-state">
+                      <FaInfoCircle className="empty-state-icon" />
+                      <p className="empty-state-text">No bookings found matching your filters</p>
+                    </div>
                   ) : (
                     <>
-                      <div className="table-responsive">
-                        <table className="table table-dark table-hover">
-                          <thead>
-                            <tr>
-                              <th style={{ minWidth: '80px' }}>ID</th>
-                              <th style={{ minWidth: '150px' }}>Parent</th>
-                              <th style={{ minWidth: '180px' }}>Email</th>
-                              <th style={{ minWidth: '120px' }}>Kid</th>
-                              <th style={{ minWidth: '100px' }}>Level</th>
-                              <th style={{ minWidth: '100px' }}>Amount</th>
-                              <th style={{ minWidth: '100px' }}>Status</th>
-                              <th style={{ minWidth: '150px' }}>Sessions</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {currentBookings.map((b, index) => (
-                              <tr key={b.bookingId} className="animate-slide-up" style={{ animationDelay: `${index * 50}ms` }}>
-                                <td className="small" style={{ color: '#999' }}>{b.bookingId}</td>
-                                <td className="fw-medium">{b.parentName}</td>
-                                <td className="small" style={{ color: '#999' }}>{b.parentEmail}</td>
-                                <td>{b.kidName}</td>
-                                <td><span className="badge bg-warning">{b.kidLevel}</span></td>
-                                <td className="fw-semibold" style={{ color: '#00c853' }}>€{b.totalAmount}</td>
-                                <td>
-                                  <span className={`badge ${b.paymentStatus ? 'bg-success' : 'bg-danger'}`}>
-                                    {b.paymentStatus ? "Paid" : "Pending"}
-                                  </span>
-                                </td>
-                                <td style={{ position: 'relative', overflow: 'visible' }}>
-  {b.sessionDetails.length === 1 ? (
-    (() => {
-      const s = b.sessionDetails[0];
-      const parts = s.split(" - ");
-      let dayPart = parts[0];
-      let rest = parts[1] || "";
-      rest = rest.replace("null", "").trim();
-      return (
-        <div className="small">
-          <div className="fw-medium" style={{ color: '#ffc107' }}>{dayPart}</div>
-          <div style={{ color: '#999' }}>{rest}</div>
-        </div>
-      );
-    })()
-  ) : (
-    <div className="dropdown">
-      <button
-        className="btn btn-sm btn-outline-warning dropdown-toggle"
-        type="button"
-        data-bs-toggle="dropdown"
-      >
-        {b.sessionDetails.length} Sessions
-      </button>
-      <ul className="dropdown-menu" style={{ zIndex: 9999 }}>
-        {b.sessionDetails.map((s, i) => {
-          const parts = s.split(" - ");
-          let dayPart = parts[0];
-          let rest = parts[1] || "";
-          rest = rest.replace("null", "").trim();
-          return (
-            <li key={i}>
-              <div className="dropdown-item-text small">
-                <div className="fw-medium" style={{ color: '#ffc107' }}>{dayPart}</div>
-                <div style={{ color: '#999' }}>{rest}</div>
-              </div>
-              {i < b.sessionDetails.length - 1 && <hr className="dropdown-divider" style={{ borderColor: '#333' }} />}
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  )}
-</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                      {currentBookings.map((booking) => (
+                        <div 
+                          key={booking.bookingId}
+                          className={`booking-card ${expandedBooking === booking.bookingId ? 'expanded' : ''}`}
+                          onClick={() => setExpandedBooking(expandedBooking === booking.bookingId ? null : booking.bookingId)}
+                        >
+                          <div className="booking-header">
+                            <div className="booking-main-info">
+                              {/* Booking ID */}
+                              <div className="booking-id">
+                                Booking #{booking.bookingId}
+                              </div>
+
+                              {/* Parent Information */}
+                              <div className="booking-section">
+                                <div className="section-label">Parent Information</div>
+                                <div className="section-content">
+                                  <div className="booking-name">{booking.parentName}</div>
+                                  <div className="booking-contact">
+                                    <FaEnvelope size={13} />
+                                    {booking.parentEmail}
+                                  </div>
+                                  {booking.parentPhone && (
+                                    <div className="booking-contact">
+                                      <FaPhone size={13} />
+                                      {booking.parentPhone}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Kid Information */}
+                              <div className="booking-section">
+                                <div className="section-label">Student Information</div>
+                                <div className="kid-info">
+                                  <FaChild size={16} style={{ color: '#666' }} />
+                                  <span className="kid-name">{booking.kidName}</span>
+                                  <span className="kid-level">{booking.kidLevel}</span>
+                                </div>
+                              </div>
+
+                              {/* Meta Information */}
+                              <div className="booking-meta">
+                                <div className="meta-item">
+                                  <FaCalendarAlt />
+                                  {booking.sessionDetails.length} Session{booking.sessionDetails.length > 1 ? 's' : ''}
+                                </div>
+                                <div className="meta-item amount-highlight">
+                                  €{booking.totalAmount}
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="booking-actions">
+                              <span className={`badge ${booking.paymentStatus ? 'badge-success' : 'badge-danger'}`}>
+                                {booking.paymentStatus ? "PAID" : "PENDING"}
+                              </span>
+                              <FaChevronRight className="expand-icon" />
+                            </div>
+                          </div>
+
+                          {expandedBooking === booking.bookingId && (
+                            <div className="booking-details">
+                              <div className="details-header">
+                                <h6>Session Details</h6>
+                                <span className="session-count-badge">
+                                  {booking.sessionDetails.length} Sessions
+                                </span>
+                              </div>
+                              
+                              <div className="session-list">
+                                {booking.sessionDetails.map((session, idx) => {
+                                  const parts = session.split(" - ");
+                                  const day = parts[0];
+                                  const classInfo = parts[1] || "";
+                                  const timeInfo = parts[2] || "";
+                                  const dateInfo = parts[3] || "";
+                                  
+                                  return (
+                                    <div key={idx} className="session-item">
+                                      <div className="session-info">
+                                        <h6>{day} Session</h6>
+                                        <p>
+                                          {classInfo && <span>{classInfo}</span>}
+                                          {timeInfo && <span> • {timeInfo}</span>}
+                                          {dateInfo && <span> • {dateInfo}</span>}
+                                        </p>
+                                      </div>
+                                      <div className="session-check">
+                                        <FaCheck />
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                              
+                              <div className="booking-summary">
+                                <div className="summary-grid">
+                                  <div className="summary-item">
+                                    <div className="summary-label">Parent Name</div>
+                                    <div className="summary-value">{booking.parentName}</div>
+                                  </div>
+                                  <div className="summary-item">
+                                    <div className="summary-label">Parent Email</div>
+                                    <div className="summary-value">{booking.parentEmail}</div>
+                                  </div>
+                                  <div className="summary-item">
+                                    <div className="summary-label">Student Name</div>
+                                    <div className="summary-value">{booking.kidName}</div>
+                                  </div>
+                                  <div className="summary-item">
+                                    <div className="summary-label">Total Amount</div>
+                                    <div className="summary-value highlight">€{booking.totalAmount}</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ))}
                       
                       <Pagination
                         currentPage={bookingsCurrentPage}
@@ -1281,152 +1747,10 @@ export default function AdminDashboard() {
                     </>
                   )}
                 </div>
-              )}
-
-              {/* Finance Tab */}
-              {activeNav === "Finance" && (
-                <div className="animate-slide-up">
-                  <div className="d-flex justify-content-between align-items-center mb-4">
-                    <h2 className="mb-0" style={{ color: '#ffc107' }}>
-                      <FaChartLine className="me-2" />
-                      Financial Overview
-                    </h2>
-                    <button className="btn btn-outline-warning">
-                      <FaDownload className="me-2" />
-                      Export Report
-                    </button>
-                  </div>
-
-                  {/* Financial Stats */}
-                  <div className="row mb-4">
-                    <StatCard 
-                      title="Total Revenue" 
-                      value={`€${bookings.filter(b => b.paymentStatus).reduce((sum, b) => sum + b.totalAmount, 0)}`}
-                      subtitle="Paid bookings"
-                      icon={<FaCheck />}
-                      color="#00c853"
-                      delay={0}
-                    />
-                    <StatCard 
-                      title="Pending Revenue" 
-                      value={`€${bookings.filter(b => !b.paymentStatus).reduce((sum, b) => sum + b.totalAmount, 0)}`}
-                      subtitle="Awaiting payment"
-                      icon={<FaCalendarAlt />}
-                      color="#ff5252"
-                      delay={100}
-                    />
-                    <StatCard 
-                      title="Total Bookings" 
-                      value={bookings.length}
-                      subtitle="All time"
-                      icon={<FaChartLine />}
-                      color="#2196f3"
-                      delay={200}
-                    />
-                    <StatCard 
-                      title="Completion Rate" 
-                      value={`${bookings.length > 0 ? Math.round((bookings.filter(b => b.paymentStatus).length / bookings.length) * 100) : 0}%`}
-                      subtitle={`${bookings.filter(b => b.paymentStatus).length} paid`}
-                      icon={<FaCheck />}
-                      color="#ffc107"
-                      delay={300}
-                    />
-                  </div>
-
-                  {/* Payment Status Table */}
-                  <div className="stat-card mb-4">
-                    <div className="stat-card-body">
-                      <h5 className="mb-4" style={{ color: '#ffc107' }}>Payment Status Details</h5>
-                      <div className="table-responsive">
-                        <table className="table table-dark table-hover">
-                          <thead>
-                            <tr>
-                              <th>ID</th>
-                              <th>Parent</th>
-                              <th>Kid</th>
-                              <th>Amount</th>
-                              <th>Status</th>
-                              <th>Actions</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {currentBookings.map((b, index) => (
-                              <tr key={b.bookingId} className="animate-slide-up" style={{ animationDelay: `${index * 50}ms` }}>
-                                <td className="small" style={{ color: '#999' }}>{b.bookingId}</td>
-                                <td className="fw-medium">{b.parentName}</td>
-                                <td>{b.kidName}</td>
-                                <td className="fw-semibold" style={{ color: '#00c853' }}>€{b.totalAmount}</td>
-                                <td>
-                                  <span className={`badge ${b.paymentStatus ? 'bg-success' : 'bg-danger'}`}>
-                                    {b.paymentStatus ? "Paid" : "Pending"}
-                                  </span>
-                                </td>
-                                <td>
-                                  {!b.paymentStatus ? (
-                                    <button 
-                                      className="btn btn-sm btn-warning"
-                                      onClick={() => alert(`Mark booking ${b.bookingId} as paid`)}
-                                    >
-                                      Mark Paid
-                                    </button>
-                                  ) : (
-                                    <span style={{ color: '#00c853' }}>✓ Completed</span>
-                                  )}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                      
-                      <Pagination
-                        currentPage={bookingsCurrentPage}
-                        totalPages={totalBookingsPages}
-                        onPageChange={setBookingsCurrentPage}
-                        itemsPerPage={bookingsPerPage}
-                        setItemsPerPage={setBookingsPerPage}
-                        totalItems={filteredBookings.length}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-            </div>
-          </div>
-        </main>
-
-        {/* Mobile Bottom Navigation */}
-        <div className="mobile-nav-bottom">
-          <div className="container-fluid">
-            <div className="row">
-              {["Sessions", "Bookings", "Finance"].map((item) => (
-                <div key={item} className="col-4">
-                  <button
-                    onClick={() => handleNavSwitch(item)}
-                    className={`btn w-100 ${activeNav === item ? 'btn-warning' : 'btn-outline-warning'}`}
-                    style={{ 
-                      fontSize: '14px',
-                      padding: '10px 5px',
-                      borderRadius: '8px'
-                    }}
-                  >
-                    {item}
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
+              </div>
+            )}
+          </main>
         </div>
-        
-        {/* Backdrop for dropdown */}
-        {profileDropdownOpen && (
-          <div 
-            className="position-fixed w-100 h-100" 
-            style={{ top: 0, left: 0, zIndex: 1040 }}
-            onClick={() => setProfileDropdownOpen(false)}
-          />
-        )}
       </div>
     </>
   );
