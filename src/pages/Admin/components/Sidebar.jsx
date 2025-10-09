@@ -46,7 +46,7 @@ export default function Sidebar({
             Bookings Overview
           </a>
         </div>
-        <div className="nav-item">
+        {/* <div className="nav-item">
           <a
             href="#"
             className={`nav-link ${activeNav === "Bookings" ? 'active' : ''}`}
@@ -55,7 +55,7 @@ export default function Sidebar({
             <FaList />
             Bookings 
           </a>
-        </div>
+        </div> */}
       </nav>
 
       <div className="sidebar-footer">
