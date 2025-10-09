@@ -952,7 +952,7 @@ const CricketAcademyBooking = () => {
                   </div>
 
                   {/* Sunday Class 2 Section */}
-                  <div className="mb-3">
+                  <div className="mb-3 " style={{ pointerEvents: 'none', opacity: 0.5 }} >
                     <div className="d-flex justify-content-between align-items-center mb-2">
                       <button
                         className="btn d-flex align-items-center flex-grow-1 me-3"
