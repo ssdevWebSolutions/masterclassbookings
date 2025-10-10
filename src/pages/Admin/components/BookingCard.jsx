@@ -18,7 +18,7 @@ const formatSessionDetail = (session) => {
 };
 
 export default function BookingCard({ booking, isExpanded, onToggleExpand }) {
-  console.log("Booking Object", booking);
+//   console.log("Booking Object", booking);
 
   // Handle emergency call
   const handleEmergencyCall = (e, phoneNumber) => {
