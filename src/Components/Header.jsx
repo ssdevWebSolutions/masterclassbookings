@@ -7,6 +7,7 @@ import { loginModalForSlice, loginUserWithType, logOutUserWithType } from "../Re
 import { fetchKids } from "@/Redux/Kids/KidActions";
 import { persistor } from "@/store";
 import { useRouter } from "next/router";
+import HelpSection from "./HelpSection";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,6 +16,7 @@ export default function Header() {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   
   // Login form state
   const [email, setEmail] = useState("");
@@ -389,6 +391,13 @@ export default function Header() {
 
         {/* Desktop Nav */}
         <nav className="d-none d-md-flex align-items-center gap-3">
+        <Button 
+            className="btn-info text-white fw-semibold d-flex align-items-center gap-2" 
+            onClick={() => setShowHelp(true)}
+          >
+            <i className="bi bi-question-circle fs-5"></i>
+            <span>Help</span>
+          </Button>
           {!isLoggedIn ? (
             <Button 
               className="btn-warning text-dark fw-semibold" 
@@ -438,6 +447,13 @@ export default function Header() {
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="d-md-none bg-dark text-white p-3 d-flex flex-column gap-2">
+          <Button 
+              className="btn-info text-white fw-semibold d-flex align-items-center gap-2" 
+              onClick={() => setShowHelp(true)}
+            >
+              <i className="bi bi-question-circle fs-5"></i>
+              <span>Help</span>
+            </Button>
           {!isLoggedIn ? (
             <Button 
               className="btn-warning text-dark fw-semibold" 
@@ -1020,6 +1036,11 @@ export default function Header() {
           </Modal.Body>
         </Form>
       </Modal>
+
+      <HelpSection 
+        show={showHelp} 
+        onHide={() => setShowHelp(false)} 
+      />
     </header>
   );
 }

@@ -14,6 +14,7 @@ import MainHeader from "./Admin/components/MainHeader";
 import SessionsTab from "./Admin/components/SessionsTab";
 import BookingsTab from "./Admin/components/BookingsTab";
 import GlobalStyles from "./Admin/components/GlobalStyles";
+import ServiceRequest from "./Admin/components/ServiceRequest";
 
 export default function AdminDashboard() {
   // MOVED ALL HOOKS TO THE TOP - BEFORE ANY CONDITIONAL RETURNS
@@ -331,6 +332,10 @@ export default function AdminDashboard() {
               expandedBooking={expandedBooking}
               setExpandedBooking={setExpandedBooking}
             />
+          )}
+
+          {activeNav === "ServiceRequest" && (
+            <ServiceRequest />
           )}
         </DashboardLayout>
       </AuthGuard>
