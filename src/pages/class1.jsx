@@ -32,6 +32,45 @@ const CricketAcademyBooking = () => {
   const kidstate = useSelector(state => state.kids.list);
   const { data: sessions, loading } = useSelector((state) => state.sessions);
   
+  // Custom blocked dates object - Add date strings in YYYY-MM-DD format to block specific dates
+  const customBlockedDates = {
+    "2025-10-24": true 
+     // This would block October 17, 2025
+    // Example: "2025-11-01": true,  // This would block November 1, 2025
+    // Add more dates as needed
+  };
+
+  // Function to check if a date is in the past (completed)
+  const isDateCompleted = (dateStr) => {
+    const sessionDate = new Date(dateStr);
+    const today = new Date();
+    // Set both dates to start of day for accurate comparison
+    sessionDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    return sessionDate < today;
+  };
+
+  // Function to check if a date is custom blocked
+  const isDateCustomBlocked = (dateStr) => {
+    return customBlockedDates[dateStr] === true;
+  };
+
+  // Enhanced function to check if a session should be disabled
+  const isSessionDisabled = (session) => {
+    const isFullyBooked = getAvailabilityStatus(session.bookedCount) === "not-available";
+    const isCompleted = isDateCompleted(session.date);
+    const isCustomBlocked = isDateCustomBlocked(session.date);
+    
+    return isFullyBooked || isCompleted || isCustomBlocked;
+  };
+
+  // Function to get the reason for disabled state
+  const getDisabledReason = (session) => {
+    if (isDateCompleted(session.date)) return "Session Completed";
+    if (isDateCustomBlocked(session.date)) return "Currently Unavailable";
+    if (getAvailabilityStatus(session.bookedCount) === "not-available") return "Fully Booked";
+    return "";
+  };
 
   // Dynamic data filtering from API
   const fridayDates = sessions ? sessions.filter(session => session.type === 'friday') : [];
@@ -39,7 +78,7 @@ const CricketAcademyBooking = () => {
   const sundayClass2Dates = sessions ? sessions.filter(session => session.type === 'sunday-class2') : [];
 
   const dispatch = useDispatch();
- 
+  const router = useRouter();
 
   useEffect(()=>{
     if(loginData.token === null) router.push("/");
@@ -47,28 +86,32 @@ const CricketAcademyBooking = () => {
 
   useEffect(() => {
     dispatch(fetchSessionsByYear(2025));
-    
-   console.log("Kids:", kidstate, "Sessions:", sessions);
- }, [ ]);
-
-
- 
+    console.log("Kids:", kidstate, "Sessions:", sessions);
+  }, []);
 
   useEffect(() => {
-    //  dispatch(fetchSessionsByYear(year));
     console.log("Kids:", kidstate, "Sessions:", sessions);
   }, [kidstate, sessions]);
 
   const getAvailabilityStatus = (bookedCount) => {
-    // Convert to number and handle undefined/null cases
     const count = Number(bookedCount) || 0;
-    
     if (count >= 36) return "not-available";
     if (count >= 30) return "filling-fast";
     return "available";
   };
 
-  const getAvailabilityBadge = (bookedCount) => {
+  const getAvailabilityBadge = (bookedCount, session) => {
+    // Check if date is completed first
+    if (isDateCompleted(session.date)) {
+      return <span className="badge bg-secondary">Completed</span>;
+    }
+    
+    // Check if date is custom blocked
+    if (isDateCustomBlocked(session.date)) {
+      return <span className="badge bg-dark">Blocked</span>;
+    }
+    
+    // Otherwise show availability status
     const status = getAvailabilityStatus(bookedCount);
     switch (status) {
       case "available":
@@ -82,9 +125,9 @@ const CricketAcademyBooking = () => {
     }
   };
 
-  const toggleFridaySelection = (sessionId, bookedCount) => {
-    const status = getAvailabilityStatus(bookedCount);
-    if (status === "not-available") return;
+  const toggleFridaySelection = (sessionId, session) => {
+    // Prevent selection if session is disabled
+    if (isSessionDisabled(session)) return;
     
     const newSelection = selectedFridayDates.includes(sessionId) 
       ? selectedFridayDates.filter(d => d !== sessionId) 
@@ -92,18 +135,15 @@ const CricketAcademyBooking = () => {
     
     setSelectedFridayDates(newSelection);
     
-    const availableFridaysCount = fridayDates.filter(session => 
-      getAvailabilityStatus(session.bookedCount) !== "not-available"
-    ).length;
+    const availableFridaysCount = fridayDates.filter(s => !isSessionDisabled(s)).length;
     
     if (newSelection.length === availableFridaysCount && availableFridaysCount === 10) {
       setShowFridayDiscount(true);
     }
   };
 
-  const toggleSundayClass1Selection = (sessionId, bookedCount) => {
-    const status = getAvailabilityStatus(bookedCount);
-    if (status === "not-available") return;
+  const toggleSundayClass1Selection = (sessionId, session) => {
+    if (isSessionDisabled(session)) return;
     
     const newSelection = selectedSundayClass1Dates.includes(sessionId)
       ? selectedSundayClass1Dates.filter(d => d !== sessionId)
@@ -111,18 +151,15 @@ const CricketAcademyBooking = () => {
     
     setSelectedSundayClass1Dates(newSelection);
 
-    const availableClass1Count = sundayClass1Dates.filter(session => 
-      getAvailabilityStatus(session.bookedCount) !== "not-available"
-    ).length;
+    const availableClass1Count = sundayClass1Dates.filter(s => !isSessionDisabled(s)).length;
     
     if (newSelection.length === availableClass1Count && availableClass1Count === 10) {
       setShowSundayClass1Discount(true);
     }
   };
 
-  const toggleSundayClass2Selection = (sessionId, bookedCount) => {
-    const status = getAvailabilityStatus(bookedCount);
-    if (status === "not-available") return;
+  const toggleSundayClass2Selection = (sessionId, session) => {
+    if (isSessionDisabled(session)) return;
     
     const newSelection = selectedSundayClass2Dates.includes(sessionId)
       ? selectedSundayClass2Dates.filter(d => d !== sessionId)
@@ -130,9 +167,7 @@ const CricketAcademyBooking = () => {
     
     setSelectedSundayClass2Dates(newSelection);
 
-    const availableClass2Count = sundayClass2Dates.filter(session => 
-      getAvailabilityStatus(session.bookedCount) !== "not-available"
-    ).length;
+    const availableClass2Count = sundayClass2Dates.filter(s => !isSessionDisabled(s)).length;
     
     if (newSelection.length === availableClass2Count && availableClass2Count === 10) {
       setShowSundayClass2Discount(true);
@@ -142,7 +177,7 @@ const CricketAcademyBooking = () => {
   const handleSelectAllFridays = (e) => {
     if (e.target.checked) {
       const availableFridays = fridayDates
-        .filter(session => getAvailabilityStatus(session.bookedCount) !== "not-available")
+        .filter(session => !isSessionDisabled(session))
         .map(session => session.id);
       setSelectedFridayDates(availableFridays);
       
@@ -157,7 +192,7 @@ const CricketAcademyBooking = () => {
   const handleSelectAllSundayClass1 = (e) => {
     if (e.target.checked) {
       const availableSundays = sundayClass1Dates
-        .filter(session => getAvailabilityStatus(session.bookedCount) !== "not-available")
+        .filter(session => !isSessionDisabled(session))
         .map(session => session.id);
       setSelectedSundayClass1Dates(availableSundays);
       
@@ -172,7 +207,7 @@ const CricketAcademyBooking = () => {
   const handleSelectAllSundayClass2 = (e) => {
     if (e.target.checked) {
       const availableSundays = sundayClass2Dates
-        .filter(session => getAvailabilityStatus(session.bookedCount) !== "not-available")
+        .filter(session => !isSessionDisabled(session))
         .map(session => session.id);
       setSelectedSundayClass2Dates(availableSundays);
       
@@ -268,13 +303,8 @@ const CricketAcademyBooking = () => {
     const bookingData = generateBookingJSON();
     console.log("Booking Data:", bookingData);
     
-    // Option 1: Using React Router - pass data via state
-    // navigate('/payment', { state: { bookingData } });
-    
-    // Option 2: Store in sessionStorage and navigate
     sessionStorage.setItem('cricketBookingData', JSON.stringify(bookingData));
     
-    // Show professional modal instead of alert
     setShowBookingProcessModal(true);
     setShowConfirmDialog(false);
     setShowBookingConfirmation(false);
@@ -303,19 +333,18 @@ const CricketAcademyBooking = () => {
     setShowPlatinumInfo(false);
   };
 
- const router= useRouter();
   const handleAddChild=()=>{
     router.push("/profile");
   }
 
   // Check if all sessions are selected for each category
-  const availableFridaysCount = fridayDates.filter(session => getAvailabilityStatus(session.bookedCount) !== "not-available").length;
+  const availableFridaysCount = fridayDates.filter(session => !isSessionDisabled(session)).length;
   const allFridaysSelected = selectedFridayDates.length === availableFridaysCount && availableFridaysCount > 0;
 
-  const availableSundayClass1Count = sundayClass1Dates.filter(session => getAvailabilityStatus(session.bookedCount) !== "not-available").length;
+  const availableSundayClass1Count = sundayClass1Dates.filter(session => !isSessionDisabled(session)).length;
   const allSundayClass1Selected = selectedSundayClass1Dates.length === availableSundayClass1Count && availableSundayClass1Count > 0;
 
-  const availableSundayClass2Count = sundayClass2Dates.filter(session => getAvailabilityStatus(session.bookedCount) !== "not-available").length;
+  const availableSundayClass2Count = sundayClass2Dates.filter(session => !isSessionDisabled(session)).length;
   const allSundayClass2Selected = selectedSundayClass2Dates.length === availableSundayClass2Count && availableSundayClass2Count > 0;
 
   if (loading) {
@@ -750,30 +779,39 @@ const CricketAcademyBooking = () => {
                         <div className="list-group">
                           {fridayDates.map((session, index) => {
                             const isSelected = selectedFridayDates.includes(session.id);
-                            const status = getAvailabilityStatus(session.bookedCount);
-                            const isDisabled = status === "not-available";
+                            const isDisabled = isSessionDisabled(session);
+                            const disabledReason = getDisabledReason(session);
 
                             return (
                               <button
                                 key={session.id}
                                 type="button"
-                                onClick={() => toggleFridaySelection(session.id, session.bookedCount)}
+                                onClick={() => toggleFridaySelection(session.id, session)}
                                 className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${isDisabled ? "disabled" : ""}`}
                                 aria-disabled={isDisabled}
+                                title={isDisabled ? disabledReason : ""}
                                 style={{ 
                                   cursor: isDisabled ? "not-allowed" : "pointer",
                                   backgroundColor: isSelected ? "#2a2a2a" : "#1a1a1a",
                                   border: `1px solid ${isSelected ? "#FFD700" : "#333"}`,
                                   color: "#d4d4d4",
+                                  opacity: isDisabled ? 0.5 : 1,
                                   transition: "all 0.3s ease"
                                 }}
                               >
                                 <div>
-                                  <div className="fw-semibold" style={{ color: "#FFD700" }}>{formatDate(session.date)}</div>
+                                  <div className="fw-semibold" style={{ color: isDisabled ? "#666" : "#FFD700" }}>
+                                    {formatDate(session.date)}
+                                    {isDisabled && disabledReason && (
+                                      <span className="ms-2 small" style={{ color: "#999" }}>
+                                        ({disabledReason})
+                                      </span>
+                                    )}
+                                  </div>
                                   <div className="small" style={{ color: "#999" }}>{session.time}</div>
                                 </div>
                                 <div className="d-flex align-items-center gap-3">
-                                  {getAvailabilityBadge(session.bookedCount)}
+                                  {getAvailabilityBadge(session.bookedCount, session)}
                                   <div 
                                     className={`rounded-circle border d-flex align-items-center justify-content-center`}
                                     style={{ 
@@ -906,30 +944,39 @@ const CricketAcademyBooking = () => {
                         <div className="list-group">
                           {sundayClass1Dates.map((session) => {
                             const isSelected = selectedSundayClass1Dates.includes(session.id);
-                            const status = getAvailabilityStatus(session.bookedCount);
-                            const isDisabled = status === "not-available";
+                            const isDisabled = isSessionDisabled(session);
+                            const disabledReason = getDisabledReason(session);
 
                             return (
                               <button
                                 key={session.id}
                                 type="button"
-                                onClick={() => toggleSundayClass1Selection(session.id, session.bookedCount)}
+                                onClick={() => toggleSundayClass1Selection(session.id, session)}
                                 className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${isDisabled ? "disabled" : ""}`}
                                 aria-disabled={isDisabled}
+                                title={isDisabled ? disabledReason : ""}
                                 style={{ 
                                   cursor: isDisabled ? "not-allowed" : "pointer",
                                   backgroundColor: isSelected ? "#2a2a2a" : "#1a1a1a",
                                   border: `1px solid ${isSelected ? "#FFD700" : "#333"}`,
                                   color: "#d4d4d4",
+                                  opacity: isDisabled ? 0.5 : 1,
                                   transition: "all 0.3s ease"
                                 }}
                               >
                                 <div>
-                                  <div className="fw-semibold" style={{ color: "#FFD700" }}>{formatDate(session.date)}</div>
+                                  <div className="fw-semibold" style={{ color: isDisabled ? "#666" : "#FFD700" }}>
+                                    {formatDate(session.date)}
+                                    {isDisabled && disabledReason && (
+                                      <span className="ms-2 small" style={{ color: "#999" }}>
+                                        ({disabledReason})
+                                      </span>
+                                    )}
+                                  </div>
                                   <div className="small" style={{ color: "#999" }}>{session.time}</div>
                                 </div>
                                 <div className="d-flex align-items-center gap-3">
-                                  {getAvailabilityBadge(session.bookedCount)}
+                                  {getAvailabilityBadge(session.bookedCount, session)}
                                   <div 
                                     className={`rounded-circle border d-flex align-items-center justify-content-center`}
                                     style={{ 
@@ -1062,30 +1109,39 @@ const CricketAcademyBooking = () => {
                         <div className="list-group">
                           {sundayClass2Dates.map((session) => {
                             const isSelected = selectedSundayClass2Dates.includes(session.id);
-                            const status = getAvailabilityStatus(session.bookedCount);
-                            const isDisabled = status === "not-available";
+                            const isDisabled = isSessionDisabled(session);
+                            const disabledReason = getDisabledReason(session);
 
                             return (
                               <button
                                 key={session.id}
                                 type="button"
-                                onClick={() => toggleSundayClass2Selection(session.id, session.bookedCount)}
+                                onClick={() => toggleSundayClass2Selection(session.id, session)}
                                 className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${isDisabled ? "disabled" : ""}`}
                                 aria-disabled={isDisabled}
+                                title={isDisabled ? disabledReason : ""}
                                 style={{ 
                                   cursor: isDisabled ? "not-allowed" : "pointer",
                                   backgroundColor: isSelected ? "#2a2a2a" : "#1a1a1a",
                                   border: `1px solid ${isSelected ? "#FFD700" : "#333"}`,
                                   color: "#d4d4d4",
+                                  opacity: isDisabled ? 0.5 : 1,
                                   transition: "all 0.3s ease"
                                 }}
                               >
                                 <div>
-                                  <div className="fw-semibold" style={{ color: "#FFD700" }}>{formatDate(session.date)}</div>
+                                  <div className="fw-semibold" style={{ color: isDisabled ? "#666" : "#FFD700" }}>
+                                    {formatDate(session.date)}
+                                    {isDisabled && disabledReason && (
+                                      <span className="ms-2 small" style={{ color: "#999" }}>
+                                        ({disabledReason})
+                                      </span>
+                                    )}
+                                  </div>
                                   <div className="small" style={{ color: "#999" }}>{session.time}</div>
                                 </div>
                                 <div className="d-flex align-items-center gap-3">
-                                  {getAvailabilityBadge(session.bookedCount)}
+                                  {getAvailabilityBadge(session.bookedCount, session)}
                                   <div 
                                     className={`rounded-circle border d-flex align-items-center justify-content-center`}
                                     style={{ 
@@ -1109,7 +1165,6 @@ const CricketAcademyBooking = () => {
                 </div>
               </div>
             )}
-  
             {/* Data Permission */}
             <div className="card mb-3 border-0 shadow-sm" style={{
               backgroundColor: "#1a1a1a",
