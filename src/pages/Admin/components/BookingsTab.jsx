@@ -54,6 +54,11 @@ const formatDateKey = (date) => {
 const EnhancedBookingCard = ({ booking }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Show per-session amount without mutating UI structure.
+  const perSessionAmount = (booking.totalAmount && booking.sessionDetails && booking.sessionDetails.length > 0)
+    ? ((booking.totalAmount) / booking.sessionDetails.length).toFixed(2)
+    : (booking.totalAmount || 0).toFixed(2);
+
   const handleEmergencyCall = (e, phoneNumber) => {
     e.stopPropagation();
     if (phoneNumber) {
@@ -72,8 +77,12 @@ const EnhancedBookingCard = ({ booking }) => {
           </span>
         </div>
         <div className="enhanced-booking-actions">
-          <span className="enhanced-amount">€{booking.totalAmount || 0}</span>
-          {isExpanded ? <FaChevronDown size={10} /> : <FaChevronRight size={10} />}
+          {/* Keep full total visible (as before) but also show per-session rate */}
+          <span className="enhanced-amount">
+            €{booking.totalAmount || 0}
+            <span style={{ marginLeft: 8, fontSize: 12, opacity: 0.8 }}>({`€${perSessionAmount}/session`})</span>
+          </span>
+          {isExpanded ? <FaChevronDown size={14} /> : <FaChevronRight size={14} />}
         </div>
       </div>
 
@@ -82,33 +91,33 @@ const EnhancedBookingCard = ({ booking }) => {
           {/* Section 1: Personal Information */}
           <div className="info-section personal-section">
             <div className="section-header">
-              <FaUsers size={11} />
-              <h6>Personal Info</h6>
+              <FaUsers size={16} />
+              <h6>Personal Information</h6>
             </div>
             <div className="section-content">
               <div className="info-grid">
                 <div className="info-item">
-                  <span className="info-label">Parent</span>
+                  <span className="info-label">Parent Name</span>
                   <span className="info-value">{booking.parentName || 'N/A'}</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Email</span>
+                  <span className="info-label">Parent Email</span>
                   <span className="info-value">{booking.parentEmail || 'N/A'}</span>
                 </div>
                 <div className="info-item emergency-item" onClick={(e) => handleEmergencyCall(e, booking.phoneNumber || booking.parentPhone)}>
                   <span className="info-label">
-                    <FaPhone size={9} className="me-1" />
-                    Emergency
+                    <FaPhone size={12} className="me-1" />
+                    Emergency Contact
                   </span>
                   <span className="info-value phone-link">{booking.phoneNumber || booking.parentPhone || 'N/A'}</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Student</span>
+                  <span className="info-label">Student Name</span>
                   <span className="info-value">{booking.kidName || 'N/A'}</span>
                 </div>
                 <div className="info-item">
                   <span className="info-label">Age</span>
-                  <span className="info-value">{booking.age ? `${booking.age}y` : 'N/A'}</span>
+                  <span className="info-value">{booking.age ? `${booking.age} years` : 'N/A'}</span>
                 </div>
                 <div className="info-item">
                   <span className="info-label">Level</span>
@@ -126,9 +135,9 @@ const EnhancedBookingCard = ({ booking }) => {
           {booking.medicalInfo && booking.medicalInfo !== 'N/A' && booking.medicalInfo.toLowerCase() !== 'n' && booking.medicalInfo.toLowerCase() !== 'none' && (
             <div className="info-section medical-section">
               <div className="section-header medical-header">
-                <FaMedkit size={11} />
-                <h6>Medical Info</h6>
-                <FaExclamationTriangle size={10} className="warning-icon" />
+                <FaMedkit size={16} />
+                <h6>Medical Information</h6>
+                <FaExclamationTriangle size={14} className="warning-icon" />
               </div>
               <div className="section-content">
                 <div className="medical-alert-box">
@@ -141,20 +150,20 @@ const EnhancedBookingCard = ({ booking }) => {
           {/* Section 3: Booking Information */}
           <div className="info-section booking-section">
             <div className="section-header">
-              <FaCalendarAlt size={11} />
-              <h6>Booking Info</h6>
+              <FaCalendarAlt size={16} />
+              <h6>Booking Information</h6>
             </div>
             <div className="section-content">
               <div className="sessions-list">
                 {(booking.sessionDetails || []).map((session, idx) => (
                   <div key={idx} className="session-item-compact">
-                    <FaCheck size={9} className="session-check" />
+                    <FaCheck size={12} className="session-check" />
                     <span>{session}</span>
                   </div>
                 ))}
               </div>
               <div className="booking-total">
-                <span className="total-label">Total:</span>
+                <span className="total-label">Total Amount:</span>
                 <span className="total-value">€{booking.totalAmount || 0}</span>
               </div>
             </div>
@@ -169,34 +178,52 @@ const EnhancedBookingCard = ({ booking }) => {
 const DayCard = ({ day, date, bookings, dayName }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
+  // Helper: normalize a date string or Date to midnight
+  const normalize = (d) => {
+    const nd = new Date(d);
+    nd.setHours(0, 0, 0, 0);
+    return nd;
+  };
+
+  // Filter bookings that contain a session that exactly matches this date
   const dayBookings = bookings.filter(booking => {
     if (!booking.sessionDetails || booking.sessionDetails.length === 0) return false;
-  
+    
     return booking.sessionDetails.some(session => {
-      const sessionStr = session.toLowerCase();
+      const sessionStr = String(session).toLowerCase();
+      // extract ISO-like date (YYYY-MM-DD) from session string
       const sessionDateMatch = session.match(/(\d{4}-\d{2}-\d{2})/);
       if (!sessionDateMatch) return false;
-
-      const sessionDate = new Date(sessionDateMatch[0]);
-      sessionDate.setHours(0, 0, 0, 0);
-
-      const matchesDay = sessionStr.includes(dayName.toLowerCase());
-
-      const weekStart = new Date(date);
-      weekStart.setHours(0, 0, 0, 0);
-
-      const weekEnd = new Date(weekStart);
-      weekEnd.setDate(weekStart.getDate() + 6);
-
-      const matchesWeek = sessionDate >= weekStart && sessionDate <= weekEnd;
-
-      return matchesDay && matchesWeek;
+  
+      const sessionDate = normalize(sessionDateMatch[0]);
+      const thisDate = normalize(date);
+  
+      // match day name too (e.g., "friday") to be extra safe
+      const matchesDayName = sessionStr.includes(dayName.toLowerCase());
+  
+      return matchesDayName && sessionDate.getTime() === thisDate.getTime();
     });
   });
 
+  // Compute per-day revenue properly:
+  // For each booking that contains sessions on this date, add per-session amount * countOfSessionsOnThisDate
   const totalRevenue = dayBookings
     .filter(b => b.paymentStatus)
-    .reduce((sum, b) => sum + (b.totalAmount || 0), 0);
+    .reduce((sum, b) => {
+      const totalAmt = b.totalAmount || 0;
+      const totalSessions = b.sessionDetails?.length || 1;
+      const perSession = totalSessions > 0 ? (totalAmt / totalSessions) : totalAmt;
+
+      // count how many sessions of this booking fall on this exact date
+      const dateCount = (b.sessionDetails || []).filter(session => {
+        const match = session.match(/(\d{4}-\d{2}-\d{2})/);
+        if (!match) return false;
+        const sDate = normalize(match[0]);
+        return sDate.getTime() === normalize(date).getTime();
+      }).length;
+
+      return sum + (perSession * dateCount);
+    }, 0);
 
   return (
     <div className="day-card">
@@ -207,14 +234,14 @@ const DayCard = ({ day, date, bookings, dayName }) => {
         </div>
         <div className="day-stats">
           <div className="day-stat">
-            <FaUsers size={10} />
-            <span>{dayBookings.length}</span>
+            <FaUsers size={14} />
+            <span>{dayBookings.length} bookings</span>
           </div>
           <div className="day-stat revenue">
-            <FaEuroSign size={10} />
-            <span>€{totalRevenue}</span>
+            <FaEuroSign size={14} />
+            <span>€{totalRevenue.toFixed(2)}</span>
           </div>
-          {isExpanded ? <FaChevronDown size={11} /> : <FaChevronRight size={11} />}
+          {isExpanded ? <FaChevronDown size={16} /> : <FaChevronRight size={16} />}
         </div>
       </div>
 
@@ -223,7 +250,7 @@ const DayCard = ({ day, date, bookings, dayName }) => {
           {dayBookings.length === 0 ? (
             <div className="no-bookings">
               <FaInfoCircle />
-              <p>No bookings</p>
+              <p>No bookings for this day</p>
             </div>
           ) : (
             dayBookings.map(booking => (
@@ -240,12 +267,16 @@ const DayCard = ({ day, date, bookings, dayName }) => {
 const WeekCard = ({ week, bookings }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  console.log(bookings,"bookings for weekCard");
+
+  // 🔧 Helper to normalize date (remove time for accurate comparison)
   const normalizeDate = (date) => {
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
     return d;
   };
 
+  // Get bookings for this week (with normalized dates)
   const weekBookings = bookings.filter(booking => {
     if (!booking.sessionDetails || booking.sessionDetails.length === 0) return false;
 
@@ -261,9 +292,28 @@ const WeekCard = ({ week, bookings }) => {
     });
   });
 
+  // 🧠 Debug log to confirm matching
+  console.log(`📅 Week ${week.weekNumber}: ${week.weekStart.toDateString()} - ${week.weekEnd.toDateString()}`);
+  console.log("Bookings for this week:", weekBookings);
+
+  // Compute revenue per-session counting only sessions that fall within the week
   const totalRevenue = weekBookings
     .filter(b => b.paymentStatus)
-    .reduce((sum, b) => sum + (b.totalAmount || 0), 0);
+    .reduce((sum, b) => {
+      const totalAmt = b.totalAmount || 0;
+      const totalSessions = b.sessionDetails?.length || 1;
+      const perSession = totalSessions > 0 ? (totalAmt / totalSessions) : totalAmt;
+
+      // count sessions of this booking that are in this week
+      const sessionsInWeek = (b.sessionDetails || []).filter(session => {
+        const m = session.match(/(\d{4}-\d{2}-\d{2})/);
+        if (!m) return false;
+        const d = normalizeDate(m[0]);
+        return d >= normalizeDate(week.weekStart) && d <= normalizeDate(week.weekEnd);
+      }).length;
+
+      return sum + (perSession * sessionsInWeek);
+    }, 0);
 
   const paidBookings = weekBookings.filter(b => b.paymentStatus).length;
 
@@ -271,7 +321,7 @@ const WeekCard = ({ week, bookings }) => {
     <div className="week-card">
       <div className="week-header" onClick={() => setIsExpanded(!isExpanded)}>
         <div className="week-title">
-          <FaCalendarAlt size={13} />
+          <FaCalendarAlt size={20} />
           <div>
             <h4>Week {week.weekNumber}</h4>
             <p>{formatDate(week.weekStart)} - {formatDate(week.weekEnd)}</p>
@@ -279,18 +329,18 @@ const WeekCard = ({ week, bookings }) => {
         </div>
         <div className="week-stats-summary">
           <div className="week-stat-item">
-            <FaUsers size={11} />
-            <span>{weekBookings.length}</span>
+            <FaUsers size={16} />
+            <span>{weekBookings.length} bookings</span>
           </div>
           <div className="week-stat-item revenue">
-            <FaEuroSign size={11} />
-            <span>€{totalRevenue}</span>
+            <FaEuroSign size={16} />
+            <span>€{totalRevenue.toFixed(2)}</span>
           </div>
           <div className="week-stat-item paid">
-            <FaCheck size={11} />
-            <span>{paidBookings}</span>
+            <FaCheck size={16} />
+            <span>{paidBookings} paid</span>
           </div>
-          {isExpanded ? <FaChevronDown size={13} /> : <FaChevronRight size={13} />}
+          {isExpanded ? <FaChevronDown size={20} /> : <FaChevronRight size={20} />}
         </div>
       </div>
 
