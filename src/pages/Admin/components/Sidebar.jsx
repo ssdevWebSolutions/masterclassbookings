@@ -26,7 +26,8 @@ export default function Sidebar({
       </div>
 
       <nav className="sidebar-nav">
-        <div className="nav-item">
+        {/* To Create Sessions */}
+        {/* <div className="nav-item">
           <a
             href="#"
             className={`nav-link ${activeNav === "Sessions" ? 'active' : ''}`}
@@ -35,7 +36,7 @@ export default function Sidebar({
             <FaCalendarAlt />
             Sessions Management
           </a>
-        </div>
+        </div> */}
         <div className="nav-item">
           <a
             href="#"

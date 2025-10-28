@@ -79,8 +79,8 @@ const EnhancedBookingCard = ({ booking }) => {
         <div className="enhanced-booking-actions">
           {/* Keep full total visible (as before) but also show per-session rate */}
           <span className="enhanced-amount">
-            €{booking.totalAmount || 0}
-            <span style={{ marginLeft: 8, fontSize: 12, opacity: 0.8 }}>({`€${perSessionAmount}/session`})</span>
+            £{booking.totalAmount || 0}
+            <span style={{ marginLeft: 8, fontSize: 12, opacity: 0.8 }}>({`£${perSessionAmount}/session`})</span>
           </span>
           {isExpanded ? <FaChevronDown size={14} /> : <FaChevronRight size={14} />}
         </div>
@@ -164,7 +164,7 @@ const EnhancedBookingCard = ({ booking }) => {
               </div>
               <div className="booking-total">
                 <span className="total-label">Total Amount:</span>
-                <span className="total-value">€{booking.totalAmount || 0}</span>
+                <span className="total-value">£{booking.totalAmount || 0}</span>
               </div>
             </div>
           </div>
@@ -239,7 +239,7 @@ const DayCard = ({ day, date, bookings, dayName }) => {
           </div>
           <div className="day-stat revenue">
             <FaEuroSign size={14} />
-            <span>€{totalRevenue.toFixed(2)}</span>
+            <span>£{totalRevenue.toFixed(2)}</span>
           </div>
           {isExpanded ? <FaChevronDown size={16} /> : <FaChevronRight size={16} />}
         </div>
@@ -334,7 +334,7 @@ const WeekCard = ({ week, bookings }) => {
           </div>
           <div className="week-stat-item revenue">
             <FaEuroSign size={16} />
-            <span>€{totalRevenue.toFixed(2)}</span>
+            <span>£{totalRevenue.toFixed(2)}</span>
           </div>
           <div className="week-stat-item paid">
             <FaCheck size={16} />
@@ -857,7 +857,7 @@ export default function WeeklyBookingsView({ bookings, loading }) {
             <div className="camp-stat-label">Bookings</div>
           </div>
           <div className="camp-stat-card">
-            <div className="camp-stat-value">€{totalRevenue}</div>
+            <div className="camp-stat-value">£{totalRevenue}</div>
             <div className="camp-stat-label">Revenue</div>
           </div>
           <div className="camp-stat-card">

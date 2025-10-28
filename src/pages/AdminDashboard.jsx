@@ -25,7 +25,7 @@ export default function AdminDashboard() {
   const loginData = useSelector((state) => state.auth.loginData);
   const bookings = useSelector(state => state.bookings.bookings || []);
 
-  const [activeNav, setActiveNav] = useState("Sessions");
+  const [activeNav, setActiveNav] = useState("Bookings");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [pageLoaded, setPageLoaded] = useState(false);
