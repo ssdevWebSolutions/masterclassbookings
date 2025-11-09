@@ -86,11 +86,11 @@ const CricketAcademyBooking = () => {
 
   useEffect(() => {
     dispatch(fetchSessionsByYear(2025));
-    console.log("Kids:", kidstate, "Sessions:", sessions);
+    // console.log("Kids:", kidstate, "Sessions:", sessions);
   }, []);
 
   useEffect(() => {
-    console.log("Kids:", kidstate, "Sessions:", sessions);
+    // console.log("Kids:", kidstate, "Sessions:", sessions);
   }, [kidstate, sessions]);
 
   const getAvailabilityStatus = (bookedCount) => {
@@ -301,7 +301,7 @@ const CricketAcademyBooking = () => {
 
   const processBooking = () => {
     const bookingData = generateBookingJSON();
-    console.log("Booking Data:", bookingData);
+    //  console.log("Booking Data:", bookingData);
     
     sessionStorage.setItem('cricketBookingData', JSON.stringify(bookingData));
     

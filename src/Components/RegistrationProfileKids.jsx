@@ -25,7 +25,7 @@ export default function RegistrationProfileKids() {
 
   useEffect(()=>{
     dispatch(fetchBookings({ token, role, parentId }));
-    console.log(kidstate,"pp");
+    // console.log(kidstate,"pp");
   },[kidstate]);
 
   useEffect(()=>{
@@ -77,7 +77,7 @@ export default function RegistrationProfileKids() {
       dispatch(updateKid(editKidId, newKid ,loginData.token));
       setEditKidId(null);
     } else {
-      console.log(loginData.id,"id");
+      // console.log(loginData.id,"id");
       dispatch(addKid( loginData.id, newKid ,loginData.token));
     }
     setNewKid({ firstName:"", lastName:"", age:"", club:"", medicalInfo:"", level:"" });

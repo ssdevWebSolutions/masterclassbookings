@@ -17,9 +17,9 @@ export const registerUserWithType=(registerFormData)=>async(dispatch)=>{
         });
     
         const result =  response;
-        console.log("Server response:", result);
+        // console.log("Server response:", result);
       } catch (error) {
-        console.error("Error:", error);
+        // console.error("Error:", error);
       }
 }
 
@@ -36,7 +36,7 @@ export const loginUserWithType = (loginData) => async (dispatch) => {
   
       if (!response.ok) {
         const errorText = await response;
-        console.error("Login failed:", errorText);
+        // console.error("Login failed:", errorText);
         dispatch(getLoginUserData({
             error: true,          // add a flag
             errorMessage: "Invalid email or password"
@@ -45,13 +45,13 @@ export const loginUserWithType = (loginData) => async (dispatch) => {
       }
   
       const result = await response.json(); // <-- parse the JSON
-      console.log("Server response for login:", result);
+      // console.log("Server response for login:", result);
   
       // dispatch login success here if needed
       dispatch(getLoginUserData(result));
   
     } catch (error) {
-      console.error("Error:", error);
+      // console.error("Error:", error);
     }
   };
 
@@ -68,7 +68,7 @@ export const loginUserWithType = (loginData) => async (dispatch) => {
       dispatch(setKidsList());
   
     } catch (error) {
-      console.error("Error:", error);
+      // console.error("Error:", error);
     }
   };
   
@@ -81,7 +81,7 @@ export const loginUserWithType = (loginData) => async (dispatch) => {
     }
     catch(e)
     {
-      console.log("error trying login modal open"+  e);
+      // console.log("error trying login modal open"+  e);
     }
   }
   

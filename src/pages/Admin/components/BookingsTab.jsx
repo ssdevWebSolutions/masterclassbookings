@@ -267,7 +267,7 @@ const DayCard = ({ day, date, bookings, dayName }) => {
 const WeekCard = ({ week, bookings }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  console.log(bookings,"bookings for weekCard");
+  // console.log(bookings,"bookings for weekCard");
 
   // 🔧 Helper to normalize date (remove time for accurate comparison)
   const normalizeDate = (date) => {
@@ -293,8 +293,8 @@ const WeekCard = ({ week, bookings }) => {
   });
 
   // 🧠 Debug log to confirm matching
-  console.log(`📅 Week ${week.weekNumber}: ${week.weekStart.toDateString()} - ${week.weekEnd.toDateString()}`);
-  console.log("Bookings for this week:", weekBookings);
+  // console.log(`📅 Week ${week.weekNumber}: ${week.weekStart.toDateString()} - ${week.weekEnd.toDateString()}`);
+  // console.log("Bookings for this week:", weekBookings);
 
   // Compute revenue per-session counting only sessions that fall within the week
   const totalRevenue = weekBookings

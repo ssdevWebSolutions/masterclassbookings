@@ -37,14 +37,14 @@ const PaymentSuccess = () => {
           if (!res.ok) throw new Error("Failed to save booking");
 
           const savedBooking = await res.json();
-          console.log("Booking saved:", savedBooking);
+          // console.log("Booking saved:", savedBooking);
 
           dispatch(saveBooking(savedBooking));
 
           sessionStorage.removeItem("cricketBookingData");
         }
       } catch (err) {
-        console.error("Booking error:", err);
+        // console.error("Booking error:", err);
       }
     };
 

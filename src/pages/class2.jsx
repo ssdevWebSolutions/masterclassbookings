@@ -47,14 +47,14 @@ const CricketAcademyBooking = () => {
   useEffect(() => {
     dispatch(fetchSessionsByYear(2026));
     
-   console.log("Kids:", kidstate, "Sessions:", sessions);
+  //  console.log("Kids:", kidstate, "Sessions:", sessions);
  }, [ ]);
 
  
 
   useEffect(() => {
     //  dispatch(fetchSessionsByYear(year));
-    console.log("Kids:", kidstate, "Sessions:", sessions);
+    // console.log("Kids:", kidstate, "Sessions:", sessions);
   }, [kidstate, sessions]);
 
   const getAvailabilityStatus = (bookedCount) => {
@@ -264,7 +264,7 @@ const CricketAcademyBooking = () => {
 
   const processBooking = () => {
     const bookingData = generateBookingJSON();
-    console.log("Booking Data:", bookingData);
+    // console.log("Booking Data:", bookingData);
     
     // Option 1: Using React Router - pass data via state
     // navigate('/payment', { state: { bookingData } });

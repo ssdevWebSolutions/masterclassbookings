@@ -248,7 +248,7 @@ export default function AdminDashboard() {
       alert("Sessions initialized!");
       dispatch(fetchSessionsByYear(year));
     } catch (err) {
-      console.error(err);
+      // console.error(err);
       alert("Error initializing sessions");
     }
   };

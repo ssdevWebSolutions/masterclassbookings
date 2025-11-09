@@ -24,7 +24,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       const state = store.getState();
       const refreshToken = state.auth.loginData.refreshToken;
-    console.log("Refresh token:", refreshToken);
+    // console.log("Refresh token:", refreshToken);
       try {
         const refreshRes = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/refresh`, {
           refreshToken,
@@ -45,7 +45,7 @@ api.interceptors.response.use(
         return api(error.config);
 
       } catch (refreshErr) {
-        console.log("Refresh token expired → force logout needed later");
+        // console.log("Refresh token expired → force logout needed later");
         return Promise.reject(refreshErr);
       }
     }

@@ -84,7 +84,7 @@ function CenterToast({ message, onClose }) {
   const dispatch = useDispatch();
 
   const handleClose = () => {
-    console.log("hello");
+    // console.log("hello");
     dispatch(loginModalForSlice(true));
     onClose();
   };

@@ -60,7 +60,7 @@ export default function RegistrationProfile() {
       role: "ADMIN", // hardcoded for now
     };
 
-    console.log("Payload to send:", payload);
+    // console.log("Payload to send:", payload);
 
     dispatch(registerUserWithType(payload));
     handleRoute(); // redirect after dispatch

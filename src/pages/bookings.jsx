@@ -26,7 +26,7 @@ export default function Home() {
 
   useEffect(() => {
     if (token && role) {
-      console.log(token,role,"ro");
+      // console.log(token,role,"ro");
       dispatch(fetchBookings({ token, role, parentId }));
     }
   }, [token, role, parentId, dispatch]);

@@ -59,7 +59,7 @@ export default function Header() {
   const loginModal = useSelector(state => state.auth.loginModal);
 
   useEffect(()=>{
-    console.log(loginModal);
+    // console.log(loginModal);
     setShowLogin(true);
   },[loginModal]);
   
@@ -352,7 +352,7 @@ export default function Header() {
   };
 
   const handleModalClose = () => {
-    console.log("close");
+    // console.log("close");
     
     setShowLogin(false);
     setShowRegister(false);

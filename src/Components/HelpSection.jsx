@@ -43,8 +43,8 @@ export default function HelpSection({ show, onHide }) {
         timestamp: new Date().toISOString()
       };
   
-      console.log("=== SUBMITTING REQUEST ===");
-      console.log("Request Data:", requestData);
+      // console.log("=== SUBMITTING REQUEST ===");
+      // console.log("Request Data:", requestData);
   
       // Call backend API
       const response = await fetch(`${API_BASE_URL}/service-request/raise-register-request`, {
@@ -55,16 +55,16 @@ export default function HelpSection({ show, onHide }) {
         body: JSON.stringify(requestData),
       });
   
-      console.log("Response Status:", response.status);
+      // console.log("Response Status:", response.status);
   
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("Error Response:", errorText);
+        // console.error("Error Response:", errorText);
         throw new Error('Failed to submit request. Please try again.');
       }
   
       const responseText = await response.text();
-      console.log("Success Response:", responseText);
+      // console.log("Success Response:", responseText);
   
       // Extract service ticket ID from response text
       const ticketId = responseText.match(/\d+/)?.[0];
@@ -77,7 +77,7 @@ export default function HelpSection({ show, onHide }) {
       }
   
     } catch (error) {
-      console.error("Submit Error:", error);
+      // console.error("Submit Error:", error);
       setSubmitError(error.message || "Failed to submit request. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -92,8 +92,8 @@ export default function HelpSection({ show, onHide }) {
     setSearchResult(null);
     
     try {
-      console.log("=== SEARCHING REQUEST STATUS ===");
-      console.log("Ticket ID:", searchRequestId);
+      // console.log("=== SEARCHING REQUEST STATUS ===");
+      // console.log("Ticket ID:", searchRequestId);
       
       // Call your backend API
       const response = await fetch(`${API_BASE_URL}/service-request/get-service-ticket-status/${searchRequestId}`, {
@@ -103,18 +103,18 @@ export default function HelpSection({ show, onHide }) {
         },
       });
       
-      console.log("Search Response Status:", response.status);
+      // console.log("Search Response Status:", response.status);
       
       if (!response.ok) {
         throw new Error('Request not found. Please check your ticket ID.');
       }
       
       const data = await response.json();
-      console.log("Search Result:", data);
+      //console.log("Search Result:", data);
       setSearchResult(data);
       
     } catch (error) {
-      console.error("Search Error:", error);
+      // console.error("Search Error:", error);
       setSearchError(error.message || "Failed to fetch request status. Please try again.");
     } finally {
       setIsSearching(false);

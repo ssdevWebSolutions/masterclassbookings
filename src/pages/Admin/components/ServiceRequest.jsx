@@ -34,7 +34,7 @@ const ServiceRequest = () => {
       });
 
       if (!response.ok) {
-        console.error('Fetch failed with status:', response.status);
+        // console.error('Fetch failed with status:', response.status);
         setError("Unable to load service requests. Please try again.");
         setServiceRequests([]);
         setFilteredRequests([]);
@@ -45,17 +45,17 @@ const ServiceRequest = () => {
       
       // Validate data is an array
       if (!Array.isArray(data)) {
-        console.warn("Expected array but received:", data);
+        // console.warn("Expected array but received:", data);
         setServiceRequests([]);
         setFilteredRequests([]);
         return;
       }
 
-      console.log("Fetched Service Requests:", data);
+      // console.log("Fetched Service Requests:", data);
       setServiceRequests(data);
       setFilteredRequests(data);
     } catch (error) {
-      console.error("Fetch Error:", error);
+      // console.error("Fetch Error:", error);
       setError("Unable to connect to server. Please check your connection.");
       setServiceRequests([]);
       setFilteredRequests([]);
@@ -118,7 +118,7 @@ const ServiceRequest = () => {
   // Handle approve action
   const handleApprove = (request) => {
     if (!request || !request.id) {
-      console.error("Invalid request selected");
+      // console.error("Invalid request selected");
       return;
     }
     setSelectedRequest(request);
@@ -127,7 +127,7 @@ const ServiceRequest = () => {
 
   const confirmApprove = async () => {
     if (!selectedRequest?.id) {
-      console.error("No request selected");
+      // console.error("No request selected");
       return;
     }
 
@@ -147,13 +147,13 @@ const ServiceRequest = () => {
       );
 
       if (!response.ok) {
-        console.error('Approve failed with status:', response.status);
+        // console.error('Approve failed with status:', response.status);
         setError("Failed to approve request. Please try again.");
         return;
       }
 
       const result = await response.text().catch(() => "Approved successfully");
-      console.log("Approve Response:", result);
+      // console.log("Approve Response:", result);
       
       setSuccessMessage(
         `Request #${selectedRequest.id} approved successfully! User account created and email sent.`
@@ -166,7 +166,7 @@ const ServiceRequest = () => {
       await fetchServiceRequests();
       
     } catch (error) {
-      console.error("Approve Error:", error);
+      // console.error("Approve Error:", error);
       setError("Unable to approve request. Please check your connection and try again.");
     } finally {
       setActionLoading(false);
@@ -176,7 +176,7 @@ const ServiceRequest = () => {
   // Handle reject action
   const handleReject = (request) => {
     if (!request || !request.id) {
-      console.error("Invalid request selected");
+      // console.error("Invalid request selected");
       return;
     }
     setSelectedRequest(request);
@@ -185,7 +185,7 @@ const ServiceRequest = () => {
 
   const confirmReject = async () => {
     if (!selectedRequest?.id) {
-      console.error("No request selected");
+      // console.error("No request selected");
       return;
     }
 
@@ -205,13 +205,13 @@ const ServiceRequest = () => {
       );
 
       if (!response.ok) {
-        console.error('Reject failed with status:', response.status);
+        // console.error('Reject failed with status:', response.status);
         setError("Failed to reject request. Please try again.");
         return;
       }
 
       const result = await response.text().catch(() => "Rejected successfully");
-      console.log("Reject Response:", result);
+      // console.log("Reject Response:", result);
       
       setSuccessMessage(`Request #${selectedRequest.id} has been rejected successfully.`);
       
@@ -222,7 +222,7 @@ const ServiceRequest = () => {
       await fetchServiceRequests();
       
     } catch (error) {
-      console.error("Reject Error:", error);
+      //      console.error("Reject Error:", error);
       setError("Unable to reject request. Please check your connection and try again.");
     } finally {
       setActionLoading(false);
@@ -249,7 +249,7 @@ const ServiceRequest = () => {
     try {
       return new Date(timestamp).toLocaleDateString();
     } catch (error) {
-      console.error("Date parsing error:", error);
+      // console.error("Date parsing error:", error);
       return "Invalid Date";
     }
   };

@@ -98,7 +98,7 @@ const PaymentPage = () => {
         } else alert(data.message || 'Failed to reserve slots.');
       }
     } catch (err) {
-      console.error(err);
+      // console.error(err);
       alert('Network error. Try again.');
     } finally {
       setIsProcessing(false);
@@ -134,11 +134,11 @@ const PaymentPage = () => {
         sessionStorage.setItem('paymentInProgress', 'true');
         window.location.href = data.url;
       } else {
-        console.error('Stripe response:', data);
+        //  console.error('Stripe response:', data);
         alert('Failed to initiate payment');
       }
     } catch (err) {
-      console.error(err);
+      // console.error(err);
       alert('Payment failed. Try again.');
     } finally {
       setIsProcessing(false);
@@ -159,7 +159,7 @@ const PaymentPage = () => {
       });
       sessionStorage.clear();
     } catch (err) {
-      console.error('Failed to release reservation:', err);
+      // console.error('Failed to release reservation:', err);
     } finally {
       setReservationData(null);
       setTimeRemaining(0);
