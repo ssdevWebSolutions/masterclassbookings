@@ -45,7 +45,7 @@ export const loginUserWithType = (loginData) => async (dispatch) => {
       }
   
       const result = await response.json(); // <-- parse the JSON
-      // console.log("Server response for login:", result);
+      console.log("Server response for login:", result);
   
       // dispatch login success here if needed
       dispatch(getLoginUserData(result));

@@ -15,6 +15,7 @@ const authSlice = createSlice({
     },
     getLoginUserData:(state,action)=>{
         state.loginData = action.payload
+        console.log("Login data:", state.loginData);
     },
     getLoginModalStatus:(state,action)=>{
       state.loginModal = action.payload

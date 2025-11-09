@@ -1,20 +1,18 @@
 // store/bookingSlice.js
+import api from '@/api';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // Async thunk to fetch bookings for a user/admin
 export const fetchBookings = createAsyncThunk(
   'booking/fetchBookings',
-  async ({ token, role, parentId }) => {
+  async ({ role, parentId }) => {
     let url = role === 'ADMIN'
-      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/payments/bookings/all`
-      : `${process.env.NEXT_PUBLIC_API_BASE_URL}/payments/bookings/parent/${parentId}`;
+      ? `/payments/bookings/all`
+      : `/payments/bookings/parent/${parentId}`;
 
-    const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const { data } = await api.get(url); // ✅ token auto-added
 
-    if (!res.ok) throw new Error('Failed to fetch bookings');
-    return await res.json();
+    return data;
   }
 );
 
