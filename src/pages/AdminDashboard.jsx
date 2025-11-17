@@ -55,6 +55,12 @@ export default function AdminDashboard() {
   // ALL USE_EFFECT HOOKS MOVED HERE - BEFORE CONDITIONAL RETURNS
   useEffect(() => {
     import('bootstrap/dist/js/bootstrap.bundle.min.js');
+    if (loginData.token && loginData.role) {
+      const token = loginData.token;
+      const role = loginData.role;
+      const parentId = 0;
+      dispatch(fetchBookings({ token, role, parentId }));
+    }
   }, []);
 
   useEffect(() => {
