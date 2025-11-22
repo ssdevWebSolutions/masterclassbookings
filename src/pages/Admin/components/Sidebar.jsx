@@ -1,87 +1,215 @@
-import { FaChartLine, FaTimes, FaCalendarAlt, FaList, FaUser, FaChevronDown, FaSignOutAlt, FaAccusoft } from "react-icons/fa";
+"use client";
 
-export default function Sidebar({ 
-  activeNav, 
-  sidebarOpen, 
-  profileDropdownOpen, 
-  onNavSwitch, 
-  onCloseSidebar, 
-  onProfileDropdownToggle, 
-  onLogout 
+import { useState } from "react";
+import {
+  Drawer,
+  Box,
+  IconButton,
+  List,
+  Typography,
+  Collapse,
+  Button,
+} from "@mui/material";
+
+import CloseIcon from "@mui/icons-material/Close";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PersonIcon from "@mui/icons-material/Person";
+import InventoryRounded from "@mui/icons-material/InventoryRounded";
+import ChatBubble from "@mui/icons-material/ChatBubble";
+import GroupOutlined from "@mui/icons-material/GroupOutlined";
+import Settings from "@mui/icons-material/Settings";
+import CurrencyPoundSharp from "@mui/icons-material/CurrencyPoundSharp";
+import CampaignSharp from "@mui/icons-material/CampaignSharp";
+import Person2Outlined from "@mui/icons-material/Person2Outlined";
+import { HomeFilled } from "@mui/icons-material";
+import { LucideCalendarCheck } from "lucide-react";
+
+import NavItem from "@/sharedComponents/NavItem";
+import Image from "next/image";
+
+export default function Sidebar({
+  sidebarOpen,
+  activeNav,
+  profileDropdownOpen,
+  onNavSwitch,
+  onCloseSidebar,
+  onProfileDropdownToggle,
+  onLogout,
 }) {
+  const [scheduleOpen, setScheduleOpen] = useState(false);
+
   return (
-    <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
-      <div className="sidebar-header">
-        <h1 className="sidebar-logo">
-          <FaChartLine />
-          Admin Panel
-        </h1>
-        <button 
-          className="sidebar-close-btn"
-          onClick={onCloseSidebar}
-          aria-label="Close sidebar"
+    <Drawer
+      variant="temporary"
+      open={sidebarOpen}
+      onClose={onCloseSidebar}
+      PaperProps={{
+        sx: (theme) => ({
+          width: 250,
+          backgroundColor: theme.palette.background.default,
+          color: theme.palette.text.primary,
+          border: "none",
+          pt: 1,
+        }),
+      }}
+    >
+      {/* ✅ HEADER */}
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        px={1}
+        py={1}
+      >
+        <Box display="flex" alignItems="center" gap={1}>
+          <Image
+            src="/logo_.png"
+            alt="MasterClass Cricket Logo"
+            width={35}
+            height={60}
+            priority
+          />
+          <Typography variant="h5">Masterclass Cricket</Typography>
+        </Box>
+
+        <IconButton onClick={onCloseSidebar} sx={{ p: 0.5, color: "accent.main" }}>
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </Box>
+
+      {/* ✅ NAVIGATION */}
+      <List sx={{ px: 1, pt: 1 }}>
+        <NavItem
+          label="Dashboard"
+          icon={<HomeFilled fontSize="small" />}
+          active={activeNav === "Dashboard"}
+          onClick={() => onNavSwitch("Dashboard")}
+        />
+
+        {/* ✅ DROPDOWN — SCHEDULE */}
+        <NavItem
+          label="Schedule"
+          icon={<LucideCalendarCheck size={18} />}
+          expandable
+          open={scheduleOpen}
+          unread={0}
+          onClick={() => setScheduleOpen(!scheduleOpen)}
+        />
+
+        <Collapse in={scheduleOpen}>
+          <NavItem
+            label="Bookings"
+            active={activeNav === "Bookings"}
+            onClick={() => onNavSwitch("Bookings")}
+          />
+          {/* <NavItem
+            label="Completed"
+            active={activeNav === "Completed"}
+            onClick={() => onNavSwitch("Completed")}
+          /> */}
+        </Collapse>
+
+        <NavItem
+          label="Finance"
+          icon={<CurrencyPoundSharp fontSize="small" />}
+          active={activeNav === "Finance"}
+          onClick={() => onNavSwitch("Finance")}
+        />
+
+        <NavItem
+          label="Camps"
+          icon={<CampaignSharp fontSize="small" />}
+          active={activeNav === "Camps"}
+          onClick={() => onNavSwitch("Camps")}
+        />
+
+        <NavItem
+          label="Service Request"
+          icon={<PersonIcon fontSize="small" />}
+          active={activeNav === "ServiceRequest"}
+          onClick={() => onNavSwitch("ServiceRequest")}
+        />
+
+        <NavItem
+          label="Contacts"
+          icon={<Person2Outlined fontSize="small" />}
+          active={activeNav === "Contacts"}
+          onClick={() => onNavSwitch("Contacts")}
+        />
+
+        <NavItem
+          label="Orders"
+          icon={<InventoryRounded fontSize="small" />}
+          unread={12}
+          active={activeNav === "Orders"}
+          onClick={() => onNavSwitch("Orders")}
+        />
+
+        <NavItem
+          label="Communication Tracker"
+          icon={<ChatBubble fontSize="small" />}
+          unread={5}
+          active={activeNav === "Communication"}
+          onClick={() => onNavSwitch("Communication")}
+        />
+
+        <NavItem
+          label="Team"
+          icon={<GroupOutlined fontSize="small" />}
+          active={activeNav === "Team"}
+          onClick={() => onNavSwitch("Team")}
+        />
+
+        <NavItem
+          label="Settings"
+          icon={<Settings fontSize="small" />}
+          active={activeNav === "Settings"}
+          onClick={() => onNavSwitch("Settings")}
+        />
+      </List>
+
+      {/* ✅ FOOTER */}
+      <Box mt="auto" p={1}>
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          onClick={onProfileDropdownToggle}
+          sx={{ cursor: "pointer", py: 0.6 }}
         >
-          <FaTimes />
-        </button>
-      </div>
+          <Box display="flex" alignItems="center" gap={1}>
+            <PersonIcon fontSize="small" />
+            <Box>
+              <Typography variant="body2">Admin</Typography>
+              <Typography variant="caption" color="text.secondary">
+                Administrator
+              </Typography>
+            </Box>
+          </Box>
 
-      <nav className="sidebar-nav">
-        {/* To Create Sessions */}
-        {/* <div className="nav-item">
-          <a
-            href="#"
-            className={`nav-link ${activeNav === "Sessions" ? 'active' : ''}`}
-            onClick={(e) => { e.preventDefault(); onNavSwitch("Sessions"); }}
-          >
-            <FaCalendarAlt />
-            Sessions Management
-          </a>
-        </div> */}
-        <div className="nav-item">
-          <a
-            href="#"
-            className={`nav-link ${activeNav === "Bookings" ? 'active' : ''}`}
-            onClick={(e) => { e.preventDefault(); onNavSwitch("Bookings"); }}
-          >
-            <FaList />
-            Bookings Overview
-          </a>
-        </div>
-        <div className="nav-item">
-          <a
-            href="#"
-            className={`nav-link ${activeNav === "ServiceRequest" ? 'active' : ''}`}
-            onClick={(e) => { e.preventDefault(); onNavSwitch("ServiceRequest"); }}
-          >
-            <FaUser />
-            Service Request 
-          </a>
-        </div>
-      </nav>
+          <ExpandMoreIcon
+            fontSize="small"
+            sx={{
+              transform: profileDropdownOpen ? "rotate(180deg)" : "rotate(0deg)",
+              transition: "0.2s",
+            }}
+          />
+        </Box>
 
-      <div className="sidebar-footer">
-        <div className="user-profile" onClick={onProfileDropdownToggle}>
-          <div className="user-avatar">
-            <FaUser />
-          </div>
-          <div className="user-info">
-            <p className="user-name">Admin</p>
-            <p className="user-role">Administrator</p>
-          </div>
-          <FaChevronDown style={{ color: '#999', fontSize: '14px' }} />
-        </div>
-        {profileDropdownOpen && (
-          <div className="mt-2">
-            <button 
-              className="btn btn-outline-warning w-100"
-              onClick={onLogout}
-            >
-              <FaSignOutAlt className="me-2" />
-              Logout
-            </button>
-          </div>
-        )}
-      </div>
-    </aside>
+        <Collapse in={profileDropdownOpen}>
+          <Button
+            variant="outlined"
+            fullWidth
+            color="primary"
+            sx={{ mt: 1, fontSize: "0.75rem", py: 0.4 }}
+            onClick={onLogout}
+            startIcon={<LogoutIcon fontSize="small" />}
+          >
+            Logout
+          </Button>
+        </Collapse>
+      </Box>
+    </Drawer>
   );
 }

@@ -15,6 +15,8 @@ import SessionsTab from "./Admin/components/SessionsTab";
 import BookingsTab from "./Admin/components/BookingsTab";
 import GlobalStyles from "./Admin/components/GlobalStyles";
 import ServiceRequest from "./Admin/components/ServiceRequest";
+import ServiceRequestPage from "./Admin/modules/service-request/ServiceRequestPage";
+import ComingSoon from "./Admin/modules/page-coming-soon/ComingSoon";
 
 export default function AdminDashboard() {
   // MOVED ALL HOOKS TO THE TOP - BEFORE ANY CONDITIONAL RETURNS
@@ -341,8 +343,27 @@ export default function AdminDashboard() {
           )}
 
           {activeNav === "ServiceRequest" && (
-            <ServiceRequest />
+            <ServiceRequestPage />
           )}
+
+          {activeNav === "Dashboard" && <ComingSoon title="Dashboard" />}
+
+          {activeNav === "Finance" && <ComingSoon title="Finance Dashboard" />}
+
+          {activeNav === "Camps" && <ComingSoon title="Camps Management" />}
+
+          {activeNav === "Contacts" && <ComingSoon title="Contacts" />}
+
+
+          {activeNav === "Orders" && <ComingSoon title="Orders" />}
+
+
+          {activeNav === "Communication" && <ComingSoon title="Communication" />}
+
+          {activeNav === "Team" && <ComingSoon title="Team Module" />}
+
+          {activeNav === "Settings" && <ComingSoon title="Settings" />}
+          
         </DashboardLayout>
       </AuthGuard>
     </>
