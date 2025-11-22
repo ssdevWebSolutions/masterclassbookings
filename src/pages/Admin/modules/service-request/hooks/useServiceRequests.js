@@ -3,7 +3,7 @@ import {
   fetchServiceRequestsApi,
   approveServiceRequestApi,
   rejectServiceRequestApi,
-} from "../api/serviceRequest.api";
+} from "../../../../api/api/serviceRequest";
 
 export default function useServiceRequests() {
   const [requests, setRequests] = useState([]);
