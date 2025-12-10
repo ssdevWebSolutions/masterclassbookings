@@ -415,6 +415,7 @@ const CricketAcademyBooking = () => {
                 <h6 className="card-title mb-1" style={{ color: "#FFD700" }}>
                   <i className="bi bi-geo-alt me-2"></i>Venue
                 </h6>
+                {/* changes in venues */}
                 <p className="mb-0" style={{ color: "#d4d4d4" }}>ST PAUL’S SCHOOL, BARNES, LONDON SW13 9JT (INDOORS)</p>
               </div>
             </div>
