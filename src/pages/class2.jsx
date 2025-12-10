@@ -415,7 +415,7 @@ const CricketAcademyBooking = () => {
                 <h6 className="card-title mb-1" style={{ color: "#FFD700" }}>
                   <i className="bi bi-geo-alt me-2"></i>Venue
                 </h6>
-                <p className="mb-0" style={{ color: "#d4d4d4" }}>Tiffin Girls School, KT2 5PL</p>
+                <p className="mb-0" style={{ color: "#d4d4d4" }}>ST PAUL’S SCHOOL, BARNES, LONDON SW13 9JT (INDOORS)</p>
               </div>
             </div>
   
@@ -638,7 +638,7 @@ const CricketAcademyBooking = () => {
                   </div>
   
                  {/* Fridays Section */}
-                 <div className="mb-3">
+                 {/* <div className="mb-3">
                     <div className="d-flex justify-content-between align-items-center mb-2">
                       <button
                         className="btn d-flex align-items-center flex-grow-1 me-3"
@@ -791,7 +791,7 @@ const CricketAcademyBooking = () => {
                         </div>
                       </div>
                     )}
-                  </div>
+                  </div> */}
 
                   {/* Sunday Class 1 Section */}
                   <div className="mb-3">
