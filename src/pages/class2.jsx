@@ -537,7 +537,7 @@ const CricketAcademyBooking = () => {
                 </div>
               </div>
   
-              <div className="col-md-4">
+              {/* <div className="col-md-4">
                 <div 
                   className={`card position-relative text-center h-100 shadow-sm`}
                   style={{
@@ -548,7 +548,7 @@ const CricketAcademyBooking = () => {
                   }}
                   onClick={handlePlatinumClick}
                 >
-                  {/* <span className="badge position-absolute top-0 start-50 translate-middle" style={{
+                  <span className="badge position-absolute top-0 start-50 translate-middle" style={{
                     backgroundColor: "#FFD700",
                     color: "#000"
                   }}>Platinum Pass</span>
@@ -598,9 +598,9 @@ const CricketAcademyBooking = () => {
                         {isPlatinumSelected && <i className="bi bi-check-lg" style={{ fontSize: '0.75rem', color: "#000" }} />}
                       </div>
                     </div>
-                  </div> */}
+                  </div>
                 </div>
-              </div>
+              </div> */}
             </div>
   
             {/* Session Selection */}
