@@ -429,7 +429,7 @@ const CricketAcademyBooking = () => {
                 <div>
                   <h6 className="card-title mb-1" style={{ color: "#FFD700" }}>Programme Details</h6>
                   <p className="mb-0 small" style={{ color: "#999" }}>
-                    10-Week Technical Masterclass Clinic (Ages 10–13, Girls & Boys)
+                    10-Week COACHING PROGRAMME (Ages 7–13, Girls & Boys)
                   </p>
                 </div>
                 <button 
