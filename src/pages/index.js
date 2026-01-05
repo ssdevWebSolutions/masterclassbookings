@@ -67,10 +67,10 @@ export default function Home() {
       </Head>
 
       <main className="font-sans">
-        <Header />
+        {/* <Header /> */}
         <Hero />
         <About />
-        <CampGrid />
+        {/* <CampGrid /> */}
         
         
         {/* Registration Modal or Profile - only for non-admin users */}
