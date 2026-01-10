@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 
 import { fetchBookings } from "@/pages/api/attendaceapi/adminAttendanceApi";
-import AdminLayout from "../../adminlayouts/AdminLayout";
+import AdminLayout from "../../adminlayouts";
 
 export default function FinanceDashboard() {
   const [loading, setLoading] = useState(false);
