@@ -4,10 +4,10 @@ import { Modal, Button, Dropdown, Form, Alert, Row, Col } from "react-bootstrap"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch, useSelector } from "react-redux";
 import { loginModalForSlice, loginUserWithType, logOutUserWithType } from "../Redux/Authentication/AuthenticationAction";
-import { fetchKids } from "@/Redux/Kids/KidActions";
-import { persistor } from "@/store";
+
 import { useRouter } from "next/router";
 import HelpSection from "./HelpSection";
+import { fetchKids } from "@/Redux/Kids/KidActions";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
