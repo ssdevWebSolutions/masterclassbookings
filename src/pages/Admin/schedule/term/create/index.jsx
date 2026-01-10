@@ -32,7 +32,7 @@ import {
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-import AdminLayout from "../../../../adminlayouts";
+import AdminLayout from "../../../../../adminlayouts";
 import { createTermApi } from "../../../../api/termapi/terms-api";
 
 /* ---------------- DAYJS CONFIG ---------------- */

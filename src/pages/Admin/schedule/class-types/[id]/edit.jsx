@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import AdminLayout from "../../../../adminlayouts";
+import AdminLayout from "../../../../../adminlayouts";
 import LoadingState from "@/sharedComponents/LoadingState";
 import useClasses from "../hooks/useClasses";
 import ClassAddForm from "../components/ClassAddForm";

@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 
 import { fetchTrainingClasses } from "@/Redux/trainingClassesSlice/trainingClassesSlice";
-import AdminLayout from "../../adminlayouts";
+import AdminLayout from "../../../adminlayouts";
 
 /* ---------- HELPERS ---------- */
 const formatTime = (t) =>

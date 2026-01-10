@@ -9,7 +9,7 @@ import WeeklyPlanSection from "../components/WeeklyPlanSection";
 import useUpdateTrainingSchedule from "../hooks/useUpdateTrainingSchedule";
 import { fetchTrainingClassById } from "../../../../api/trainingclassesapi/trainingClassesApi";
 
-import AdminLayout from '@/pages/adminlayouts';
+import AdminLayout from '@/adminlayouts';
 
 export default function EditTrainingClassSchedule() {
   const router = useRouter();

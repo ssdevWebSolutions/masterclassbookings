@@ -1,6 +1,6 @@
 "use client";
 
-import AdminLayout from "../../../adminlayouts";
+import AdminLayout from "../../../../adminlayouts";
 import VenueList from "./components/VenueList";
 import { Button, Box, Typography, Breadcrumbs,Link } from "@mui/material";
 import { useRouter } from "next/router";

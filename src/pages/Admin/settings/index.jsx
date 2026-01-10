@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Modal, Button, Form, Alert, Container, Row, Col, Card } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useSelector } from "react-redux";
-import AdminLayout from "../../adminlayouts";
+import AdminLayout from "../../../adminlayouts";
 
 export default function Settings() {
   const loginData = useSelector(state => state.auth.loginData);

@@ -25,7 +25,7 @@ import useCreateTrainingClass from "../hooks/useCreateTrainingClass";
 import TrainingClassBasicInfo from "../components/TrainingClassBasicInfo";
 import WeeklyPlanSection from "../components/WeeklyPlanSection";
 import PricingSection from "../components/PricingSection";
-import AdminLayout from "@/pages/adminlayouts";
+import AdminLayout from "@/adminlayouts";
 
 
 /* ================== DISCOUNT SECTION ================== */

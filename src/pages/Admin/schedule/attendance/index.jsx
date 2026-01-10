@@ -14,7 +14,7 @@ import {
 
 
 import { getTerms } from "@/pages/api/attendaceapi/adminAttendanceApi";
-import AdminLayout from "../../../adminlayouts";
+import AdminLayout from "../../../../adminlayouts";
 
 export default function AttendanceTermsPage() {
   const router = useRouter();
