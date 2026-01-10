@@ -1,13 +1,9 @@
 /** @type {import('next').NextConfig} */
 const path = require('path');
-const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
 const nextConfig = {
   reactStrictMode: true,
-
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  turbopack: {},  // Enables Turbopack explicitly, resolves webpack conflict
 
   webpack(config, { isServer }) {
     config.plugins.push(new CaseSensitivePathsPlugin());
