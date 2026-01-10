@@ -14,7 +14,6 @@
     "@mui/material": "^7.3.5",
     "@mui/x-data-grid": "^7.29.11",
     "@mui/x-date-pickers": "^8.22.0",
-    "@next/swc-darwin-arm64": "^16.0.10",
     "@reduxjs/toolkit": "^2.9.0",
     "@stripe/react-stripe-js": "^4.0.2",
     "@stripe/stripe-js": "^7.9.0",
