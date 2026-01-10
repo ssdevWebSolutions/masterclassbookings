@@ -12,8 +12,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { formatDate, formatTime } from "../../utils/formatUtils";
-import { recheckPayment } from "@/pages/training-classes/api/bookingApi";
+import { formatDate, formatTime } from "../../../../../utils/formatUtils";
+import { recheckPayment } from "@/pages/api/bookingapi/bookingApi";
 
 export default function BookingsTab({ bookings, loading }) {
   const router = useRouter();

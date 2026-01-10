@@ -18,8 +18,8 @@ import DashboardLayout from "@/pages/admin/components/DashboardLayout";
 import UserSidebar from "@/pages/dashboard/components/UserSidebar";
 import UserHeader from "@/pages/dashboard/components/UserHeader";
 import { getGreeting } from "@/utils/greetingUtils";
-import { fetchTrainingClassById } from "@/pages/admin/schedule/training-classes/api/trainingClassesApi";
-import { formatDate, formatTermDateRange } from "@/pages/dashboard/utils/formatUtils";
+import { fetchTrainingClassById } from "@/pages/api/trainingclassesapi/trainingClassesApi";
+import { formatDate, formatTermDateRange } from "../../../../utils/formatUtils";
 
 // Get cricket images from Unsplash
 const getCricketImage = (index) => {

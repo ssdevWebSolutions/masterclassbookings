@@ -21,7 +21,7 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import EventIcon from "@mui/icons-material/Event";
 import PendingIcon from "@mui/icons-material/Pending";
 import AdminLayout from "@/pages/admin/AdminLayout";
-import { fetchBookings, getTerms } from "@/pages/admin/schedule/attendance/api/adminAttendanceApi";
+import { fetchBookings, getTerms } from "@/pages/api/attendaceapi/adminAttendanceApi";
 
 export default function AdminDashboard() {
   const router = useRouter();

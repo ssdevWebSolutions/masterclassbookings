@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
  * Custom hook for authentication guard
  * @returns {{isAuthenticated: boolean, token: string|null, userId: number|null, userName: string}}
  */
-export const useAuthGuard = () => {
+ const useAuthGuard = () => {
   const router = useRouter();
   const loginData = useSelector((state) => state.auth.loginData);
   const token = loginData?.token;
@@ -32,4 +32,6 @@ export const useAuthGuard = () => {
     loginData
   };
 };
+
+export default useAuthGuard;
 

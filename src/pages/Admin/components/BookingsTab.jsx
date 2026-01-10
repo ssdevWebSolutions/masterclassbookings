@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { Box, Typography, CircularProgress, Alert } from "@mui/material";
-import { fetchBookings } from "../schedule/attendance/api/adminAttendanceApi";
+import { fetchBookings } from "../../api/attendaceapi/adminAttendanceApi";
 
 export default function BookingPage() {
   const [loading, setLoading] = useState(false);

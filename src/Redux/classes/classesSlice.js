@@ -1,4 +1,4 @@
-import { createClassApi, deleteClassApi, fetchClassesApi, updateClassApi } from "@/pages/admin/schedule/class-types/api/classes-api";
+import { createClassApi, deleteClassApi, fetchClassesApi, updateClassApi } from "@/pages/api/classtypesapi/classes-api";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 

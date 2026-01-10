@@ -3,15 +3,15 @@
  * Single Responsibility: Handle all data fetching for training class sessions
  */
 
-import { fetchTrainingClassById } from "@/pages/admin/schedule/training-classes/api/trainingClassesApi";
-import { fetchClassSessions } from "../api/bookingApi";
+import { fetchTrainingClassById } from "@/pages/api/trainingclassesapi/trainingClassesApi";
+import { fetchClassSessions } from "../../api/bookingapi/bookingApi";
 
 /**
  * Fetch training class and sessions data
  * @param {string|number} classId - Training class ID
  * @returns {Promise<{trainingClass: Object, sessions: Array}>}
  */
-export const fetchSessionsData = async (classId) => {
+const fetchSessionsData = async (classId) => {
   try {
     const [classData, sessionsData] = await Promise.all([
       fetchTrainingClassById(classId),
@@ -27,4 +27,6 @@ export const fetchSessionsData = async (classId) => {
     throw error;
   }
 };
+
+export default fetchSessionsData;
 

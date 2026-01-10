@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createTrainingClass } from "../api/trainingClassesApi";
+import { createTrainingClass } from "../../../../api/trainingclassesapi/trainingClassesApi";
 
 export default function useCreateTrainingClass() {
   const [loading, setLoading] = useState(false);

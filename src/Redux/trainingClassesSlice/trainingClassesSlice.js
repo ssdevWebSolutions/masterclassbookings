@@ -3,7 +3,7 @@ import {
   fetchTrainingClassesApi,
   createTrainingClass,
   updateTrainingSchedule,
-} from "@/pages/admin/schedule/training-classes/api/trainingClassesApi";
+} from "@/pages/api/trainingclassesapi/trainingClassesApi";
 
 /* =========================
    THUNKS

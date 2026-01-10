@@ -1,4 +1,4 @@
-import { createTermApi, fetchTermByIdApi, fetchTermsApi, updateTermApi } from "@/pages/admin/schedule/term/api/terms-api";
+import { createTermApi, fetchTermByIdApi, fetchTermsApi, updateTermApi } from "@/pages/api/termapi/terms-api";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 

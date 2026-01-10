@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/router";
-import { getBookingStatus } from "./training-classes/api/bookingApi";
+import { getBookingStatus } from "./api/bookingapi/bookingApi";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 

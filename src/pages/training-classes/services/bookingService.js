@@ -3,7 +3,7 @@
  * Single Responsibility: Handle booking creation and checkout
  */
 
-import { createBooking, createCheckoutSession } from "../api/bookingApi";
+import { createBooking, createCheckoutSession } from "../../api/bookingapi/bookingApi";
 
 /**
  * Process booking and redirect to checkout
@@ -12,7 +12,7 @@ import { createBooking, createCheckoutSession } from "../api/bookingApi";
  * @param {string|number} classId - Training class ID
  * @returns {Promise<void>}
  */
-export const processBooking = async (bookingData, finalPrice, classId) => {
+const processBooking = async (bookingData, finalPrice, classId) => {
   try {
     // Create booking
     const booking = await createBooking({
@@ -56,3 +56,4 @@ export const processBooking = async (bookingData, finalPrice, classId) => {
   }
 };
 
+export default  processBooking;

@@ -6,7 +6,7 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SearchIcon from "@mui/icons-material/Search";
-import { formatDate, formatTime } from "../../utils/formatUtils";
+import { formatDate, formatTime } from "../../../../../utils/formatUtils";
 
 
 export default function DashboardTab({ bookings, loading, trainingClasses, router }) {

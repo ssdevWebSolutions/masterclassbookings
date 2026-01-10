@@ -5,7 +5,7 @@ import {
   createVenueApi,
   updateVenueApi,
   deleteVenueApi,
-} from "../../pages/admin/schedule/venue/api/venues-api";
+} from "../../pages/api/venueapi/venues-api";
 
 // Fetch all venues
 export const fetchVenues = createAsyncThunk(

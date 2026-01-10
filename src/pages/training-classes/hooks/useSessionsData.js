@@ -11,7 +11,7 @@ import { fetchSessionsData } from "../services/sessionsService";
  * @param {string|number} classId - Training class ID
  * @returns {{trainingClass: Object|null, sessions: Array, loading: boolean, error: Error|null, refetch: Function}}
  */
-export const useSessionsData = (classId) => {
+ const useSessionsData = (classId) => {
   const [trainingClass, setTrainingClass] = useState(null);
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -46,4 +46,6 @@ export const useSessionsData = (classId) => {
     refetch: fetchData
   };
 };
+
+export default useSessionsData;
 

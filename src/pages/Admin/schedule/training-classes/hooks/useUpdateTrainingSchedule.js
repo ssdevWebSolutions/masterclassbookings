@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { updateTrainingSchedule } from "../api/trainingClassesApi";
+import { updateTrainingSchedule } from "../../../../api/trainingclassesapi/trainingClassesApi";
 
 export default function useUpdateTrainingSchedule() {
   const [loading, setLoading] = useState(false);

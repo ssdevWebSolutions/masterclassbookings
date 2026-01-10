@@ -16,7 +16,7 @@ import {
   fetchSessions,
   fetchSessionAttendance,
   saveAttendance,
-} from "./api/adminAttendanceApi";
+} from "../../../api/attendaceapi/adminAttendanceApi";
 
 import AdminLayout from "../../AdminLayout";
 

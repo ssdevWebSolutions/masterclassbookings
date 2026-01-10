@@ -11,7 +11,7 @@ import { fetchDashboardData } from "../services/dashboardService";
  * @param {number} userId - User ID
  * @returns {{data: Object, loading: boolean, error: Error|null, refetch: Function}}
  */
-export const useDashboardData = (userId) => {
+ const useDashboardData = (userId) => {
   const [data, setData] = useState({
     trainingClasses: [],
     bookings: [],
@@ -47,4 +47,6 @@ export const useDashboardData = (userId) => {
     refetch: fetchData
   };
 };
+
+export default useDashboardData;
 

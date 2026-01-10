@@ -3,17 +3,17 @@
  * Single Responsibility: Handle all data fetching for dashboard
  */
 
-import { fetchTrainingClassesApi } from "@/pages/admin/schedule/training-classes/api/trainingClassesApi";
-import { getUserBookings } from "@/pages/training-classes/api/bookingApi";
-import { fetchClassSessions } from "@/pages/training-classes/api/bookingApi";
-import { fetchClassesApi } from "@/pages/admin/schedule/class-types/api/classes-api";
+import { fetchTrainingClassesApi } from "@/pages/api/trainingclassesapi/trainingClassesApi";
+import { getUserBookings } from "@/pages/api/bookingapi/bookingApi";
+import { fetchClassSessions } from "@/pages/api/bookingapi/bookingApi";
+import { fetchClassesApi } from "@/pages/api/classtypesapi/classes-api";
 
 /**
  * Fetch all dashboard data
  * @param {number} userId - User ID
  * @returns {Promise<{trainingClasses: Array, bookings: Array, classTypes: Array}>}
  */
-export const fetchDashboardData = async (userId) => {
+ const fetchDashboardData = async (userId) => {
   try {
     const [classes, userBookings, classTypesData] = await Promise.all([
       fetchTrainingClassesApi(),
@@ -51,4 +51,4 @@ export const fetchDashboardData = async (userId) => {
     throw error;
   }
 };
-
+export default fetchDashboardData;

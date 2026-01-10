@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import AdminLayout from "@/pages/admin/AdminLayout";
 import WeeklyPlanSection from "../components/WeeklyPlanSection";
 import useUpdateTrainingSchedule from "../hooks/useUpdateTrainingSchedule";
-import { fetchTrainingClassById } from "../api/trainingClassesApi";
+import { fetchTrainingClassById } from "../../../../api/trainingclassesapi/trainingClassesApi";
 
 export default function EditTrainingClassSchedule() {
   const router = useRouter();

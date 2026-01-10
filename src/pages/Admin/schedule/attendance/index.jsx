@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 
 import AdminLayout from "@/pages/admin/AdminLayout";
-import { getTerms } from "@/pages/admin/schedule/attendance/api/adminAttendanceApi";
+import { getTerms } from "@/pages/api/attendaceapi/adminAttendanceApi";
 
 export default function AttendanceTermsPage() {
   const router = useRouter();

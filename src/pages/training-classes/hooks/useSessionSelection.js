@@ -9,7 +9,7 @@ const getAvailabilityStatus = (bookedCount,CAPACITY) => {
   return "available";
 };
 
-export const useSessionSelection = (sessions = [], trainingClass = null) => {
+const useSessionSelection = (sessions = [], trainingClass = null) => {
   const [selected, setSelected] = useState([]);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponError, setCouponError] = useState(null);
@@ -150,3 +150,5 @@ export const useSessionSelection = (sessions = [], trainingClass = null) => {
     couponError,
   };
 };
+
+export default useSessionSelection;

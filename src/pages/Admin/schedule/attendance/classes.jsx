@@ -10,7 +10,7 @@ import {
   Stack,
   Divider,
 } from "@mui/material";
-import { fetchClassesByTerm } from "./api/adminAttendanceApi";
+import { fetchClassesByTerm } from "../../../api/attendaceapi/adminAttendanceApi";
 import AdminLayout from "../../AdminLayout";
 
 

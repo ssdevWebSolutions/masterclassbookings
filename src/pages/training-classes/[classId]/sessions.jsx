@@ -21,7 +21,7 @@ import { useSessionsData } from "../hooks/useSessionsData";
 import { useSessionSelection } from "../hooks/useSessionSelection";
 import { processBooking } from "../services/bookingService";
 import SessionAccordion from "../components/SessionAccordion";
-import { formatTermDateRange } from "@/pages/dashboard/utils/formatUtils";
+import { formatTermDateRange } from "../../../../utils/formatUtils";
 
 export default function TrainingClassSessionsPage() {
   const router = useRouter();

@@ -7,7 +7,7 @@
 
 import { Box, Typography, Checkbox, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { formatSlotLabel } from "../utils/sessionUtils";
+import { formatSlotLabel } from "../../../../utils/sessionUtils";
 
 
 

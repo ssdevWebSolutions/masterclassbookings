@@ -18,8 +18,8 @@ import DashboardLayout from "@/pages/admin/components/DashboardLayout";
 import UserSidebar from "@/pages/dashboard/components/UserSidebar";
 import UserHeader from "@/pages/dashboard/components/UserHeader";
 import { getGreeting } from "@/utils/greetingUtils";
-import { getUserBookings } from "@/pages/training-classes/api/bookingApi";
-import { fetchClassSessions } from "@/pages/training-classes/api/bookingApi";
+import { getUserBookings } from "@/pages/api/bookingapi/bookingApi";
+import { fetchClassSessions } from "@/pages/api/bookingapi/bookingApi";
 import Barcode from "react-barcode";
 import html2canvas from "html2canvas";
 

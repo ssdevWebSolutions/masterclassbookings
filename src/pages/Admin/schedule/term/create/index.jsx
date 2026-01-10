@@ -33,7 +33,7 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import AdminLayout from "../../../AdminLayout";
-import { createTermApi } from "../api/terms-api";
+import { createTermApi } from "../../../../api/termapi/terms-api";
 
 /* ---------------- DAYJS CONFIG ---------------- */
 dayjs.extend(updateLocale);
