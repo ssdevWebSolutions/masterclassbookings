@@ -14,8 +14,8 @@ import DashboardLayout from "@/pages/admin/components/DashboardLayout";
 import UserSidebar from "./components/UserSidebar";
 import UserHeader from "./components/UserHeader";
 import { getGreeting } from "@/utils/greetingUtils";
-import { useAuthGuard } from "./hooks/useAuthGuard";
-import { useDashboardData } from "./hooks/useDashboardData";
+import { useAuthGuard } from "@/hooks/dashboard/useAuthGuard";
+import { useDashboardData } from "@/hooks/dashboard/useDashboardData";
 import ProfileTab from "./components/tabs/ProfileTab";
 
 // Lazy load tab components

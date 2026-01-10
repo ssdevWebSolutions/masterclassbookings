@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { fetchDashboardData } from "../services/dashboardService";
+import { fetchDashboardData } from "@/services/dashboard/dashboardService";
 
 /**
  * Custom hook for dashboard data management
@@ -48,5 +48,5 @@ import { fetchDashboardData } from "../services/dashboardService";
   };
 };
 
-export default useDashboardData;
+export { useDashboardData };
 

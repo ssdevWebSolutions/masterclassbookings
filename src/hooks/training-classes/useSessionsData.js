@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { fetchSessionsData } from "../services/sessionsService";
+import { fetchSessionsData } from "@/services/training-classes/sessionsService";
 
 /**
  * Custom hook for sessions data management
@@ -47,5 +47,5 @@ import { fetchSessionsData } from "../services/sessionsService";
   };
 };
 
-export default useSessionsData;
+export { useSessionsData };
 

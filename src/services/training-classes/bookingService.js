@@ -3,7 +3,7 @@
  * Single Responsibility: Handle booking creation and checkout
  */
 
-import { createBooking, createCheckoutSession } from "../../api/bookingapi/bookingApi";
+import { createBooking, createCheckoutSession } from "@/pages/api/bookingapi/bookingApi";
 
 /**
  * Process booking and redirect to checkout
@@ -56,4 +56,4 @@ const processBooking = async (bookingData, finalPrice, classId) => {
   }
 };
 
-export default  processBooking;
+export { processBooking };

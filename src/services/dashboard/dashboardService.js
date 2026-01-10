@@ -51,4 +51,5 @@ import { fetchClassesApi } from "@/pages/api/classtypesapi/classes-api";
     throw error;
   }
 };
-export default fetchDashboardData;
+
+export { fetchDashboardData };

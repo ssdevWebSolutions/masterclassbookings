@@ -4,10 +4,10 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 
 import { Box } from "@mui/material";
-import Sidebar from '../admin/components/Sidebar';
-import MainHeader from '../admin/components/MainHeader';
-import DashboardLayout from '../admin/components/DashboardLayout';
-import AuthGuard from '../admin/components/AuthGuard';
+import Sidebar from '@/pages/admin/components/Sidebar';
+import MainHeader from '@/pages/admin/components/MainHeader';
+import DashboardLayout from '@/pages/admin/components/DashboardLayout';
+import AuthGuard from '@/pages/admin/components/AuthGuard';
 
 
 

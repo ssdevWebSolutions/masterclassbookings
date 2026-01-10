@@ -17,9 +17,9 @@ import DashboardLayout from "@/pages/admin/components/DashboardLayout";
 import UserSidebar from "@/pages/dashboard/components/UserSidebar";
 import UserHeader from "@/pages/dashboard/components/UserHeader";
 import { getGreeting } from "@/utils/greetingUtils";
-import { useSessionsData } from "../hooks/useSessionsData";
-import { useSessionSelection } from "../hooks/useSessionSelection";
-import { processBooking } from "../services/bookingService";
+import { useSessionsData } from "@/hooks/training-classes/useSessionsData";
+import { useSessionSelection } from "@/hooks/training-classes/useSessionSelection";
+import { processBooking } from "@/services/training-classes/bookingService";
 import SessionAccordion from "../components/SessionAccordion";
 import { formatTermDateRange } from "../../../../utils/formatUtils";
 

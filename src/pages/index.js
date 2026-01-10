@@ -67,7 +67,7 @@ export default function Home() {
       </Head>
 
       <main className="font-sans">
-        {/* <Header /> */}
+        <Header />
         <Hero />
         <About />
         {/* <CampGrid /> */}

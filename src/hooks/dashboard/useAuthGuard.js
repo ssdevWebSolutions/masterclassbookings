@@ -33,5 +33,5 @@ import { useSelector } from "react-redux";
   };
 };
 
-export default useAuthGuard;
+export { useAuthGuard };
 

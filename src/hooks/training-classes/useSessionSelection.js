@@ -151,4 +151,4 @@ const useSessionSelection = (sessions = [], trainingClass = null) => {
   };
 };
 
-export default useSessionSelection;
+export { useSessionSelection };

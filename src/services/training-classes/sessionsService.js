@@ -4,7 +4,7 @@
  */
 
 import { fetchTrainingClassById } from "@/pages/api/trainingclassesapi/trainingClassesApi";
-import { fetchClassSessions } from "../../api/bookingapi/bookingApi";
+import { fetchClassSessions } from "@/pages/api/bookingapi/bookingApi";
 
 /**
  * Fetch training class and sessions data
@@ -28,5 +28,5 @@ const fetchSessionsData = async (classId) => {
   }
 };
 
-export default fetchSessionsData;
+export { fetchSessionsData };
 
