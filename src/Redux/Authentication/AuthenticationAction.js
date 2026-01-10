@@ -84,4 +84,32 @@ export const loginUserWithType = (loginData) => async (dispatch) => {
       // console.log("error trying login modal open"+  e);
     }
   }
+
+  /**
+   * Test Email API
+   * Sends a test email to the specified email address
+   */
+  export const testEmail = (email) => async (dispatch) => {
+    try {
+      const response = await fetch(`${BASE_URL}/test-email?email=${encodeURIComponent(email)}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Test email failed:", errorText);
+        return { success: false, error: errorText };
+      }
+
+      const result = await response.json();
+      console.log("Test email sent successfully:", result);
+      return { success: true, data: result };
+    } catch (error) {
+      console.error("Error sending test email:", error);
+      return { success: false, error: error.message };
+    }
+  };
   

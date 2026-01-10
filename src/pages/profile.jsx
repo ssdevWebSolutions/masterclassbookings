@@ -1,12 +1,14 @@
-import RegistrationProfile from "../Components/RegistrationProfile";
 import Header from "../Components/Header";
 import Head from "next/head";
 import Footer from "../Components/Footer";
 import RegistrationProfileKids from "../Components/RegistrationProfileKids";
+import DashboardLayout from "./admin/components/DashboardLayout";
+
 
 export default function Register() {
   return (
     <>
+    <DashboardLayout>
       <Head>
         <title>Cricket Camps</title>
         <meta
@@ -23,6 +25,7 @@ export default function Register() {
         </main>
         <Footer />
       </div>
+      </DashboardLayout>
     </>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import {
   Drawer,
   Box,
@@ -23,21 +24,33 @@ import CurrencyPoundSharp from "@mui/icons-material/CurrencyPoundSharp";
 import CampaignSharp from "@mui/icons-material/CampaignSharp";
 import Person2Outlined from "@mui/icons-material/Person2Outlined";
 import { HomeFilled } from "@mui/icons-material";
-import { LucideCalendarCheck } from "lucide-react";
+import { BookImageIcon, LucideCalendarCheck } from "lucide-react";
 
 import NavItem from "@/sharedComponents/NavItem";
 import Image from "next/image";
 
 export default function Sidebar({
   sidebarOpen,
-  activeNav,
   profileDropdownOpen,
-  onNavSwitch,
   onCloseSidebar,
   onProfileDropdownToggle,
   onLogout,
 }) {
+  const router = useRouter();
+  const path = router.pathname;
+
+  // ✅ Auto-open schedule dropdown if on nested route
   const [scheduleOpen, setScheduleOpen] = useState(false);
+
+  useEffect(() => {
+    if (
+      path.startsWith("/admin/bookings") ||
+      path.startsWith("/admin/schedule/venue") ||
+      path.startsWith("/admin/schedule/attendance")
+    ) {
+      setScheduleOpen(true);
+    }
+  }, [path]);
 
   return (
     <Drawer
@@ -83,89 +96,125 @@ export default function Sidebar({
         <NavItem
           label="Dashboard"
           icon={<HomeFilled fontSize="small" />}
-          active={activeNav === "Dashboard"}
-          onClick={() => onNavSwitch("Dashboard")}
+          active={path === "/admin"}                // ✅ highlight
+          onClick={() => router.push("/admin/dashboard")}
         />
 
-        {/* ✅ DROPDOWN — SCHEDULE */}
+        <NavItem
+          label="Bookings"
+          icon={<HomeFilled fontSize="small" />}
+          active={path === "/admin/bookings"}                // ✅ highlight
+          onClick={() => router.push("/admin/bookings")}
+        />
+
         <NavItem
           label="Schedule"
           icon={<LucideCalendarCheck size={18} />}
           expandable
           open={scheduleOpen}
-          unread={0}
           onClick={() => setScheduleOpen(!scheduleOpen)}
         />
 
-        <Collapse in={scheduleOpen}>
-          <NavItem
-            label="Bookings"
-            active={activeNav === "Bookings"}
-            onClick={() => onNavSwitch("Bookings")}
-          />
           {/* <NavItem
-            label="Completed"
-            active={activeNav === "Completed"}
-            onClick={() => onNavSwitch("Completed")}
+            label="Bookings"
+            icon={<BookImageIcon size={18} />}
+            active={path.startsWith("/admin/bookings")}
+            onClick={() => router.push("/admin/bookings")}
           /> */}
+
+        <Collapse in={scheduleOpen}>
+          
+
+          <NavItem
+            label="Terms"
+            active={path.startsWith("/admin/schedule/term")}
+            onClick={() => router.push("/admin/schedule/term")}
+          />
+
+          <NavItem
+            label="Class Types"
+            active={path.startsWith("/admin/schedule/class-types")}
+            onClick={() => router.push("/admin/schedule/class-types")}
+          />
+
+          <NavItem
+            label="Venues"
+            active={path.startsWith("/admin/schedule/venue")}
+            onClick={() => router.push("/admin/schedule/venue")}
+          />
+
+          <NavItem
+            label="Attendance"
+            active={path.startsWith("/admin/schedule/attendance")}
+            onClick={() => router.push("/admin/schedule/attendance")}
+          />
+
+          <NavItem
+            label="Training Classes"
+            active={
+              path === "/admin/schedule" ||
+              path.startsWith("/admin/schedule/training-classes")
+            }
+            onClick={() => router.push("/admin/schedule")}
+          />
         </Collapse>
 
         <NavItem
           label="Finance"
           icon={<CurrencyPoundSharp fontSize="small" />}
-          active={activeNav === "Finance"}
-          onClick={() => onNavSwitch("Finance")}
+          active={path.startsWith("/admin/finance")}
+          onClick={() => router.push("/admin/finance")}
         />
 
-        <NavItem
+        {/* <NavItem
           label="Camps"
           icon={<CampaignSharp fontSize="small" />}
-          active={activeNav === "Camps"}
-          onClick={() => onNavSwitch("Camps")}
-        />
+          active={path.startsWith("/admin/camps")}
+          onClick={() => router.push("/admin/camps")}
+        /> */}
 
-        <NavItem
+        {/* <NavItem
           label="Service Request"
           icon={<PersonIcon fontSize="small" />}
-          active={activeNav === "ServiceRequest"}
-          onClick={() => onNavSwitch("ServiceRequest")}
+          active={path.startsWith("/admin/service-request")}
+          onClick={() => router.push("/admin/service-request")}
         />
 
         <NavItem
           label="Contacts"
           icon={<Person2Outlined fontSize="small" />}
-          active={activeNav === "Contacts"}
-          onClick={() => onNavSwitch("Contacts")}
-        />
+          active={path.startsWith("/admin/contacts")}
+          onClick={() => router.push("/admin/contacts")}
+        /> */}
 
-        <NavItem
+        {/* <NavItem
           label="Orders"
           icon={<InventoryRounded fontSize="small" />}
           unread={12}
-          active={activeNav === "Orders"}
-          onClick={() => onNavSwitch("Orders")}
-        />
+          active={path.startsWith("/admin/orders")}
+          onClick={() => router.push("/admin/orders")}
+        /> */}
 
-        <NavItem
+        {/* <NavItem
           label="Communication Tracker"
           icon={<ChatBubble fontSize="small" />}
           unread={5}
-          active={activeNav === "Communication"}
-          onClick={() => onNavSwitch("Communication")}
-        />
+          active={path.startsWith("/admin/communication")}
+          onClick={() => router.push("/admin/communication")}
+        /> */}
 
-        <NavItem
+        {/* <NavItem
           label="Team"
           icon={<GroupOutlined fontSize="small" />}
-          active={activeNav === "Team"}
-          onClick={() => onNavSwitch("Team")}
-        />
+          active={path.startsWith("/admin/team")}
+          onClick={() => router.push("/admin/team")}
+        /> */}
 
         <NavItem
           label="Settings"
           icon={<Settings fontSize="small" />}
-          active={activeNav === "Settings"}
-          onClick={() => onNavSwitch("Settings")}
+          active={path.startsWith("/admin/settings")}
+          onClick={() => router.push("/admin/settings")}
         />
       </List>
 

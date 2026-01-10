@@ -18,13 +18,21 @@ import authSliceReducer from  './Redux/Authentication/AuthenticationSlice'
 import kidsReducer from './Redux/Kids/KidsSlice'
 import sessionReducer from './Redux/Sessions/sessionsSlice'
 import bookingReducer from  './Redux/bookingSlice/bookingSlice'
+import venuesReducer from  './Redux/venues/venuesSlice'
+import classesReducer from "@/Redux/classes/classesSlice";
+import termsReducer from "@/Redux/terms/termsSlice";
+import trainingClassesReducer from "@/Redux/trainingClassesSlice/trainingClassesSlice";
 
 // Combine reducers
 const rootReducer = combineReducers({
     auth : authSliceReducer,
     kids : kidsReducer,
     sessions :sessionReducer,
-    bookings : bookingReducer
+    bookings : bookingReducer,
+    venues: venuesReducer,
+    classes: classesReducer,
+    terms: termsReducer,
+    trainingClasses: trainingClassesReducer,
 });
 
 // Persist config

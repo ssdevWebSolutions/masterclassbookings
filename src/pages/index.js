@@ -21,15 +21,15 @@ export default function Home() {
   const role = useSelector((state) => state.auth.loginData?.role);
   const parentId = useSelector((state) => state.auth.loginData?.id);
 
-  // Redirect admin users to AdminDashboard
+  // Only redirect admin users to AdminDashboard
   useEffect(() => {
     if (token && role === 'ADMIN') {
-      router.push('/AdminDashboard');
-      return; // Exit early to prevent further execution
+      router.push('/admin');
+      return;
     }
   }, [token, role, router]);
 
-  // Fetch bookings for authenticated non-admin users
+  // Fetch bookings for authenticated non-admin users (but don't redirect)
   useEffect(() => {
     if (token && role && role !== 'ADMIN') {
       dispatch(fetchBookings({ token, role, parentId }));
@@ -70,8 +70,7 @@ export default function Home() {
         <Header />
         <Hero />
         <About />
-        <CampGrid />
-        
+        {/* <CampGrid /> */}
         
         {/* Registration Modal or Profile - only for non-admin users */}
         {registration && (

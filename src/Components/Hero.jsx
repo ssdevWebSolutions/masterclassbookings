@@ -8,7 +8,7 @@ export default function Hero() {
     const timer = setTimeout(() => {
       setIsLoaded(true);
     }, 100);
-    
+
     // Reset animation when component unmounts
     return () => {
       clearTimeout(timer);
@@ -18,7 +18,6 @@ export default function Hero() {
 
   const styles = {
     section: {
-      // backgroundColor: '#212529',
       backgroundColor: '#111111',
       color: '#ffffff',
       padding: '80px 20px',
@@ -63,7 +62,7 @@ export default function Hero() {
     heading: {
       fontSize: '3.5rem',
       fontWeight: '700',
-      marginBottom: '24px',
+      marginBottom: '16px',
       lineHeight: '1.2',
       opacity: isLoaded ? 1 : 0,
       transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
@@ -72,28 +71,52 @@ export default function Hero() {
     headingSpan: {
       color: '#FFD700'
     },
+    subtitle: {
+      fontSize: '1.2rem',
+      fontWeight: '400',
+      marginBottom: '32px',
+      color: '#e0e0e0',
+      maxWidth: '600px',
+      margin: '0 auto 32px auto',
+      opacity: isLoaded ? 1 : 0,
+      transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
+      transition: 'opacity 1.4s ease 0.6s, transform 1.4s ease 0.6s'
+    },
     tagsContainer: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       gap: '12px',
       marginBottom: '40px',
-      fontSize: '18px',
+      fontSize: '16px',
       opacity: isLoaded ? 1 : 0,
       transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
-      transition: 'opacity 1.4s ease 0.8s, transform 1.4s ease 0.8s'
+      transition: 'opacity 1.4s ease 0.8s, transform 1.4s ease 0.8s',
+      flexWrap: 'wrap'
     },
     tag: {
-      padding: '10px 16px',
+      padding: '8px 14px',
       backgroundColor: 'rgba(255, 193, 7, 0.1)',
       color: '#ffc107',
       borderRadius: '6px',
-      fontWeight: '500'
+      fontWeight: '500',
+      border: '1px solid rgba(255, 193, 7, 0.2)'
     },
     separator: {
-      color: '#6c757d'
+      color: '#6c757d',
+      display: 'none'
     },
-    button: {
+    buttonsContainer: {
+      display: 'flex',
+      gap: '16px',
+      justifyContent: 'center',
+      alignItems: 'center',
+      opacity: isLoaded ? 1 : 0,
+      transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
+      transition: 'opacity 1.4s ease 1.2s, transform 1.4s ease 1.2s',
+      flexWrap: 'wrap'
+    },
+    primaryButton: {
       backgroundColor: '#ffc107',
       color: '#212529',
       padding: '14px 32px',
@@ -103,22 +126,21 @@ export default function Hero() {
       fontWeight: '600',
       cursor: 'pointer',
       boxShadow: '0 10px 25px rgba(255, 193, 7, 0.2)',
-      transition: 'all 0.3s ease, opacity 1.4s ease 1.2s, transform 1.4s ease 1.2s',
-      opacity: isLoaded ? 1 : 0,
-      transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
+      transition: 'all 0.3s ease',
       position: 'relative',
       overflow: 'hidden'
     },
-    buttonRipple: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      width: '0',
-      height: '0',
-      borderRadius: '50%',
-      backgroundColor: 'rgba(255, 255, 255, 0.5)',
-      animation: 'ripple 2s infinite'
+    secondaryButton: {
+      backgroundColor: 'transparent',
+      color: '#ffffff',
+      padding: '14px 32px',
+      border: '2px solid rgba(255, 255, 255, 0.3)',
+      borderRadius: '8px',
+      fontSize: '16px',
+      fontWeight: '600',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      backdropFilter: 'blur(10px)'
     },
     decorativeLine: {
       position: 'absolute',
@@ -133,94 +155,86 @@ export default function Hero() {
     }
   };
 
+  const handleExploreClick = () => {
+    const eventsSection = document.getElementById('camps') || document.getElementById('events') || document.getElementById('programs');
+    if (eventsSection) {
+      eventsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const handleBookNowClick = () => {
-    const campGridSection = document.getElementById('camps');
-    if (campGridSection) {
-      campGridSection.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
+    const bookingSection = document.getElementById('booking') || document.getElementById('contact');
+    if (bookingSection) {
+      bookingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
   return (
     <section style={styles.section}>
-      <style>
-        {`
-          @keyframes ripple {
-            0% {
-              width: 0;
-              height: 0;
-              opacity: 0.8;
-            }
-            100% {
-              width: 200px;
-              height: 200px;
-              opacity: 0;
-            }
-          }
-          
-          @keyframes pulse {
-            0%, 100% {
-              transform: translateY(0) scale(1);
-            }
-            50% {
-              transform: translateY(-3px) scale(1.02);
-            }
-          }
-          
-          .book-now-btn {
-            animation: pulse 2.5s ease-in-out infinite;
-            animation-delay: 3s;
-          }
-          
-          .book-now-btn:hover {
-            animation: none !important;
-          }
-        `}
-      </style>
       {/* Subtle gradient overlay */}
       <div style={styles.gradientOverlay}></div>
       
       <div style={styles.container}>
         {/* Badge */}
         <div style={styles.badge}>
-          <p style={styles.badgeText}>
-            WINTER SEASON 2025
-          </p>
+          <p style={styles.badgeText}>ELITE CRICKET COACHING</p>
         </div>
         
         {/* Heading */}
-        <h2 style={styles.heading}>
-          Book Your Winter<br />
-          <span style={{color:'#FFD700'}}>Masterclass Coaching</span>
-        </h2>
+        <h1 style={styles.heading}>
+          Master Your Cricket Skills with <span style={styles.headingSpan}>Expert Coaching</span>
+        </h1>
+        
+        {/* Subtitle */}
+        <p style={styles.subtitle}>
+          Discover upcoming camps, clinics, and personalized training sessions. 
+          Join our community of passionate cricketers and take your game to the next level.
+        </p>
         
         {/* Tags */}
         <div style={styles.tagsContainer}>
-          <span style={styles.tag}>Clinics</span>
-          <span style={styles.separator}>&</span>
-          <span style={styles.tag}>Camps</span>
+          <span style={styles.tag}>Individual Sessions</span>
+          <span style={styles.tag}>Group Camps</span>
+          <span style={styles.tag}>Masterclasses</span>
+          <span style={styles.tag}>Skills Clinics</span>
         </div>
         
-        {/* Button */}
-        <button 
-          className="book-now-btn"
-          style={styles.button}
-          onClick={handleBookNowClick}
-          onMouseOver={(e) => {
-            e.target.style.backgroundColor = '#ffcd39';
-            e.target.style.transform = 'translateY(-4px) scale(1.05)';
-            e.target.style.boxShadow = '0 15px 35px rgba(255, 193, 7, 0.4)';
-          }}
-          onMouseOut={(e) => {
-            e.target.style.backgroundColor = '#ffc107';
-            e.target.style.transform = 'translateY(0) scale(1)';
-            e.target.style.boxShadow = '0 10px 25px rgba(255, 193, 7, 0.2)';
-          }}
-        >
-          Book Now →
-        </button>
+        {/* Buttons */}
+        <div style={styles.buttonsContainer}>
+          <button 
+            style={styles.primaryButton}
+            onClick={handleExploreClick}
+            onMouseOver={(e) => {
+              e.target.style.backgroundColor = '#ffcd39';
+              e.target.style.transform = 'translateY(-2px) scale(1.02)';
+              e.target.style.boxShadow = '0 15px 35px rgba(255, 193, 7, 0.3)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.backgroundColor = '#ffc107';
+              e.target.style.transform = 'translateY(0) scale(1)';
+              e.target.style.boxShadow = '0 10px 25px rgba(255, 193, 7, 0.2)';
+            }}
+          >
+            Explore Programs →
+          </button>
+          
+          <button 
+            style={styles.secondaryButton}
+            onClick={handleBookNowClick}
+            onMouseOver={(e) => {
+              e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.6)';
+              e.target.style.transform = 'translateY(-2px)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.backgroundColor = 'transparent';
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+              e.target.style.transform = 'translateY(0)';
+            }}
+          >
+            Book Now
+          </button>
+        </div>
       </div>
       
       {/* Decorative element */}

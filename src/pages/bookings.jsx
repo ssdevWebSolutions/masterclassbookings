@@ -4,7 +4,7 @@ import Footer from "../Components/Footer";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchBookings } from "../Redux/bookingSlice/bookingSlice";
-import AdminDashboard from "../pages/AdminDashboard";
+import AdminDashboard from "./admin";
 import Header from "@/Components/Header";
 import { useRouter } from "next/router";
 import jsPDF from 'jspdf';
