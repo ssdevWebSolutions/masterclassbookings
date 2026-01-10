@@ -18,7 +18,7 @@ import {
   saveAttendance,
 } from "../../../api/attendaceapi/adminAttendanceApi";
 
-import AdminLayout from "../../AdminLayout";
+import AdminLayout from "../../../adminlayouts/AdminLayout";
 
 // Chrome-style Tabs Component
 const ChromeTabs = ({ sessions, activeSession, onChange }) => {

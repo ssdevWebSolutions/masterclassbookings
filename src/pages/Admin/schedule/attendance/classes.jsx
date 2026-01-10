@@ -11,7 +11,7 @@ import {
   Divider,
 } from "@mui/material";
 import { fetchClassesByTerm } from "../../../api/attendaceapi/adminAttendanceApi";
-import AdminLayout from "../../AdminLayout";
+import AdminLayout from "../../../adminlayouts/AdminLayout";
 
 
 

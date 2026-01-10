@@ -9,7 +9,7 @@ import RejectModal from "./components/RejectModal";
 import LoadingState from "../../../sharedComponents/LoadingState";
 import EmptyState from "../../../sharedComponents/EmptyState";
 
-import AdminLayout from "../AdminLayout";
+import AdminLayout from "../../adminlayouts/AdminLayout";
 
 export default function ServiceRequestPage() {
   const {

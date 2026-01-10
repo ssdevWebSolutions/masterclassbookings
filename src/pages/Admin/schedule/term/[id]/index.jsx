@@ -3,7 +3,7 @@
 import { Box, Typography, Chip, Divider, Button } from "@mui/material";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
-import AdminLayout from "../../../AdminLayout";
+import AdminLayout from "../../../../adminlayouts/AdminLayout";
 import useTerms from "../hooks/useTerms";
 import { getTermStatus } from "../../../../../../utils/termStatus";
 

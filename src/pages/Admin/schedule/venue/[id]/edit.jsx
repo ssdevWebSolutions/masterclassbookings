@@ -5,7 +5,7 @@ import { Box, Typography } from "@mui/material";
 import useVenues from "../hooks/useVenues";
 import VenueForm from "../components/VenueForm";
 import { useEffect, useState } from "react";
-import AdminLayout from "../../../AdminLayout";
+import AdminLayout from "../../../../adminlayouts/AdminLayout";
 import LoadingState from "@/sharedComponents/LoadingState";
 
 export default function EditVenuePage() {

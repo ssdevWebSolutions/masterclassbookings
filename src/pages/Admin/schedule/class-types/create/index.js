@@ -1,6 +1,6 @@
 "use client";
 
-import AdminLayout from "../../../AdminLayout";
+import AdminLayout from "../../../../adminlayouts/AdminLayout";
 import { Box, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import ClassAddForm from "../components/ClassAddForm";

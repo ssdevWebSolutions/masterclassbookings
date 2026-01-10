@@ -22,7 +22,7 @@ import EventIcon from "@mui/icons-material/Event";
 import PendingIcon from "@mui/icons-material/Pending";
 
 import { fetchBookings, getTerms } from "@/pages/api/attendaceapi/adminAttendanceApi";
-import AdminLayout from "../AdminLayout";
+import AdminLayout from "../../adminlayouts/AdminLayout";
 
 export default function AdminDashboard() {
   const router = useRouter();

@@ -20,7 +20,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 
 import { fetchBookings } from "@/pages/api/attendaceapi/adminAttendanceApi";
-import AdminLayout from "../AdminLayout";
+import AdminLayout from "../../adminlayouts/AdminLayout";
 
 export default function BookingsDetailsPage() {
   const [loading, setLoading] = useState(false);

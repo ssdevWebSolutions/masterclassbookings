@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import Sidebar from "./components/Sidebar";
-import MainHeader from "./components/MainHeader";
-import DashboardLayout from "./components/DashboardLayout";
-import AuthGuard from "./components/AuthGuard";
+import Sidebar from "../admin/components/Sidebar";
+import MainHeader from "../admin/components/MainHeader";
+import DashboardLayout from "../admin/components/DashboardLayout";
+import AuthGuard from "../admin/components/AuthGuard";
 import { Box } from "@mui/material";
 
 
