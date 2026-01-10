@@ -3,14 +3,13 @@ import { useRouter } from "next/router";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from '../components/Header';
 import Hero from "../components/Hero";
-import CampGrid from "../components/CampGrid";
-import WhyJoinUs from "../components/WhyJoinUs";
-import About from "../components/About";
+import About from "../Components/About";
 import Footer from "../components/Footer";
 import RegistrationProfile from "../components/RegistrationProfile";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchBookings } from "../Redux/bookingSlice/bookingSlice";
+
 
 export default function Home() {
   const [registration, setRegistration] = useState(false);
