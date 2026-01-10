@@ -3,7 +3,7 @@ import Head from "next/head";
 
 
 
-import RegistrationProfileKids from "@/Components/RegistrationProfileKids";
+import RegistrationProfileKids from "@/components/RegistrationProfileKids";
 import DashboardLayout from "@/pages/admin/components/DashboardLayout";
 
 

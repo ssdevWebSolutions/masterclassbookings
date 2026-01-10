@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { saveBooking } from '../Redux/bookingSlice/bookingSlice';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Header from '@/Components/Header';
-import Footer from '@/Components/Footer';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const PaymentSuccess = () => {
   const router = useRouter();

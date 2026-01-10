@@ -1,7 +1,7 @@
-import RegistrationProfile from "../Components/RegistrationProfile";
-import Header from "../Components/Header";
+import RegistrationProfile from "../components/RegistrationProfile";
+import Header from "../components/Header";
 import Head from "next/head";
-import Footer from "../Components/Footer";
+import Footer from "../components/Footer";
 
 export default function Register() {
   return (

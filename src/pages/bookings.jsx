@@ -1,11 +1,11 @@
 import Head from "next/head";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Footer from "../Components/Footer";
+import Footer from "../components/Footer";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchBookings } from "../Redux/bookingSlice/bookingSlice";
 import AdminDashboard from "./admin";
-import Header from "@/Components/Header";
+import Header from "@/components/Header";
 import { useRouter } from "next/router";
 import jsPDF from 'jspdf';
 

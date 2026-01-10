@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { XCircle, Home, Calendar } from 'lucide-react';
-import Header from '@/Components/Header';
-import Footer from '@/Components/Footer';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import { useDispatch } from 'react-redux';
 import { getLoginUserData } from '@/Redux/Authentication/AuthenticationSlice';
 import 'bootstrap/dist/css/bootstrap.min.css';

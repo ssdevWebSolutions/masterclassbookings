@@ -3,8 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSessionsByYear } from "@/Redux/Sessions/sessionsSlice";
 import { useRouter } from "next/navigation";
-import Header from "../Components/Header";
-import Footer from "../Components/Footer";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const CricketAcademyBooking = () => {
   const [selectedChild, setSelectedChild] = useState("");
