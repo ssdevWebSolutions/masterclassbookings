@@ -3,7 +3,7 @@
 import AdminLayout from "../../../../../adminlayouts";
 import { Box, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import ClassAddForm from "../components/ClassAddForm";
+import ClassAddForm from "@/components/ClassAddForm";
 import useClasses from "../hooks/useClasses";
 
 

@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSessionsByYear } from "@/Redux/Sessions/sessionsSlice";
 import { useRouter } from "next/navigation";
-import Header from "../components/Header";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 

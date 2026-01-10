@@ -1,7 +1,7 @@
-import Header from "../components/Header";
+import Header from "@/components/Header";
 import Head from "next/head";
-import Footer from "../components/Footer";
-import RegistrationProfileKids from "../components/RegistrationProfileKids";
+import Footer from "@/components/Footer";
+import RegistrationProfileKids from "@/components/RegistrationProfileKids";
 import DashboardLayout from "./admin/components/DashboardLayout";
 
 

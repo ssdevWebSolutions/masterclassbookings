@@ -6,8 +6,8 @@ import { useRouter } from "next/router";
 import dayjs from "dayjs";
 
 import AdminLayout from "../../../../../adminlayouts";
-import TermFormFields from "../components/TermFormFields";
-import HolidayModal from "../components/HolidayModal";
+import TermFormFields from "@/components/TermFormFields";
+import HolidayModal from "@/components/HolidayModal";
 import useTerms from "../hooks/useTerms";
 
 export default function EditTermPage() {

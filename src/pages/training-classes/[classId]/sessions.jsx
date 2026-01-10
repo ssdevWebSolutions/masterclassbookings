@@ -20,7 +20,7 @@ import { getGreeting } from "@/utils/greetingUtils";
 import { useSessionsData } from "@/hooks/training-classes/useSessionsData";
 import { useSessionSelection } from "@/hooks/training-classes/useSessionSelection";
 import { processBooking } from "@/services/training-classes/bookingService";
-import SessionAccordion from "../components/SessionAccordion";
+import SessionAccordion from "@/components/SessionAccordion";
 import { formatTermDateRange } from "../../../../utils/formatUtils";
 
 export default function TrainingClassSessionsPage() {

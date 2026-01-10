@@ -1,7 +1,7 @@
 "use client";
 
 import AdminLayout from "../../../../../adminlayouts";
-import VenueForm from "../components/VenueForm";
+import VenueForm from "@/components/VenueForm";
 import { Box, Typography } from "@mui/material";
 import useVenues from "../hooks/useVenues";
 import { useRouter } from "next/router";
