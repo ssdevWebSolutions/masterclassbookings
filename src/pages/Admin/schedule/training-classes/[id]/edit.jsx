@@ -5,11 +5,12 @@ import { Box, Typography, Button, Divider } from "@mui/material";
 import { useRouter } from "next/router";
 
 
-import WeeklyPlanSection from "@/components/WeeklyPlanSection";
+
 import useUpdateTrainingSchedule from "../hooks/useUpdateTrainingSchedule";
 import { fetchTrainingClassById } from "../../../../api/trainingclassesapi/trainingClassesApi";
 
 import AdminLayout from '@/adminlayouts';
+import WeeklyPlanSection from "../components/WeeklyPlanSection";
 
 export default function EditTrainingClassSchedule() {
   const router = useRouter();

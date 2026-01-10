@@ -1,10 +1,11 @@
 "use client";
 
 import AdminLayout from "../../../../../adminlayouts";
-import VenueForm from "@/components/VenueForm";
+
 import { Box, Typography } from "@mui/material";
 import useVenues from "../hooks/useVenues";
 import { useRouter } from "next/router";
+import VenueForm from "../components/VenueForm";
 
 export default function CreateVenuePage() {
   const { createVenue } = useVenues();

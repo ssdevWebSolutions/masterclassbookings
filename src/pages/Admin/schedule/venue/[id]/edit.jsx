@@ -3,10 +3,11 @@
 import { useRouter } from "next/router";
 import { Box, Typography } from "@mui/material";
 import useVenues from "../hooks/useVenues";
-import VenueForm from "@/components/VenueForm";
+
 import { useEffect, useState } from "react";
 import AdminLayout from "../../../../../adminlayouts";
 import LoadingState from "@/sharedComponents/LoadingState";
+import VenueForm from "../components/VenueForm";
 
 export default function EditVenuePage() {
   const router = useRouter();

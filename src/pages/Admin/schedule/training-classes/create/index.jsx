@@ -22,10 +22,13 @@ import useClasses from "../../class-types/hooks/useClasses";
 import useCreateTrainingClass from "../hooks/useCreateTrainingClass";
 
 // components
-import TrainingClassBasicInfo from "@/components/TrainingClassBasicInfo";
-import WeeklyPlanSection from "@/components/WeeklyPlanSection";
-import PricingSection from "@/components/PricingSection";
+
+
+
 import AdminLayout from "@/adminlayouts";
+import PricingSection from "../components/PricingSection";
+import TrainingClassBasicInfo from "../components/TrainingClassBasicInfo";
+import WeeklyPlanSection from "../components/WeeklyPlanSection";
 
 
 /* ================== DISCOUNT SECTION ================== */

@@ -7,7 +7,8 @@ import { useEffect, useState } from "react";
 import AdminLayout from "../../../../../adminlayouts";
 import LoadingState from "@/sharedComponents/LoadingState";
 import useClasses from "../hooks/useClasses";
-import ClassAddForm from "@/components/ClassAddForm";
+import ClassAddForm from "../components/ClassAddForm";
+
 
 export default function EditClassPage() {
   const router = useRouter();
