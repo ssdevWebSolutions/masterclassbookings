@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchSessionsByYear } from "@/Redux/Sessions/sessionsSlice";
 import { useRouter } from "next/navigation";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Footer from "@/components/Footer";
+
 
 const CricketAcademyBooking = () => {
   const [selectedChild, setSelectedChild] = useState("");

@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from '../components/Header';
 import Hero from "../components/Hero";
-import About from "../Components/About";
+import About from "../components/About";
 import Footer from "../components/Footer";
 import RegistrationProfile from "../components/RegistrationProfile";
 import { useState, useEffect } from "react";
