@@ -13,8 +13,9 @@ import {
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 
-import AdminLayout from "@/pages/admin/AdminLayout";
+
 import { fetchTrainingClasses } from "@/Redux/trainingClassesSlice/trainingClassesSlice";
+import AdminLayout from "../AdminLayout";
 
 /* ---------- HELPERS ---------- */
 const formatTime = (t) =>

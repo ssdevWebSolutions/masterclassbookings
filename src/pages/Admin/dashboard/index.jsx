@@ -20,8 +20,9 @@ import PeopleIcon from "@mui/icons-material/People";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import EventIcon from "@mui/icons-material/Event";
 import PendingIcon from "@mui/icons-material/Pending";
-import AdminLayout from "@/pages/admin/AdminLayout";
+
 import { fetchBookings, getTerms } from "@/pages/api/attendaceapi/adminAttendanceApi";
+import AdminLayout from "../AdminLayout";
 
 export default function AdminDashboard() {
   const router = useRouter();

@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/router";
 
-import AdminLayout from "@/pages/admin/AdminLayout";
+
 
 // hooks
 import useVenues from "../../venue/hooks/useVenues";
@@ -25,6 +25,8 @@ import useCreateTrainingClass from "../hooks/useCreateTrainingClass";
 import TrainingClassBasicInfo from "../components/TrainingClassBasicInfo";
 import WeeklyPlanSection from "../components/WeeklyPlanSection";
 import PricingSection from "../components/PricingSection";
+import AdminLayout from "@/pages/admin/AdminLayout";
+
 
 /* ================== DISCOUNT SECTION ================== */
 const DiscountSection = ({ discounts, setDiscounts }) => {

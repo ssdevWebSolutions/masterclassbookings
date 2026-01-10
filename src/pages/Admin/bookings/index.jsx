@@ -18,8 +18,9 @@ import {
   Avatar,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import AdminLayout from "@/pages/admin/AdminLayout";
+
 import { fetchBookings } from "@/pages/api/attendaceapi/adminAttendanceApi";
+import AdminLayout from "../AdminLayout";
 
 export default function BookingsDetailsPage() {
   const [loading, setLoading] = useState(false);

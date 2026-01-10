@@ -4,10 +4,11 @@ import { useEffect, useState, useMemo } from "react";
 import { Box, Typography, Button, Divider } from "@mui/material";
 import { useRouter } from "next/router";
 
-import AdminLayout from "@/pages/admin/AdminLayout";
+
 import WeeklyPlanSection from "../components/WeeklyPlanSection";
 import useUpdateTrainingSchedule from "../hooks/useUpdateTrainingSchedule";
 import { fetchTrainingClassById } from "../../../../api/trainingclassesapi/trainingClassesApi";
+import AdminLayout from "@/pages/admin/AdminLayout";
 
 export default function EditTrainingClassSchedule() {
   const router = useRouter();

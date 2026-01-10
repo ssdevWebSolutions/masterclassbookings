@@ -12,8 +12,9 @@ import {
   Stack,
 } from "@mui/material";
 
-import AdminLayout from "@/pages/admin/AdminLayout";
+
 import { getTerms } from "@/pages/api/attendaceapi/adminAttendanceApi";
+import AdminLayout from "../../AdminLayout";
 
 export default function AttendanceTermsPage() {
   const router = useRouter();

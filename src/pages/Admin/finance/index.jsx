@@ -15,8 +15,9 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import AdminLayout from "@/pages/admin/AdminLayout";
+
 import { fetchBookings } from "@/pages/api/attendaceapi/adminAttendanceApi";
+import AdminLayout from "../AdminLayout";
 
 export default function FinanceDashboard() {
   const [loading, setLoading] = useState(false);
