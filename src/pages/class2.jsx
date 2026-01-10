@@ -397,7 +397,7 @@ const CricketAcademyBooking = () => {
   
           <div>
             <small style={{ color: "#999" }}>
-            Fridays: 5:45pm - 7:15pm (16th January- 27th March 2026) • Sundays: Class1 4:30pm-6pm & Class2 6pm-7:30pm (18TH January - Sunday 27th March 2026)
+            • Sundays: Class1 4:30pm-6pm & Class2 6pm-7:30pm (18TH January - Sunday 29th March 2026)
             </small>
           </div>
         </div>
@@ -415,7 +415,8 @@ const CricketAcademyBooking = () => {
                 <h6 className="card-title mb-1" style={{ color: "#FFD700" }}>
                   <i className="bi bi-geo-alt me-2"></i>Venue
                 </h6>
-                <p className="mb-0" style={{ color: "#d4d4d4" }}>Tiffin Girls School, KT2 5PL</p>
+                {/* changes in venues */}
+                <p className="mb-0" style={{ color: "#d4d4d4" }}>ST PAUL’S SCHOOL, BARNES, LONDON SW13 9JT (INDOORS)</p>
               </div>
             </div>
   
@@ -428,7 +429,7 @@ const CricketAcademyBooking = () => {
                 <div>
                   <h6 className="card-title mb-1" style={{ color: "#FFD700" }}>Programme Details</h6>
                   <p className="mb-0 small" style={{ color: "#999" }}>
-                    10-Week Technical Masterclass Clinic (Ages 8–13, Girls & Boys)
+                    10-Week COACHING PROGRAMME (Ages 7–13, Girls & Boys)
                   </p>
                 </div>
                 <button 
@@ -536,7 +537,7 @@ const CricketAcademyBooking = () => {
                 </div>
               </div>
   
-              <div className="col-md-4">
+              {/* <div className="col-md-4">
                 <div 
                   className={`card position-relative text-center h-100 shadow-sm`}
                   style={{
@@ -599,7 +600,7 @@ const CricketAcademyBooking = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
   
             {/* Session Selection */}
@@ -638,7 +639,7 @@ const CricketAcademyBooking = () => {
                   </div>
   
                  {/* Fridays Section */}
-                 <div className="mb-3">
+                 {/* <div className="mb-3">
                     <div className="d-flex justify-content-between align-items-center mb-2">
                       <button
                         className="btn d-flex align-items-center flex-grow-1 me-3"
@@ -791,7 +792,7 @@ const CricketAcademyBooking = () => {
                         </div>
                       </div>
                     )}
-                  </div>
+                  </div> */}
 
                   {/* Sunday Class 1 Section */}
                   <div className="mb-3">
@@ -810,7 +811,7 @@ const CricketAcademyBooking = () => {
                         <div className="d-flex align-items-center gap-2 flex-grow-1">
                           <i className="bi bi-calendar"></i>
                           <div className="d-flex flex-column align-items-start flex-grow-1">
-                            <span>Sunday Class 1 (4:30pm-6:00pm) - {sundayClass1Dates.length} sessions</span>
+                            <span>Sunday Group 1  Ages 7-9 (4:30pm-6:00pm) - {sundayClass1Dates.length} sessions</span>
                             <small style={{ fontSize: "0.75rem", color: "#999", fontWeight: "normal" }}>
                               Click to select individual sessions
                             </small>
@@ -966,7 +967,7 @@ const CricketAcademyBooking = () => {
                         <div className="d-flex align-items-center gap-2 flex-grow-1">
                           <i className="bi bi-calendar"></i>
                           <div className="d-flex flex-column align-items-start flex-grow-1">
-                            <span>Sunday Class 2 (6:00pm-7:30pm) - {sundayClass2Dates.length} sessions</span>
+                            <span>Sunday Group 2  Ages 10-13 (6:00pm-7:30pm) - {sundayClass2Dates.length} sessions</span>
                             <small style={{ fontSize: "0.75rem", color: "#999", fontWeight: "normal" }}>
                               Click to select individual sessions
                             </small>
@@ -2116,7 +2117,7 @@ const CricketAcademyBooking = () => {
                   color: "#000",
                   borderBottom: "none"
                 }}>
-                  <h5 className="modal-title fw-bold">10-Week Technical Masterclass Clinic</h5>
+                  <h5 className="modal-title fw-bold">10-Week Coaching Programme</h5>
                   <button type="button" className="btn-close" onClick={() => setShowDescription(false)} style={{ filter: "invert(1)" }}></button>
                 </div>
                 <div className="modal-body" style={{ color: "#d4d4d4" }}>
@@ -2124,18 +2125,18 @@ const CricketAcademyBooking = () => {
                     backgroundColor: "rgba(255, 215, 0, 0.1)",
                     border: "1px solid #FFD700"
                   }}>
-                    <h6 style={{ color: "#FFD700" }}><i className="bi bi-trophy me-2"></i>Ages 8–13 (Girls & Boys) | Real, Measurable Improvement</h6>
+                    <h6 style={{ color: "#FFD700" }}><i className="bi bi-trophy me-2"></i>Ages 7–13 (Girls & Boys) | Real, Measurable Improvement</h6>
                     <p className="mb-0">At Masterclass Cricket Academy, we help young cricketers achieve genuine improvement through structured development.</p>
                 </div>
 
                 <h6 style={{ color: "#FFD700" }}><i className="bi bi-calendar-range me-2"></i>Programme Schedule</h6>
-                <p><strong style={{ color: "#FFD700" }}>Block 1 Dates:</strong></p>
+                <p><strong style={{ color: "#FFD700" }}>Block 2 Dates:</strong></p>
                 <ul>
-                  <li><strong style={{ color: "#FFD700" }}>Fridays:</strong> 10th October - 12th December 2025 (5:45pm - 7:15pm)</li>
-                  <li><strong style={{ color: "#FFD700" }}>Sundays:</strong> 12th October - 14th December 2025
+                  {/* <li><strong style={{ color: "#FFD700" }}>Fridays:</strong> 10th October - 12th December 2025 (5:45pm - 7:15pm)</li> */}
+                  <li><strong style={{ color: "#FFD700" }}>Sundays:</strong> 18th January - 29th March 2025
                     <ul>
-                      <li>Class 1: 4:30pm - 6:00pm</li>
-                      <li>Class 2: 6:00pm - 7:30pm</li>
+                      <li>Group 1: Ages 7-9   4:30pm - 6:00pm</li>
+                      <li>Group 2: Ages 10-13 6:00pm - 7:30pm</li>
                     </ul>
                   </li>
                 </ul>
